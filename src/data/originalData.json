@@ -1,0 +1,1994 @@
+{
+  "users": [
+    {
+      "id": "USR-000",
+      "name": "Toha, S.H., M.H.",
+      "email": "tohalegal@gmail.com",
+      "role": "ADMIN",
+      "department": "Legal & Corporate Governance",
+      "title": "General Counsel & Lead Legal Director"
+    },
+    {
+      "id": "USR-001",
+      "name": "Budi Santoso, S.H., LL.M.",
+      "email": "admin@legal.local",
+      "role": "ADMIN",
+      "department": "Legal & Corporate Governance",
+      "title": "Head of Legal & Compliance"
+    },
+    {
+      "id": "USR-002",
+      "name": "Siti Rahmawati, S.H., M.H.",
+      "email": "siti.rahma@legal.local",
+      "role": "LEGAL MANAGER",
+      "department": "Legal Department",
+      "title": "Legal Operations Manager"
+    },
+    {
+      "id": "USR-003",
+      "name": "Dimas Prasetyo, S.H.",
+      "email": "dimas.prasetyo@legal.local",
+      "role": "LEGAL COUNSEL",
+      "department": "Commercial Legal",
+      "title": "Senior Legal Counsel"
+    },
+    {
+      "id": "USR-004",
+      "name": "Anisa Maharani, S.H.",
+      "email": "anisa.maharani@legal.local",
+      "role": "LEGAL STAFF",
+      "department": "Legal Department",
+      "title": "Legal Specialist & Administrator"
+    },
+    {
+      "id": "USR-005",
+      "name": "Hendra Gunawan, S.T., M.B.A.",
+      "email": "hendra.gunawan@company.local",
+      "role": "REQUESTOR",
+      "department": "Project Development & Procurement",
+      "title": "VP Project Development"
+    },
+    {
+      "id": "USR-006",
+      "name": "Ir. Bambang Trihatmodjo",
+      "email": "bambang.tri@board.local",
+      "role": "MANAGEMENT",
+      "department": "Board of Directors",
+      "title": "President Director"
+    }
+  ],
+  "requests": [
+    {
+      "id": "LR-2026-0001",
+      "requestDate": "2026-08-10",
+      "requestor": "Hendra Gunawan",
+      "requestorEmail": "hendra.gunawan@company.local",
+      "department": "Project Development",
+      "company": "PT Nusantara Energi",
+      "project": "PLTS 50 MW Cirata",
+      "requestType": "Contract Drafting",
+      "subject": "Drafting EPC Contract untuk Proyek PLTS Cirata Tahap 2",
+      "description": "Mohon bantuan penyusunan draft Engineering, Procurement, and Construction (EPC) Agreement dengan konsorsium kontraktor asing dan lokal.",
+      "priority": "HIGH",
+      "deadline": "2026-08-25",
+      "picLegal": "Dimas Prasetyo, S.H.",
+      "status": "IN PROGRESS",
+      "attachmentName": "TermSheet_EPC_PLTS_Cirata_v2.pdf",
+      "remarks": "Telah dilakukan preliminary meeting dengan tim teknis.",
+      "updatedAt": "2026-08-18"
+    },
+    {
+      "id": "LR-2026-0002",
+      "requestDate": "2026-08-12",
+      "requestor": "Ratna Kusuma",
+      "requestorEmail": "ratna.k@company.local",
+      "department": "Business Development",
+      "company": "PT Nusabara Sinergi Bersama",
+      "project": "Eksplorasi Geothermal Jawa Barat",
+      "requestType": "Contract Review",
+      "subject": "Review Non-Disclosure Agreement (NDA) dengan Investor Perancis",
+      "description": "Review klausul kerahasiaan dan non-circumvention draft NDA dari ENGIE S.A.",
+      "priority": "URGENT",
+      "deadline": "2026-08-20",
+      "picLegal": "Siti Rahmawati, S.H., M.H.",
+      "status": "INTERNAL REVIEW",
+      "attachmentName": "NDA_ENGIE_Draft_2026.docx",
+      "remarks": "Fokus pada klausul governing law dan jurisdiction.",
+      "updatedAt": "2026-08-19"
+    },
+    {
+      "id": "LR-2026-0003",
+      "requestDate": "2026-08-01",
+      "requestor": "Fajar Nugroho",
+      "requestorEmail": "fajar.n@company.local",
+      "department": "Finance & Tax",
+      "company": "PT Aksa Energi Palapa",
+      "project": "Refinancing Sindikasi Bank",
+      "requestType": "Legal Opinion",
+      "subject": "Legal Opinion terkait Batasan Leverage Ratio dan Akibat Penjaminan Aset",
+      "description": "Pendapat hukum mengenai implikasi fiducia aset pembangkit terhadap fasilitas pinjaman eksisting.",
+      "priority": "HIGH",
+      "deadline": "2026-08-15",
+      "picLegal": "Budi Santoso, S.H., LL.M.",
+      "status": "COMPLETED",
+      "completionDate": "2026-08-14",
+      "remarks": "Opini hukum telah diserahkan dan disetujui Direksi.",
+      "attachmentName": "LO_Refinancing_Aset_Fiducia.pdf",
+      "updatedAt": "2026-08-14"
+    },
+    {
+      "id": "LR-2026-0004",
+      "requestDate": "2026-08-05",
+      "requestor": "Maya Indah",
+      "requestorEmail": "maya.indah@company.local",
+      "department": "General Affairs",
+      "company": "PT Nusantara Energi",
+      "project": "Sewa Kantor Pusat",
+      "requestType": "Contract Review",
+      "subject": "Review Perpanjangan Perjanjian Sewa Ruang Kantor Menara Astra Lt. 32",
+      "description": "Perjanjian sewa kantor akan jatuh tempo bulan depan. Perlu review addendum kenaikan service charge.",
+      "priority": "MEDIUM",
+      "deadline": "2026-08-22",
+      "picLegal": "Anisa Maharani, S.H.",
+      "status": "WAITING REQUESTOR",
+      "remarks": "Menunggu konfirmasi angka service charge final dari tim GA.",
+      "attachmentName": "Addendum_Lease_MenaraAstra_Draft.pdf",
+      "updatedAt": "2026-08-17"
+    },
+    {
+      "id": "LR-2026-0005",
+      "requestDate": "2026-08-14",
+      "requestor": "Bayu Wibowo",
+      "requestorEmail": "bayu.w@company.local",
+      "department": "Human Resources",
+      "company": "PT Nusantara Energi",
+      "project": "Restrukturisasi Organisasi",
+      "requestType": "Corporate",
+      "subject": "Penyusunan Perjanjian Kerja Bersama (PKB) & Standard PKWT 2026",
+      "description": "Harmonisasi kontrak kerja PKWT sesuai PP No. 35 Tahun 2021 dan Perpu Cipta Kerja.",
+      "priority": "MEDIUM",
+      "deadline": "2026-08-30",
+      "picLegal": "Dimas Prasetyo, S.H.",
+      "status": "ASSIGNED",
+      "attachmentName": "Draft_PKB_Revisi_2026.docx",
+      "remarks": "Dijadwalkan review pasal uang kompensasi PKWT.",
+      "updatedAt": "2026-08-15"
+    },
+    {
+      "id": "LR-2026-0006",
+      "requestDate": "2026-08-16",
+      "requestor": "Dian Permata",
+      "requestorEmail": "dian.p@company.local",
+      "department": "Operations",
+      "company": "PT Aksa Energi Palapa",
+      "project": "PLTU Tanjung Jati",
+      "requestType": "Licensing",
+      "subject": "Perpanjangan Izin Operasi IUJPTL dan Sertifikat Laik Operasi (SLO)",
+      "description": "SLO Generator Unit 2 akan berakhir dalam 45 hari. Perlu koordinasi dengan DJK ESDM.",
+      "priority": "HIGH",
+      "deadline": "2026-08-28",
+      "picLegal": "Anisa Maharani, S.H.",
+      "status": "IN PROGRESS",
+      "attachmentName": "Berkas_SLO_Unit2.zip",
+      "remarks": "Dokumen teknis uji emisi telah lengkap.",
+      "updatedAt": "2026-08-18"
+    },
+    {
+      "id": "LR-2026-0007",
+      "requestDate": "2026-08-17",
+      "requestor": "Agus Salim",
+      "requestorEmail": "agus.salim@company.local",
+      "department": "Commercial",
+      "company": "PT Nusabara Sinergi Bersama",
+      "project": "Suplai Batubara PLTU",
+      "requestType": "Dispute",
+      "subject": "Penyusunan Somasi Wanprestasi Keterlambatan Pasokan Batubara Vendor X",
+      "description": "Vendor PT Mineral Sejahtera gagal mengirimkan 50.000 MT batubara sesuai jadwal FOB Mother Vessel.",
+      "priority": "URGENT",
+      "deadline": "2026-08-21",
+      "picLegal": "Budi Santoso, S.H., LL.M.",
+      "status": "WAITING APPROVAL",
+      "attachmentName": "Bukti_PurchaseOrder_dan_DelayNotice.pdf",
+      "remarks": "Draft somasi 1 telah disiapkan, menunggu paraf Legal Manager.",
+      "updatedAt": "2026-08-19"
+    },
+    {
+      "id": "LR-2026-0008",
+      "requestDate": "2026-07-20",
+      "requestor": "Rina Salsabila",
+      "requestorEmail": "rina.s@company.local",
+      "department": "Corporate Secretary",
+      "company": "PT Nusantara Energi",
+      "project": "RUPS Luar Biasa 2026",
+      "requestType": "Corporate",
+      "subject": "Penyusunan Berita Acara & Akta Notaris Perubahan Susunan Direksi",
+      "description": "Pelaksanaan RUPSLB pengangkatan Direktur Operasional baru dan pelaporan ke Ditjen AHU Kemenkumham.",
+      "priority": "HIGH",
+      "deadline": "2026-08-05",
+      "picLegal": "Siti Rahmawati, S.H., M.H.",
+      "status": "OVERDUE",
+      "remarks": "Menunggu tanda tangan sirkuler pemegang saham luar negeri.",
+      "updatedAt": "2026-08-06"
+    },
+    {
+      "id": "LR-2026-0009",
+      "requestDate": "2026-08-18",
+      "requestor": "Eko Prasojo",
+      "requestorEmail": "eko.p@company.local",
+      "department": "Business Development",
+      "company": "PT Nusantara Energi",
+      "project": "Akuisisi PT Surya Kencana",
+      "requestType": "Legal Due Diligence",
+      "subject": "Permintaan Pelaksanaan LDD Akuisisi 70% Saham Perusahaan Pengembang PLTS",
+      "description": "Pelaksanaan pemeriksaan hukum menyeluruh terhadap perizinan, lahan, dan kontrak komersial target.",
+      "priority": "HIGH",
+      "deadline": "2026-09-15",
+      "picLegal": "Dimas Prasetyo, S.H.",
+      "status": "SCREENING",
+      "attachmentName": "InfoMemo_SuryaKencana.pdf",
+      "remarks": "Dalam tahap penyusunan request list dokumen LDD.",
+      "updatedAt": "2026-08-18"
+    },
+    {
+      "id": "LR-2026-0010",
+      "requestDate": "2026-08-19",
+      "requestor": "Lukman Hakim",
+      "requestorEmail": "lukman.h@company.local",
+      "department": "IT & Digital",
+      "company": "PT Nusantara Energi",
+      "project": "Implementasi Cloud ERP",
+      "requestType": "Contract Review",
+      "subject": "Review Master Subscription Agreement SAP Cloud Indonesia",
+      "description": "Perjanjian lisensi software enterprise dan perlindungan data pribadi (PDP) UU No. 27/2022.",
+      "priority": "MEDIUM",
+      "deadline": "2026-09-02",
+      "picLegal": "Anisa Maharani, S.H.",
+      "status": "NEW",
+      "attachmentName": "SAP_Cloud_MSA_Standard.pdf",
+      "remarks": "Baru diterima dari Tim IT.",
+      "updatedAt": "2026-08-19"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "CTR-2026-0001",
+      "company": "PT Nusantara Energi",
+      "counterparty": "PT PLN (Persero)",
+      "contractType": "Power Purchase Agreement (PPA)",
+      "project": "PLTS Cirata Tahap 1",
+      "contractTitle": "Perjanjian Jual Beli Tenaga Listrik PLTS Cirata 50 MW",
+      "contractNumber": "PPA-PLN-NE-2021-098",
+      "effectiveDate": "2021-10-01",
+      "expiryDate": "2046-10-01",
+      "contractValue": 450000000000,
+      "currency": "IDR",
+      "pic": "Hendra Gunawan",
+      "legalPic": "Budi Santoso, S.H., LL.M.",
+      "status": "ACTIVE",
+      "renewalStatus": "Non-Renewable",
+      "keyObligations": "Penyediaan pasokan daya listrik minimal 75 GWh per tahun sesuai availability factor.",
+      "paymentTerms": "Pembayaran bulanan COD invoice dalam 30 hari kalender.",
+      "penalty": "Denda unavailability 0.1% per hari dari nilai invoice.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "Arbitrase BANI di Jakarta",
+      "documentLink": "https://docs.legal.local/contracts/PPA-PLN-NE-2021-098.pdf",
+      "remarks": "Kontrak strategis 25 tahun masa konsesi."
+    },
+    {
+      "id": "CTR-2026-0002",
+      "company": "PT Nusantara Energi",
+      "counterparty": "PT Siemens Energy Indonesia",
+      "contractType": "Equipment Supply & Maintenance",
+      "project": "Gardu Induk Cirata",
+      "contractTitle": "Long Term Service Agreement (LTSA) Gas Insulated Switchgear",
+      "contractNumber": "LTSA-SEI-2023-014",
+      "effectiveDate": "2023-09-01",
+      "expiryDate": "2026-08-25",
+      "contractValue": 12500000000,
+      "currency": "IDR",
+      "pic": "Rudi Hartono",
+      "legalPic": "Dimas Prasetyo, S.H.",
+      "status": "EXPIRING",
+      "renewalStatus": "Optional Renewal",
+      "keyObligations": "Periodic maintenance, 24/7 emergency response, suku cadang original OEM.",
+      "paymentTerms": "Termin triwulanan setelah penandatanganan Berita Acara Pemeliharaan.",
+      "penalty": "Keterlambatan response time > 4 jam dikenakan penalti IDR 10.000.000/kejadian.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "SIAC (Singapore International Arbitration Centre)",
+      "documentLink": "https://docs.legal.local/contracts/LTSA-SEI-2023-014.pdf",
+      "remarks": "URGENT: Perlu finalisasi adendum perpanjangan 1 tahun."
+    },
+    {
+      "id": "CTR-2026-0003",
+      "company": "PT Nusabara Sinergi Bersama",
+      "counterparty": "PT Adhi Karya (Persero) Tbk",
+      "contractType": "EPC Contract",
+      "project": "Infrastruktur Hauling Road Jetty",
+      "contractTitle": "Kontrak Konstruksi Jalan Angkut dan Dermaga Khusus Batubara",
+      "contractNumber": "EPC-ADHI-NSB-2024-002",
+      "effectiveDate": "2024-03-15",
+      "expiryDate": "2026-09-10",
+      "contractValue": 85000000000,
+      "currency": "IDR",
+      "pic": "Bambang Sudiro",
+      "legalPic": "Siti Rahmawati, S.H., M.H.",
+      "status": "EXPIRING",
+      "renewalStatus": "Non-Renewable",
+      "keyObligations": "Penyelesaian konstruksi jalan 18 km dan jetty kapasitas 300 ft barge.",
+      "paymentTerms": "Milestone progress basis (20% DP, 75% progress, 5% retention 12 bulan).",
+      "penalty": "Liquidated damages 1/1000 per hari keterlambatan maks 5% nilai kontrak.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "Pengadilan Negeri Jakarta Selatan",
+      "documentLink": "https://docs.legal.local/contracts/EPC-ADHI-NSB-2024.pdf",
+      "remarks": "Memasuki masa Provisional Acceptance (BAST-1) dan masa retensi."
+    },
+    {
+      "id": "CTR-2026-0004",
+      "company": "PT Aksa Energi Palapa",
+      "counterparty": "PT Asuransi Tugu Pratama Indonesia Tbk",
+      "contractType": "Insurance Policy",
+      "project": "Operational Asset Insurance",
+      "contractTitle": "Property All Risks & Machinery Breakdown Insurance Policy",
+      "contractNumber": "POL-TUGU-AEP-2025-789",
+      "effectiveDate": "2025-11-01",
+      "expiryDate": "2026-11-01",
+      "contractValue": 3200000000,
+      "currency": "IDR",
+      "pic": "Tri Wahyudi",
+      "legalPic": "Anisa Maharani, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Optional Renewal",
+      "keyObligations": "Cover risiko operasional aset pembangkit total sum insured USD 120,000,000.",
+      "paymentTerms": "Lumpsum tahunan dibayar dalam 30 hari penerbitan polis.",
+      "penalty": "Keterlambatan premi membatalkan cover klaim otomatis.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "BMAI (Badan Mediasi dan Arbitrase Asuransi Indonesia)",
+      "documentLink": "https://docs.legal.local/contracts/POL-TUGU-2025.pdf",
+      "remarks": "Review terms renewal polis untuk periode 2026-2027."
+    },
+    {
+      "id": "CTR-2026-0005",
+      "company": "PT Nusantara Energi",
+      "counterparty": "Baker McKenzie (HHP Law Firm)",
+      "contractType": "Legal Retainer Agreement",
+      "project": "Corporate Legal Advisory",
+      "contractTitle": "Perjanjian Jasa Hukum Penasihat Eksternal 2026",
+      "contractNumber": "LRA-HHP-NE-2026-001",
+      "effectiveDate": "2026-01-01",
+      "expiryDate": "2026-12-31",
+      "contractValue": 120000,
+      "currency": "USD",
+      "pic": "Budi Santoso",
+      "legalPic": "Budi Santoso, S.H., LL.M.",
+      "status": "ACTIVE",
+      "renewalStatus": "Auto-Renew",
+      "keyObligations": "Penyediaan 30 jam konsultasi hukum internasional per bulan.",
+      "paymentTerms": "Invoice bulanan retainer fee USD 10,000/bulan.",
+      "penalty": "Pengakhiran dengan pemberitahuan 30 hari.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "SIAC",
+      "documentLink": "https://docs.legal.local/contracts/LRA-HHP-2026.pdf",
+      "remarks": "Retainer untuk transaksi cross-border dan pembiayaan asing."
+    },
+    {
+      "id": "CTR-2026-0006",
+      "company": "PT Nusantara Energi",
+      "counterparty": "PT Menara Astra Sentosa",
+      "contractType": "Lease Agreement",
+      "project": "Sewa Kantor Pusat",
+      "contractTitle": "Perjanjian Sewa Ruang Kantor Menara Astra Lantai 32",
+      "contractNumber": "LSE-ASTRA-NE-2023-088",
+      "effectiveDate": "2023-09-15",
+      "expiryDate": "2026-09-15",
+      "contractValue": 4800000000,
+      "currency": "IDR",
+      "pic": "Maya Indah",
+      "legalPic": "Anisa Maharani, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Under Review",
+      "keyObligations": "Penyediaan area sewa seluas 1.200 m2 dengan standard fitting.",
+      "paymentTerms": "Pembayaran sewa per tahun di muka dan deposit jaminan 3 bulan.",
+      "penalty": "Denda keterlambatan pembayaran sewa 2% per bulan.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "Pengadilan Negeri Jakarta Pusat",
+      "documentLink": "https://docs.legal.local/contracts/LSE-ASTRA-2023.pdf",
+      "remarks": "Sedang dalam negosiasi renewal 3 tahun berikutnya."
+    },
+    {
+      "id": "CTR-2026-0007",
+      "company": "PT Nusabara Sinergi Bersama",
+      "counterparty": "PT Sucofindo (Persero)",
+      "contractType": "Inspection & Survey Agreement",
+      "project": "Quality Assurance Batubara",
+      "contractTitle": "Perjanjian Jasa Sampling dan Analisis Kualitas Batubara",
+      "contractNumber": "SUC-NSB-2025-055",
+      "effectiveDate": "2025-02-01",
+      "expiryDate": "2026-02-01",
+      "contractValue": 850000000,
+      "currency": "IDR",
+      "pic": "Hendra Gunawan",
+      "legalPic": "Dimas Prasetyo, S.H.",
+      "status": "EXPIRED",
+      "renewalStatus": "Under Review",
+      "keyObligations": "Penerbitan Certificate of Sampling and Analysis (COA) setiap shipment batubara.",
+      "paymentTerms": "Per shipment dalam 14 hari setelah COA terbit.",
+      "penalty": "Ketidaksesuaian standard ASTM dikenakan kompensasi audit ulang.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "Pengadilan Negeri Jakarta Selatan",
+      "documentLink": "https://docs.legal.local/contracts/SUC-NSB-2025.pdf",
+      "remarks": "Perjanjian lama telah expired, sedang proses tender surveyor baru."
+    },
+    {
+      "id": "CTR-2026-0008",
+      "company": "PT Aksa Energi Palapa",
+      "counterparty": "Konsorsium PT Wijaya Karya - Sinohydro",
+      "contractType": "EPC Agreement",
+      "project": "PLTA Minihidro 10 MW Palapa",
+      "contractTitle": "Engineering Procurement Construction Contract Mini Hydro Power Plant",
+      "contractNumber": "EPC-WIKA-AEP-2025-010",
+      "effectiveDate": "2025-06-01",
+      "expiryDate": "2027-12-31",
+      "contractValue": 165000000000,
+      "currency": "IDR",
+      "pic": "Farhan Maulana",
+      "legalPic": "Dimas Prasetyo, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Non-Renewable",
+      "keyObligations": "Desain, pengadaan turbin, konstruksi bendung, powerhouse dan transmisi 20kV.",
+      "paymentTerms": "Progress billing bulanan dengan kurva S approved engineer.",
+      "penalty": "Penalti performance guarantee jika heat rate/efisiensi tidak tercapai.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "BANI Jakarta",
+      "documentLink": "https://docs.legal.local/contracts/EPC-WIKA-AEP-2025.pdf",
+      "remarks": "Progres fisik konstruksi telah mencapai 42%."
+    },
+    {
+      "id": "CTR-2026-0009",
+      "company": "PT Nusantara Energi",
+      "counterparty": "PT Telkom Indonesia (Persero) Tbk",
+      "contractType": "IT & Telecommunications",
+      "project": "Dedicated Fiber Optic Network",
+      "contractTitle": "Perjanjian Penyediaan Layanan Metro-E dan Dark Fiber",
+      "contractNumber": "TEL-NE-2024-331",
+      "effectiveDate": "2024-05-01",
+      "expiryDate": "2027-05-01",
+      "contractValue": 1800000000,
+      "currency": "IDR",
+      "pic": "Lukman Hakim",
+      "legalPic": "Anisa Maharani, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Auto-Renew",
+      "keyObligations": "SLA uptime jaringan 99.8% ke seluruh lokasi remote site pembangkit.",
+      "paymentTerms": "Monthly recurring charge (MRC) tanggal 15 setiap bulan.",
+      "penalty": "Service level credit jika downtime melebihi toleransi bulanan.",
+      "governingLaw": "Hukum Republik Indonesia",
+      "disputeResolution": "Musyawarah mufakat & Pengadilan Negeri Jakarta Pusat",
+      "documentLink": "https://docs.legal.local/contracts/TEL-NE-2024.pdf",
+      "remarks": "Jaringan handal, performa SLA stabil."
+    },
+    {
+      "id": "CTR-2026-0010",
+      "company": "PT Nusabara Sinergi Bersama",
+      "counterparty": "PT Pelayaran Samudera Jaya",
+      "contractType": "Freight Charter Agreement",
+      "project": "Transhipment Batubara",
+      "contractTitle": "Contract of Affreightment (COA) Pengangkutan Tongkang 300 Feet",
+      "contractNumber": "COA-PSJ-NSB-2026-003",
+      "effectiveDate": "2026-03-01",
+      "expiryDate": "2027-03-01",
+      "contractValue": 24000000000,
+      "currency": "IDR",
+      "pic": "Bambang Sudiro",
+      "legalPic": "Siti Rahmawati, S.H., M.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Optional Renewal",
+      "keyObligations": "Penyediaan 6 set tugboat & barge 300ft untuk rute Kalsel - Jawa.",
+      "paymentTerms": "Freight payment 80% saat selesai muat (B/L issue), 20% setelah selesai bongkar.",
+      "penalty": "Demurrage USD 3.500/hari dan dispatch USD 1.750/hari.",
+      "governingLaw": "Hukum Republik Indonesia (KUHD)",
+      "disputeResolution": "BANI Jakarta",
+      "documentLink": "https://docs.legal.local/contracts/COA-PSJ-2026.pdf",
+      "remarks": "Armada kapal telah lulus vetting inspeksi keselamatan maritim."
+    }
+  ],
+  "corporate": [
+    {
+      "id": "CORP-001",
+      "companyName": "PT Nusantara Energi",
+      "shortName": "NE",
+      "nib": "9120003450912",
+      "npwp": "01.234.567.8-011.000",
+      "domicile": "Jakarta Selatan",
+      "address": "Menara Astra Lantai 32, Jl. Jend. Sudirman Kav. 5-6, Karet Tengsin, Tanah Abang, Jakarta Pusat 10220",
+      "status": "ACTIVE",
+      "shareCapital": 500000000000,
+      "paidCapital": 250000000000,
+      "nominalPerShare": 1000000,
+      "shareholders": [
+        {
+          "id": "SH-01",
+          "name": "PT Nusantara Holdings Utama",
+          "shares": 175000,
+          "percentage": 70,
+          "nominalValue": 175000000000,
+          "nationality": "Indonesia",
+          "type": "CORPORATE"
+        },
+        {
+          "id": "SH-02",
+          "name": "Asta Green Energy Pte. Ltd.",
+          "shares": 62500,
+          "percentage": 25,
+          "nominalValue": 62500000000,
+          "nationality": "Singapura",
+          "type": "CORPORATE"
+        },
+        {
+          "id": "SH-03",
+          "name": "Ir. Bambang Trihatmodjo",
+          "shares": 12500,
+          "percentage": 5,
+          "nominalValue": 12500000000,
+          "nationality": "Indonesia",
+          "type": "INDIVIDUAL"
+        }
+      ],
+      "directors": [
+        {
+          "id": "DIR-01",
+          "name": "Ir. Bambang Trihatmodjo",
+          "position": "Direktur Utama (President Director)",
+          "nikOrPassport": "3171021405750001",
+          "periodStart": "2024-05-10",
+          "periodEnd": "2029-05-10",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "DIR-02",
+          "name": "Michael Tan Jin Hui",
+          "position": "Direktur Keuangan (Chief Financial Officer)",
+          "nikOrPassport": "E4569812A",
+          "periodStart": "2024-05-10",
+          "periodEnd": "2029-05-10",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "DIR-03",
+          "name": "Hendra Gunawan, S.T., M.B.A.",
+          "position": "Direktur Operasional & Pengembangan",
+          "nikOrPassport": "3273091807820004",
+          "periodStart": "2024-05-10",
+          "periodEnd": "2029-05-10",
+          "status": "ACTIVE"
+        }
+      ],
+      "commissioners": [
+        {
+          "id": "COM-01",
+          "name": "Prof. Dr. Ir. Soemarto Brodjonegoro",
+          "position": "Komisaris Utama (President Commissioner)",
+          "nikOrPassport": "3174052309500002",
+          "periodStart": "2024-05-10",
+          "periodEnd": "2029-05-10",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "COM-02",
+          "name": "David Christopher Sterling",
+          "position": "Komisaris Independen",
+          "nikOrPassport": "GB88234190",
+          "periodStart": "2024-05-10",
+          "periodEnd": "2029-05-10",
+          "status": "ACTIVE"
+        }
+      ],
+      "deeds": [
+        {
+          "id": "DEED-01",
+          "deedNumber": "No. 45",
+          "deedDate": "2015-03-12",
+          "notaryName": "Aulia Taufani, S.H., M.Kn.",
+          "notaryDomicile": "Jakarta Selatan",
+          "deedType": "Pendirian",
+          "ahuNumber": "AHU-0012984.AH.01.01.TAHUN 2015",
+          "ahuDate": "2015-03-28",
+          "description": "Akta Pendirian Perseroan Terbatas PT Nusantara Energi."
+        },
+        {
+          "id": "DEED-02",
+          "deedNumber": "No. 18",
+          "deedDate": "2024-05-10",
+          "notaryName": "Fanny Stephanie, S.H., M.Kn.",
+          "notaryDomicile": "Jakarta Pusat",
+          "deedType": "Peningkatan Modal",
+          "ahuNumber": "AHU-0044521.AH.01.02.TAHUN 2024",
+          "ahuDate": "2024-05-22",
+          "description": "Peningkatan modal disetor dan perubahan susunan Direksi dan Dewan Komisaris."
+        }
+      ],
+      "rups": [
+        {
+          "id": "RUPS-01",
+          "title": "RUPS Tahunan Tahun Buku 2024",
+          "type": "Tahunan (AGMS)",
+          "date": "2025-05-20",
+          "agenda": "Persetujuan Laporan Tahunan, Pengesahan Laporan Keuangan 2024, Penetapan Dividen.",
+          "decisionSummary": "Menerima dan mengesahkan Laporan Keuangan audited 2024 serta membagikan dividen sebesar 40% dari laba bersih."
+        },
+        {
+          "id": "RUPS-02",
+          "title": "RUPSLB Perubahan Struktur Modal & Ekspansi",
+          "type": "Luar Biasa (EGMS)",
+          "date": "2024-05-10",
+          "agenda": "Peningkatan modal disetor untuk pendanaan proyek PLTS Cirata Tahap 2.",
+          "decisionSummary": "Menyetujui penyetoran modal tambahan sebesar IDR 75 Miliar dari pemegang saham proporsional."
+        }
+      ],
+      "beneficialOwners": [
+        "Ir. Bambang Trihatmodjo (WNI, Pengendali Efektif)",
+        "Tan Sri Dato William Tan (WNA Singapura, Beneficial Owner Ultimate)"
+      ],
+      "lastUpdated": "2026-08-15"
+    },
+    {
+      "id": "CORP-002",
+      "companyName": "PT Nusabara Sinergi Bersama",
+      "shortName": "NSB",
+      "nib": "0220008871234",
+      "npwp": "02.987.654.3-022.000",
+      "domicile": "Jakarta Selatan",
+      "address": "Prudential Tower Lantai 16, Jl. Jend. Sudirman Kav. 79, Setiabudi, Jakarta Selatan 12910",
+      "status": "ACTIVE",
+      "shareCapital": 200000000000,
+      "paidCapital": 100000000000,
+      "nominalPerShare": 1000000,
+      "shareholders": [
+        {
+          "id": "SH-04",
+          "name": "PT Nusantara Energi",
+          "shares": 60000,
+          "percentage": 60,
+          "nominalValue": 60000000000,
+          "nationality": "Indonesia",
+          "type": "CORPORATE"
+        },
+        {
+          "id": "SH-05",
+          "name": "PT Sinergi Tambang Gemilang",
+          "shares": 40000,
+          "percentage": 40,
+          "nominalValue": 40000000000,
+          "nationality": "Indonesia",
+          "type": "CORPORATE"
+        }
+      ],
+      "directors": [
+        {
+          "id": "DIR-04",
+          "name": "Bambang Sudiro, S.E.",
+          "position": "Direktur Utama",
+          "nikOrPassport": "3172081204780003",
+          "periodStart": "2023-08-01",
+          "periodEnd": "2028-08-01",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "DIR-05",
+          "name": "Agus Salim, S.T.",
+          "position": "Direktur Komersial & Logistik",
+          "nikOrPassport": "3271012903800005",
+          "periodStart": "2023-08-01",
+          "periodEnd": "2028-08-01",
+          "status": "ACTIVE"
+        }
+      ],
+      "commissioners": [
+        {
+          "id": "COM-03",
+          "name": "Ir. Bambang Trihatmodjo",
+          "position": "Komisaris Utama",
+          "nikOrPassport": "3171021405750001",
+          "periodStart": "2023-08-01",
+          "periodEnd": "2028-08-01",
+          "status": "ACTIVE"
+        }
+      ],
+      "deeds": [
+        {
+          "id": "DEED-03",
+          "deedNumber": "No. 12",
+          "deedDate": "2020-07-15",
+          "notaryName": "Aryanti Artisari, S.H., M.Kn.",
+          "notaryDomicile": "Jakarta Selatan",
+          "deedType": "Pendirian",
+          "ahuNumber": "AHU-0038910.AH.01.01.TAHUN 2020",
+          "ahuDate": "2020-07-30",
+          "description": "Akta Pendirian PT Nusabara Sinergi Bersama."
+        }
+      ],
+      "rups": [
+        {
+          "id": "RUPS-03",
+          "title": "RUPS Tahunan 2025",
+          "type": "Tahunan (AGMS)",
+          "date": "2025-06-15",
+          "agenda": "Laporan Direksi dan pengesahan neraca rugi laba.",
+          "decisionSummary": "Persetujuan penuh atas tindakan pengurusan Direksi."
+        }
+      ],
+      "beneficialOwners": [
+        "Ir. Bambang Trihatmodjo (WNI)"
+      ],
+      "lastUpdated": "2026-08-10"
+    },
+    {
+      "id": "CORP-003",
+      "companyName": "PT Aksa Energi Palapa",
+      "shortName": "AEP",
+      "nib": "8120005619842",
+      "npwp": "03.456.789.0-033.000",
+      "domicile": "Bandung",
+      "address": "Gedung Wisma Bumiputera Lt. 7, Jl. Asia Afrika No. 141-149, Bandung 40112",
+      "status": "ACTIVE",
+      "shareCapital": 150000000000,
+      "paidCapital": 75000000000,
+      "nominalPerShare": 1000000,
+      "shareholders": [
+        {
+          "id": "SH-06",
+          "name": "PT Nusantara Energi",
+          "shares": 74250,
+          "percentage": 99,
+          "nominalValue": 74250000000,
+          "nationality": "Indonesia",
+          "type": "CORPORATE"
+        },
+        {
+          "id": "SH-07",
+          "name": "PT Nusabara Sinergi Bersama",
+          "shares": 750,
+          "percentage": 1,
+          "nominalValue": 750000000,
+          "nationality": "Indonesia",
+          "type": "CORPORATE"
+        }
+      ],
+      "directors": [
+        {
+          "id": "DIR-06",
+          "name": "Farhan Maulana, S.T.",
+          "position": "Direktur",
+          "nikOrPassport": "3273110906850002",
+          "periodStart": "2024-01-15",
+          "periodEnd": "2029-01-15",
+          "status": "ACTIVE"
+        }
+      ],
+      "commissioners": [
+        {
+          "id": "COM-04",
+          "name": "Siti Rahmawati, S.H., M.H.",
+          "position": "Komisaris",
+          "nikOrPassport": "3174094511830007",
+          "periodStart": "2024-01-15",
+          "periodEnd": "2029-01-15",
+          "status": "ACTIVE"
+        }
+      ],
+      "deeds": [
+        {
+          "id": "DEED-04",
+          "deedNumber": "No. 05",
+          "deedDate": "2022-01-10",
+          "notaryName": "Rina Utami, S.H., M.Kn.",
+          "notaryDomicile": "Bandung",
+          "deedType": "Pendirian",
+          "ahuNumber": "AHU-0005512.AH.01.01.TAHUN 2022",
+          "ahuDate": "2022-01-25",
+          "description": "Akta Pendirian PT Aksa Energi Palapa (SPV PLTA Minihidro)."
+        }
+      ],
+      "rups": [
+        {
+          "id": "RUPS-04",
+          "title": "Keputusan Sirkuler Para Pemegang Saham",
+          "type": "Keputusan Sirkuler (Circular Resolution)",
+          "date": "2026-03-01",
+          "agenda": "Pemberian persetujuan penjaminan aset PLTA Minihidro kepada Bank Mandiri.",
+          "decisionSummary": "Menyetujui pembebanan hak tanggungan dan jaminan fidusia fasilitas kredit sindikasi."
+        }
+      ],
+      "beneficialOwners": [
+        "Ir. Bambang Trihatmodjo (Melalui PT Nusantara Energi)"
+      ],
+      "lastUpdated": "2026-08-01"
+    }
+  ],
+  "licenses": [
+    {
+      "id": "LIC-2026-0001",
+      "company": "PT Nusantara Energi",
+      "licenseName": "Nomor Induk Berusaha (NIB) OSS RBA",
+      "licenseNumber": "9120003450912",
+      "licenseType": "NIB",
+      "authority": "Kementerian Investasi / BKPM (OSS-RBA)",
+      "issueDate": "2021-08-20",
+      "expiryDate": "",
+      "isLifetime": true,
+      "pic": "Anisa Maharani, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Up-to-date",
+      "documentLink": "https://docs.legal.local/licenses/NIB_NusantaraEnergi.pdf",
+      "remarks": "Berlaku selama perusahaan menjalankan kegiatan usaha sesuai KBLI 35101."
+    },
+    {
+      "id": "LIC-2026-0002",
+      "company": "PT Nusantara Energi",
+      "licenseName": "Izin Usaha Penyediaan Tenaga Listrik untuk Kepentingan Umum (IUPTLU)",
+      "licenseNumber": "540/12/IUPTLU/ESDM/2021",
+      "licenseType": "IUJPTL",
+      "authority": "Kementerian ESDM cq Ditjen Ketenagalistrikan",
+      "issueDate": "2021-11-15",
+      "expiryDate": "2046-11-15",
+      "isLifetime": false,
+      "pic": "Dimas Prasetyo, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Up-to-date",
+      "documentLink": "https://docs.legal.local/licenses/IUPTLU_Cirata.pdf",
+      "remarks": "Wilayah usaha terhubung jaringan transmisi 150kV PLN."
+    },
+    {
+      "id": "LIC-2026-0003",
+      "company": "PT Aksa Energi Palapa",
+      "licenseName": "Sertifikat Laik Operasi (SLO) Genset & Substation 20kV",
+      "licenseNumber": "SLO-2023-PLTA-9981",
+      "licenseType": "SLO",
+      "authority": "Lembaga Inspeksi Teknis (LIT) Akreditasi DJK ESDM",
+      "issueDate": "2023-09-01",
+      "expiryDate": "2026-09-01",
+      "isLifetime": false,
+      "pic": "Anisa Maharani, S.H.",
+      "status": "EXPIRING",
+      "renewalStatus": "In Progress",
+      "documentLink": "https://docs.legal.local/licenses/SLO_Palapa_2023.pdf",
+      "remarks": "Uji re-sertifikasi dijadwalkan tanggal 24 Agustus 2026."
+    },
+    {
+      "id": "LIC-2026-0004",
+      "company": "PT Nusabara Sinergi Bersama",
+      "licenseName": "Sertifikat Badan Usaha (SBU) Jasa Konstruksi Bidang Kelistrikan",
+      "licenseNumber": "02.987.SBU.LPJK.2023",
+      "licenseType": "SBU",
+      "authority": "Lembaga Pengembangan Jasa Konstruksi (LPJK) / PUPR",
+      "issueDate": "2023-06-10",
+      "expiryDate": "2026-06-10",
+      "isLifetime": false,
+      "pic": "Dimas Prasetyo, S.H.",
+      "status": "EXPIRED",
+      "renewalStatus": "Need Renewal",
+      "documentLink": "https://docs.legal.local/licenses/SBU_LPJK_2023.pdf",
+      "remarks": "Wajib re-akreditasi SKK Tenaga Ahli K3 Konstruksi."
+    },
+    {
+      "id": "LIC-2026-0005",
+      "company": "PT Nusantara Energi",
+      "licenseName": "Persetujuan Lingkungan (AMDAL) PLTS Cirata Tahap 1 & 2",
+      "licenseNumber": "SK.660/102/AMDAL/KLHK/2021",
+      "licenseType": "ENVIRONMENTAL LICENSE",
+      "authority": "Kementerian Lingkungan Hidup dan Kehutanan (KLHK)",
+      "issueDate": "2021-04-18",
+      "expiryDate": "",
+      "isLifetime": true,
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Up-to-date",
+      "documentLink": "https://docs.legal.local/licenses/AMDAL_Cirata_KLHK.pdf",
+      "remarks": "Wajib pelaporan implementasi RKL-RPL per semester."
+    },
+    {
+      "id": "LIC-2026-0006",
+      "company": "PT Nusabara Sinergi Bersama",
+      "licenseName": "Izin Pengoperasian Tersus / Terminal Khusus Jetty Batubara",
+      "licenseNumber": "KP-HUB-TERSUS-2022-441",
+      "licenseType": "PROJECT LICENSE",
+      "authority": "Kementerian Perhubungan cq Ditjen Hubla",
+      "issueDate": "2022-09-12",
+      "expiryDate": "2027-09-12",
+      "isLifetime": false,
+      "pic": "Bambang Sudiro",
+      "legalPic": "Dimas Prasetyo, S.H.",
+      "status": "ACTIVE",
+      "renewalStatus": "Up-to-date",
+      "documentLink": "https://docs.legal.local/licenses/Izin_Tersus_Hubla.pdf",
+      "remarks": "Kelaikan fasilitas tambat tongkang telah diverifikasi KSOP."
+    }
+  ],
+  "compliance": [
+    {
+      "id": "CMP-2026-0001",
+      "company": "PT Nusantara Energi",
+      "requirement": "Penyampaian Laporan Kegiatan Penanaman Modal (LKPM) Triwulan III 2026",
+      "legalBasis": "Peraturan BKPM No. 5 Tahun 2021 tentang Pedoman dan Tata Cara Pengawasan Perizinan Berusaha",
+      "responsibleDepartment": "Finance & Accounting",
+      "legalPic": "Anisa Maharani, S.H.",
+      "frequency": "Triwulanan",
+      "deadline": "2026-10-10",
+      "status": "UPCOMING",
+      "evidence": "Bukti Submit Sistem OSS LKPM",
+      "evidenceLink": "",
+      "remarks": "Draft data realisasi investasi dari Finance sedang disiapkan."
+    },
+    {
+      "id": "CMP-2026-0002",
+      "company": "PT Nusantara Energi",
+      "requirement": "Penyelenggaraan Rapat Umum Pemegang Saham Tahunan (RUPST) Buku 2025",
+      "legalBasis": "Pasal 78 UU No. 40 Tahun 2007 tentang Perseroan Terbatas",
+      "responsibleDepartment": "Corporate Secretary & Legal",
+      "legalPic": "Siti Rahmawati, S.H., M.H.",
+      "frequency": "Tahunan",
+      "deadline": "2026-06-30",
+      "status": "COMPLIANT",
+      "evidence": "Risalah RUPST No. 25 & Akta Notaris Pengesahan",
+      "evidenceLink": "https://docs.legal.local/compliance/RUPST_2025_Deed.pdf",
+      "remarks": "Telah diselenggarakan tepat waktu pada 20 Mei 2026."
+    },
+    {
+      "id": "CMP-2026-0003",
+      "company": "PT Nusabara Sinergi Bersama",
+      "requirement": "Pelaporan Wajib Lapor Ketenagakerjaan Perusahaan (WLKP) Online",
+      "legalBasis": "UU No. 7 Tahun 1981 jo. Permenaker No. 18 Tahun 2017",
+      "responsibleDepartment": "Human Resources",
+      "legalPic": "Anisa Maharani, S.H.",
+      "frequency": "Tahunan",
+      "deadline": "2026-08-01",
+      "status": "OVERDUE",
+      "evidence": "Bukti Tanda Terima WLKP Kemnaker",
+      "evidenceLink": "",
+      "remarks": "HR belum submit pemutakhiran data BPJS Ketenagakerjaan. Escalated to HR Head."
+    },
+    {
+      "id": "CMP-2026-0004",
+      "company": "PT Aksa Energi Palapa",
+      "requirement": "Pelaporan Pelaksanaan Rencana Pengelolaan Lingkungan (RKL-RPL) Semester 1 2026",
+      "legalBasis": "Permen LHK No. P.25/MENLHK/SETJEN/KUM.1/7/2018",
+      "responsibleDepartment": "HSE (Health Safety Environment)",
+      "legalPic": "Dimas Prasetyo, S.H.",
+      "frequency": "Semesteran",
+      "deadline": "2026-08-31",
+      "status": "IN PROGRESS",
+      "evidence": "Tanda Terima SIMPEL KLHK",
+      "evidenceLink": "https://docs.legal.local/compliance/Draft_RKL_RPL_Sem1_2026.pdf",
+      "remarks": "Hasil uji lab kualitas air sungai sedang diintegrasikan ke format pelaporan."
+    },
+    {
+      "id": "CMP-2026-0005",
+      "company": "PT Nusantara Energi",
+      "requirement": "Pemutakhiran Data Pemilik Manfaat (Beneficial Ownership) pada Sistem AHU Online",
+      "legalBasis": "Perpres No. 13 Tahun 2018 jo. Permenkumham No. 15 Tahun 2019",
+      "responsibleDepartment": "Legal Department",
+      "legalPic": "Budi Santoso, S.H., LL.M.",
+      "frequency": "Tahunan",
+      "deadline": "2026-09-30",
+      "status": "UPCOMING",
+      "evidence": "Konfirmasi Pelaporan BO Kemenkumham",
+      "evidenceLink": "",
+      "remarks": "Menunggu konfirmasi verifikasi identitas ultimate shareholder."
+    }
+  ],
+  "disputes": [
+    {
+      "id": "CASE-2026-0001",
+      "company": "PT Nusantara Energi",
+      "caseType": "Arbitrase",
+      "opponent": "Global Turbines Consortium GmbH",
+      "courtOrInstitution": "BANI Arbitration Center Jakarta",
+      "caseNumber": "No. 45021/I/ARB-BANI/2026",
+      "claimValue": 42000000000,
+      "currency": "IDR",
+      "lawyer": "Budi Santoso, S.H., LL.M.",
+      "externalCounsel": "Hadiputranto, Hadinoto & Partners (HHP Law Firm)",
+      "pic": "Dimas Prasetyo, S.H.",
+      "status": "ARBITRATION (BANI)",
+      "nextHearing": "2026-08-27",
+      "importantDeadline": "2026-09-10",
+      "outcome": "Sedang dalam proses pembuktian saksi ahli teknis.",
+      "documentLink": "https://docs.legal.local/cases/BANI_45021_Summary.pdf",
+      "remarks": "Sengketa keterlambatan pengiriman turbin gas dan klaim liquidated damages kontraktor.",
+      "timeline": [
+        {
+          "id": "EVT-01",
+          "date": "2026-01-15",
+          "title": "Pendaftaran Permohonan Arbitrase",
+          "agendaOrNotes": "NE mendaftarkan permohonan arbitrase terhadap GTC GmbH atas wanprestasi delivery schedule."
+        },
+        {
+          "id": "EVT-02",
+          "date": "2026-03-20",
+          "title": "Penetapan Majelis Arbitase",
+          "agendaOrNotes": "Pembentukan Majelis Arbitrase beranggotakan 3 arbiter resmi dikukuhkan Ketua BANI."
+        },
+        {
+          "id": "EVT-03",
+          "date": "2026-06-12",
+          "title": "Sidang Jawaban & Eksepsi Termohon",
+          "agendaOrNotes": "Termohon mengajukan eksepsi overmacht terkait kendala rantai pasok global di Pelabuhan Rotterdam."
+        },
+        {
+          "id": "EVT-04",
+          "date": "2026-08-27",
+          "title": "Sidang Pemeriksaan Ahli Metalurgi & Engineer",
+          "agendaOrNotes": "Pemeriksaan saksi ahli independen dari Institut Teknologi Bandung (ITB)."
+        }
+      ]
+    },
+    {
+      "id": "CASE-2026-0002",
+      "company": "PT Nusabara Sinergi Bersama",
+      "caseType": "Perdata",
+      "opponent": "PT Mineral Prima Abadi",
+      "courtOrInstitution": "Pengadilan Negeri Jakarta Selatan",
+      "caseNumber": "Reg. Perkara No. 312/Pdt.G/2026/PN.Jkt.Sel",
+      "claimValue": 18500000000,
+      "currency": "IDR",
+      "lawyer": "Siti Rahmawati, S.H., M.H.",
+      "externalCounsel": "Assegaf Hamzah & Partners (AHP)",
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "status": "FIRST INSTANCE (PN/PTUN)",
+      "nextHearing": "2026-09-03",
+      "importantDeadline": "2026-08-28",
+      "outcome": "Tahap Replik Penggugat.",
+      "documentLink": "https://docs.legal.local/cases/Gugatan_PN_Jaksel_312.pdf",
+      "remarks": "Gugatan perbuatan melawan hukum (PMH) atas pembatalan sepihak kontrak offtake batubara.",
+      "timeline": [
+        {
+          "id": "EVT-05",
+          "date": "2026-05-14",
+          "title": "Pemberian Kuasa Khusus",
+          "agendaOrNotes": "Penandatanganan Surat Kuasa Khusus kepada AHP Law Firm."
+        },
+        {
+          "id": "EVT-06",
+          "date": "2026-06-04",
+          "title": "Sidang Mediasi Pengadilan",
+          "agendaOrNotes": "Mediasi dinyatakan gagal (Deadlock) karena Tergugat menolak membayar kompensasi kerugian riil."
+        },
+        {
+          "id": "EVT-07",
+          "date": "2026-07-22",
+          "title": "Pembacaan Jawaban Tergugat",
+          "agendaOrNotes": "Tergugat menyangkal adanya pembatalan sepihak dan mendalilkan fluktuasi harga acuan ESDM."
+        }
+      ]
+    },
+    {
+      "id": "CASE-2026-0003",
+      "company": "PT Aksa Energi Palapa",
+      "caseType": "Hubungan Industrial (PHI)",
+      "opponent": "Sdr. Robert Simanjuntak (Eks Project Manager)",
+      "courtOrInstitution": "Pengadilan Hubungan Industrial pada PN Bandung",
+      "caseNumber": "No. 88/Pdt.Sus-PHI/2026/PN.Bdg",
+      "claimValue": 450000000,
+      "currency": "IDR",
+      "lawyer": "Dimas Prasetyo, S.H.",
+      "externalCounsel": "In-house Legal Representation",
+      "pic": "Dimas Prasetyo, S.H.",
+      "status": "MEDIATION",
+      "nextHearing": "2026-08-26",
+      "importantDeadline": "2026-08-24",
+      "outcome": "Penawaran perdamaian uang pisah dan pesangon sesuai PP 35/2021.",
+      "documentLink": "https://docs.legal.local/cases/PHI_Robert_Palapa.pdf",
+      "remarks": "Perselisihan pemutusan hubungan kerja karena pelanggaran berat SOP keselamatan bendungan.",
+      "timeline": [
+        {
+          "id": "EVT-08",
+          "date": "2026-04-10",
+          "title": "Bipartit I & II Gagal",
+          "agendaOrNotes": "Pekerja menuntut pesangon 2x PMTK lama tanpa memperhitungkan SP3 yang sah."
+        },
+        {
+          "id": "EVT-09",
+          "date": "2026-06-18",
+          "title": "Risalah Anjuran Disnaker Kota Bandung",
+          "agendaOrNotes": "Mediator menganjurkan pembayaran kompensasi sesuai ketentuan Pasal 52 PP No. 35/2021."
+        }
+      ]
+    }
+  ],
+  "ldd": [
+    {
+      "id": "LDD-2026-0001",
+      "project": "Project Helios - Akuisisi 70% Saham PT Surya Mandiri Kencana",
+      "targetCompany": "PT Surya Mandiri Kencana (Developer PLTS 30 MW Minahasa)",
+      "client": "PT Nusantara Energi (Investment Committee)",
+      "transactionType": "Akuisisi Saham",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "deadline": "2026-09-30",
+      "status": "REVIEW_IN_PROGRESS",
+      "progress": 68,
+      "checklistStatus": {
+        "Corporate": "COMPLIANT",
+        "Licensing": "FLAGGED",
+        "Contracts": "IN_PROGRESS",
+        "Assets": "COMPLIANT",
+        "Land": "FLAGGED",
+        "Employment": "COMPLIANT",
+        "Tax": "IN_PROGRESS",
+        "Litigation": "COMPLIANT",
+        "IP": "COMPLIANT",
+        "Finance": "IN_PROGRESS",
+        "Compliance": "FLAGGED",
+        "Environment": "COMPLIANT",
+        "Other": "NOT_STARTED"
+      },
+      "findings": [
+        {
+          "id": "FND-001",
+          "category": "Land & Agrarian",
+          "issue": "Sebagian area tapak solar panel seluas 4,2 Ha masih berstatus Sertifikat Hak Milik (SHM) perorangan dan belum dilepaskan ke Hak Guna Bangunan (HGB) atas nama perseroan.",
+          "legalBasis": "Pasal 21 UU No. 5 Tahun 1960 tentang Pokok-Pokok Agraria (UUPA)",
+          "riskLevel": "HIGH",
+          "recommendation": "Wajib dijadikan Condition Precedent (CP) dalam Perjanjian Jual Beli Saham Bersyarat (CSPA) agar penjual menuntaskan pelepasan hak ke HGB sebelum Closing.",
+          "responsibleParty": "Seller & Notaris PPAT Minahasa",
+          "status": "OPEN",
+          "dueDate": "2026-09-15"
+        },
+        {
+          "id": "FND-002",
+          "category": "Licensing",
+          "issue": "Persetujuan Teknis (Pertek) Emisi dan Pemenuhan Baku Mutu Air Limbah belum termutakhirkan pasca penambahan kapasitas trafo 30 MVA.",
+          "legalBasis": "PP No. 22 Tahun 2021 tentang Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup",
+          "riskLevel": "MEDIUM",
+          "recommendation": "Target company harus menyerahkan permohonan addendum pertek ke Dinas LHK Provinsi Sulut sebelum signing definitive agreement.",
+          "responsibleParty": "Target Company HSE Team",
+          "status": "IN PROGRESS",
+          "dueDate": "2026-09-20"
+        },
+        {
+          "id": "FND-003",
+          "category": "Corporate",
+          "issue": "Terdapat pinjaman dari pemegang saham minoritas (Shareholder Loan) sebesar IDR 8.5 Miliar tanpa perjanjian tertulis bertanggal pasti.",
+          "legalBasis": "Pasal 1320 jo. 1338 KUHPerdata & UU PT",
+          "riskLevel": "MEDIUM",
+          "recommendation": "Konversi shareholder loan menjadi modal disetor atau buat Akta Pengakuan Hutang subordinasi terpisah.",
+          "responsibleParty": "Legal Counsel Nusantara Energi",
+          "status": "OPEN",
+          "dueDate": "2026-09-25"
+        }
+      ],
+      "remarks": "Pemeriksaan fisik aset lapangan (site visit) telah selesai dilaksanakan pada 5-8 Agustus 2026."
+    },
+    {
+      "id": "LDD-2026-0002",
+      "project": "Project Vulcan - Joint Venture Geothermal Patuha 2x55 MW",
+      "targetCompany": "PT Patuha Geothermal Power",
+      "client": "PT Nusabara Sinergi Bersama & PT Nusantara Energi",
+      "transactionType": "Joint Venture",
+      "pic": "Dimas Prasetyo, S.H.",
+      "deadline": "2026-10-15",
+      "status": "INFORMATION_GATHERING",
+      "progress": 35,
+      "checklistStatus": {
+        "Corporate": "IN_PROGRESS",
+        "Licensing": "IN_PROGRESS",
+        "Contracts": "FLAGGED",
+        "Assets": "NOT_STARTED",
+        "Land": "IN_PROGRESS",
+        "Employment": "NOT_STARTED",
+        "Tax": "NOT_STARTED",
+        "Litigation": "COMPLIANT",
+        "IP": "COMPLIANT",
+        "Finance": "NOT_STARTED",
+        "Compliance": "IN_PROGRESS",
+        "Environment": "FLAGGED",
+        "Other": "NOT_STARTED"
+      },
+      "findings": [
+        {
+          "id": "FND-004",
+          "category": "Contracts & PPA",
+          "issue": "PPA eksisting dengan PLN memuat klausul Change of Control yang mewajibkan written consent tertulis dari Direksi PLN sebelum pengalihan saham >20%.",
+          "legalBasis": "Klausul 18.2 Master PPA PLN - Patuha No. 044/PPA/2019",
+          "riskLevel": "CRITICAL",
+          "recommendation": "Memasukkan syarat persetujuan tertulis PLN sebagai syarat tangguh mutlak sebelum transaksi JV dieksekusi.",
+          "responsibleParty": "Joint Steering Committee",
+          "status": "OPEN",
+          "dueDate": "2026-10-01"
+        }
+      ],
+      "remarks": "Virtual Data Room (VDR) baru dibuka 40% dari total checklist request."
+    }
+  ],
+  "opinions": [
+    {
+      "id": "LO-2026-0001",
+      "requestDate": "2026-08-01",
+      "requestor": "Fajar Nugroho (VP Finance)",
+      "department": "Finance & Treasury",
+      "company": "PT Aksa Energi Palapa",
+      "issue": "Pembebanan Jaminan Kebendaan atas Aset Pembangkit Listrik (PLTA Minihidro)",
+      "question": "Apakah Direksi berwenang membebankan Hak Tanggungan atas tanah HGB dan Fidusia atas mesin turbin pembangkit tanpa persetujuan RUPSLB?",
+      "legalBasis": "Pasal 102 ayat (1) huruf a UU No. 40 Tahun 2007 tentang Perseroan Terbatas; Anggaran Dasar Perseroan Pasal 12.",
+      "analysis": "Berdasarkan Pasal 102 ayat (1) UU PT, Direksi wajib meminta persetujuan RUPS untuk mengalihkan atau menjadikan jaminan utang seluruh atau lebih dari 50% jumlah kekayaan bersih perseroan dalam 1 transaksi atau beberapa transaksi yang berkaitan. Mengingat aset PLTA Minihidro merupakan lebih dari 75% aset bersih PT Aksa Energi Palapa, maka tindakan penjaminan ini secara imperatif memerlukan persetujuan RUPSLB dengan kuorum kehadiran minimal 3/4 bagian dari jumlah seluruh saham dengan hak suara.",
+      "conclusion": "Direksi TIDAK BERWENANG membebankan jaminan kebendaan tersebut semata-mata atas diskresi internal Direksi. Tindakan tersebut wajib mendapat persetujuan RUPSLB atau Keputusan Sirkuler Pemegang Saham terlebih dahulu.",
+      "recommendation": "1. Segera buat Risalah Keputusan Sirkuler Pengganti RUPSLB yang ditandatangani 100% pemegang saham.\n2. Sertakan klausul persetujuan penjaminan secara spesifik menyebutkan nilai plafon kredit perbankan yang dijamin.",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "reviewer": "Budi Santoso, S.H., LL.M.",
+      "approval": "APPROVED",
+      "status": "FINALIZED",
+      "documentLink": "https://docs.legal.local/opinions/LO-2026-0001-Jaminan-Aset.pdf",
+      "updatedAt": "2026-08-14"
+    },
+    {
+      "id": "LO-2026-0002",
+      "requestDate": "2026-07-15",
+      "requestor": "Hendra Gunawan (VP Project Dev)",
+      "department": "Project Development",
+      "company": "PT Nusantara Energi",
+      "issue": "Pemanfaatan Waduk & Badan Air Cirata untuk Pemasangan Floating Solar PV",
+      "question": "Bagaimana status kepemilikan dan skema perizinan penggunaan badan air waduk milik BUMN Pengelola Sumber Daya Air untuk proyek PLTS Terapung?",
+      "legalBasis": "UU No. 17 Tahun 2019 tentang Sumber Daya Air; Permen PUPR No. 06/PRT/M/2020 tentang Pemanfaatan Waduk untuk PLTS Terapung.",
+      "analysis": "Badan air waduk merupakan kekayaan negara yang dikuasai oleh negara dan dikelola oleh BUMN Pengelola Sumber Daya Air (PJT II). Pemanfaatan ruang permukaan air waduk untuk PLTS terapung diizinkan maksimal 20% dari luas permukaan waduk pada muka air normal, dan wajib memiliki Izin Penggunaan Sumber Daya Air (IPSDA) dari Menteri PUPR serta Perjanjian Sewa Pemanfaatan Ruang Waduk dengan BUMN Pengelola.",
+      "conclusion": "Pemanfaatan badan air adalah sah secara hukum sepanjang tidak melebihi threshold 20% luasan waduk dan telah mengantongi IPSDA dari Kementerian PUPR.",
+      "recommendation": "1. Finalisasi Perjanjian Kerjasama Pemanfaatan Waduk dengan PJT II.\n2. Ajukan permohonan rekomendasi teknis BBWS Citarum sebagai syarat penerbitan IPSDA definitif.",
+      "pic": "Dimas Prasetyo, S.H.",
+      "reviewer": "Siti Rahmawati, S.H., M.H.",
+      "approval": "APPROVED",
+      "status": "FINALIZED",
+      "documentLink": "https://docs.legal.local/opinions/LO-2026-0002-Floating-PV.pdf",
+      "updatedAt": "2026-07-28"
+    },
+    {
+      "id": "LO-2026-0003",
+      "requestDate": "2026-08-08",
+      "requestor": "Lukman Hakim (Head of IT)",
+      "department": "IT & Digital Infrastructure",
+      "company": "PT Nusantara Energi",
+      "issue": "Keabsahan Tanda Tangan Elektronik Tersertifikasi pada Kontrak Pengadaan Vendor",
+      "question": "Apakah tanda tangan elektronik melalui PrivyID atau VIDA memiliki kekuatan pembuktian yang sempurna setara tanda tangan basah di hadapan Pengadilan RI?",
+      "legalBasis": "UU No. 11 Tahun 2008 jo. UU No. 1 Tahun 2024 tentang ITE; PP No. 71 Tahun 2019 tentang PSTE.",
+      "analysis": "Pasal 11 UU ITE dan PP 71/2019 membedakan tanda tangan elektronik tidak tersertifikasi dengan TTE Tersertifikasi yang diterbitkan oleh Penyelenggara Sertifikasi Elektronik (PSrE) berinduk ke Kominfo. TTE tersertifikasi memiliki kekuatan hukum dan akibat hukum yang sah serta kekuatan pembuktian yang sempurna sebagaimana akta otentik atau akta di bawah tangan yang diakui.",
+      "conclusion": "Penggunaan TTE dari PSrE Berinduk (seperti PrivyID / VIDA) adalah sah, mengikat, dan diakui penuh oleh hukum acara perdata Indonesia.",
+      "recommendation": "Standardisasi klausul tanda tangan digital dalam seluruh template kontrak internal perseroan dan daftarkan akun korporat ke PSrE resmi.",
+      "pic": "Anisa Maharani, S.H.",
+      "reviewer": "Budi Santoso, S.H., LL.M.",
+      "approval": "APPROVED",
+      "status": "FINALIZED",
+      "documentLink": "https://docs.legal.local/opinions/LO-2026-0003-Digital-Signature.pdf",
+      "updatedAt": "2026-08-16"
+    },
+    {
+      "id": "LO-2026-0004",
+      "requestDate": "2026-08-12",
+      "requestor": "Ratna Kusuma (Business Dev)",
+      "department": "Business Development",
+      "company": "PT Nusabara Sinergi Bersama",
+      "issue": "Batasan Kepemilikan Saham Asing (DNI / Positif Investasi) Sektor Energi Terbarukan",
+      "question": "Apakah investor asing (PMA) dapat memiliki 100% saham pada entitas SPV Pembangkit Listrik Tenaga Surya skala >10 MW?",
+      "legalBasis": "Perpres No. 49 Tahun 2021 jo. Perpres No. 10 Tahun 2021 tentang Bidang Usaha Penanaman Modal; KBLI 35101.",
+      "analysis": "Berdasarkan Daftar Positif Investasi (DPI) Lampiran II Perpres 49/2021, bidang usaha Pembangkitan Tenaga Listrik (KBLI 35101) dengan kapasitas di atas 10 MW terbuka 100% untuk penanaman modal asing tanpa syarat kemitraan wajib dengan UMKM-K.",
+      "conclusion": "Investor asing DAPAT memiliki hingga 100% saham pada SPV PLTS >10 MW secara legal.",
+      "recommendation": "Struktur transaksi joint venture dapat menggunakan skema foreign majority shareholding dengan tetap mempertahankan hak veto pemegang saham lokal pada isu strategic reserve.",
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "reviewer": "Budi Santoso, S.H., LL.M.",
+      "approval": "PENDING_APPROVAL",
+      "status": "REVIEW",
+      "documentLink": "https://docs.legal.local/opinions/LO-2026-0004-DPI-PMA.pdf",
+      "updatedAt": "2026-08-18"
+    },
+    {
+      "id": "LO-2026-0005",
+      "requestDate": "2026-08-16",
+      "requestor": "Bayu Wibowo (HR Head)",
+      "department": "Human Resources",
+      "company": "PT Nusantara Energi",
+      "issue": "Kewajiban Pembayaran Uang Kompensasi PKWT pada Pekerja Asing (Expatriate TKA)",
+      "question": "Apakah Tenaga Kerja Asing pemegang RPTKA dan KITAS berhak menerima uang kompensasi pengakhiran masa kontrak PKWT?",
+      "legalBasis": "Pasal 61A UU No. 13/2003 jo. UU No. 6/2023 Cipta Kerja; Pasal 15 ayat (5) PP No. 35 Tahun 2021.",
+      "analysis": "Pasal 15 ayat (5) PP No. 35 Tahun 2021 secara tegas mengecualikan Tenaga Kerja Asing (TKA) dari hak atas uang kompensasi pengakhiran PKWT. Ketentuan uang kompensasi hanya berlaku mutlak bagi pekerja berkewarganegaraan Indonesia (WNI).",
+      "conclusion": "Perusahaan TIDAK MEMILIKI kewajiban hukum untuk membayar uang kompensasi PKWT kepada ekspatriat/TKA pada saat masa kerja berakhir.",
+      "recommendation": "Hapus klausul pembayaran kompensasi PP 35/2021 dari template employment contract untuk seluruh expat.",
+      "pic": "Anisa Maharani, S.H.",
+      "reviewer": "Siti Rahmawati, S.H., M.H.",
+      "approval": "DRAFT",
+      "status": "IN PROGRESS",
+      "documentLink": "",
+      "updatedAt": "2026-08-19"
+    }
+  ],
+  "documents": [
+    {
+      "id": "DOC-2026-0001",
+      "documentName": "Akta Notaris Pendirian PT Nusantara Energi No. 45",
+      "documentType": "CORPORATE",
+      "company": "PT Nusantara Energi",
+      "project": "Corporate Secretarial",
+      "date": "2015-03-12",
+      "owner": "Corporate Secretary",
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "confidentialityLevel": "CONFIDENTIAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/corporate/Akta_Pendirian_NE_45.pdf",
+      "fileSize": "4.8 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0002",
+      "documentName": "SK Menkumham Pengesahan Akta Pendirian AHU-0012984",
+      "documentType": "CORPORATE",
+      "company": "PT Nusantara Energi",
+      "project": "Corporate Secretarial",
+      "date": "2015-03-28",
+      "owner": "Legal Department",
+      "pic": "Anisa Maharani, S.H.",
+      "confidentialityLevel": "CONFIDENTIAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/corporate/SK_AHU_NE_2015.pdf",
+      "fileSize": "1.2 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0003",
+      "documentName": "Power Purchase Agreement (PPA) Cirata 50 MW Final Signed",
+      "documentType": "CONTRACT",
+      "company": "PT Nusantara Energi",
+      "project": "PLTS Cirata",
+      "date": "2021-10-01",
+      "expiryDate": "2046-10-01",
+      "owner": "Project Development",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "confidentialityLevel": "STRICTLY_CONFIDENTIAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/contracts/PPA_Cirata_Final.pdf",
+      "fileSize": "18.4 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0004",
+      "documentName": "Nomor Induk Berusaha (NIB) OSS-RBA Berbasis Risiko",
+      "documentType": "LICENSE",
+      "company": "PT Nusantara Energi",
+      "project": "General Corporate",
+      "date": "2021-08-20",
+      "owner": "Legal Department",
+      "pic": "Anisa Maharani, S.H.",
+      "confidentialityLevel": "INTERNAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/licenses/NIB_OSS_RBA_NE.pdf",
+      "fileSize": "850 KB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0005",
+      "documentName": "Persetujuan Lingkungan AMDAL PLTS Cirata Terpadu",
+      "documentType": "LICENSE",
+      "company": "PT Nusantara Energi",
+      "project": "PLTS Cirata",
+      "date": "2021-04-18",
+      "owner": "HSE Department",
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "confidentialityLevel": "INTERNAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/licenses/AMDAL_Cirata_SK660.pdf",
+      "fileSize": "9.2 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0006",
+      "documentName": "Legal Due Diligence Report Project Helios (Draft v2)",
+      "documentType": "LDD",
+      "company": "PT Nusantara Energi",
+      "project": "Project Helios",
+      "date": "2026-08-10",
+      "owner": "Legal Department",
+      "pic": "Dimas Prasetyo, S.H.",
+      "confidentialityLevel": "STRICTLY_CONFIDENTIAL",
+      "status": "DRAFT",
+      "documentLink": "https://docs.legal.local/ldd/LDD_Helios_Report_v2.pdf",
+      "fileSize": "12.6 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0007",
+      "documentName": "Legal Opinion Penjaminan Aset Kebendaan PLTA Palapa",
+      "documentType": "LEGAL OPINION",
+      "company": "PT Aksa Energi Palapa",
+      "project": "Refinancing Sindikasi",
+      "date": "2026-08-14",
+      "owner": "Finance Department",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "confidentialityLevel": "CONFIDENTIAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/opinions/LO-2026-0001-Aset.pdf",
+      "fileSize": "1.5 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0008",
+      "documentName": "Surat Permohonan Arbitrase BANI vs GTC GmbH",
+      "documentType": "DISPUTE",
+      "company": "PT Nusantara Energi",
+      "project": "Dispute Settlement",
+      "date": "2026-01-15",
+      "owner": "Legal Department",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "confidentialityLevel": "STRICTLY_CONFIDENTIAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/disputes/BANI_Request_45021.pdf",
+      "fileSize": "6.4 MB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0009",
+      "documentName": "Somasi Pertama Keterlambatan Pasokan Batubara PT Mineral Sejahtera",
+      "documentType": "CORRESPONDENCE",
+      "company": "PT Nusabara Sinergi Bersama",
+      "project": "Suplai Batubara",
+      "date": "2026-08-19",
+      "owner": "Commercial Division",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "confidentialityLevel": "CONFIDENTIAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/correspondence/Somasi_I_Batubara.pdf",
+      "fileSize": "620 KB",
+      "fileFormat": "PDF"
+    },
+    {
+      "id": "DOC-2026-0010",
+      "documentName": "Standard Operating Procedure (SOP) Manajemen Kontrak & Legal Review",
+      "documentType": "OTHER",
+      "company": "PT Nusantara Energi",
+      "project": "Compliance & Governance",
+      "date": "2025-01-10",
+      "owner": "Legal Department",
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "confidentialityLevel": "INTERNAL",
+      "status": "ACTIVE",
+      "documentLink": "https://docs.legal.local/policies/SOP_Legal_Review_2025.pdf",
+      "fileSize": "3.1 MB",
+      "fileFormat": "PDF"
+    }
+  ],
+  "correspondence": [
+    {
+      "id": "COR-2026-0001",
+      "date": "2026-08-19",
+      "type": "Somasi",
+      "sender": "PT Nusabara Sinergi Bersama (Legal Dept)",
+      "recipient": "Direksi PT Mineral Sejahtera, Menara Kadin Lt. 12 Jakarta",
+      "subject": "Surat Peringatan & Somasi I atas Wanprestasi Pengiriman 50.000 MT Batubara Kontrak No. SPB-2025-09",
+      "pic": "Budi Santoso, S.H., LL.M.",
+      "deadline": "2026-08-26",
+      "status": "SENT",
+      "documentLink": "https://docs.legal.local/letters/Somasi_I_Mineral_Sejahtera.pdf",
+      "remarks": "Memberikan batas waktu pemenuhan kewajiban 7 hari kalender sebelum langkah hukum ganti rugi."
+    },
+    {
+      "id": "COR-2026-0002",
+      "date": "2026-08-15",
+      "type": "Incoming Letter",
+      "sender": "Kementerian Investasi / BKPM (Direktorat Wilayah III)",
+      "recipient": "Direksi PT Nusantara Energi",
+      "subject": "Surat Permintaan Klarifikasi Realisasi Investasi LKPM Q2 2026 Proyek Cirata",
+      "pic": "Anisa Maharani, S.H.",
+      "deadline": "2026-08-29",
+      "status": "IN_REVIEW",
+      "documentLink": "https://docs.legal.local/letters/Surat_BKPM_Klarifikasi_LKPM.pdf",
+      "remarks": "Telah dikoordinasikan dengan tim Keuangan & Akuntansi untuk draft jawaban data capex."
+    },
+    {
+      "id": "COR-2026-0003",
+      "date": "2026-08-12",
+      "type": "Response Letter",
+      "sender": "PT Aksa Energi Palapa",
+      "recipient": "Dinas Lingkungan Hidup Kabupaten Bandung Barat",
+      "subject": "Tanggapan atas Hasil Inspeksi Lapangan Uji Emisi & Kualitas Air Saluran Pembuang",
+      "pic": "Dimas Prasetyo, S.H.",
+      "status": "SENT",
+      "documentLink": "https://docs.legal.local/letters/Tanggapan_DLH_Palapa.pdf",
+      "remarks": "Melampirkan sertifikat kalibrasi sensor pH dan DO otomatis dari laboratorium terakreditasi KAN."
+    },
+    {
+      "id": "COR-2026-0004",
+      "date": "2026-07-28",
+      "type": "Legal Notice",
+      "sender": "Kantor Hukum Hotman & Rekan (Kuasa Hukum Vendor IT)",
+      "recipient": "Direktur Utama PT Nusantara Energi",
+      "subject": "Pemberitahuan Klaim Penyesuaian Harga Lisensi Software akibat Inflasi Valas",
+      "pic": "Siti Rahmawati, S.H., M.H.",
+      "deadline": "2026-08-15",
+      "status": "REPLIED",
+      "documentLink": "https://docs.legal.local/letters/Notice_Vendor_IT.pdf",
+      "remarks": "Telah dibalas resmi: perseroan menolak kenaikan harga karena kontrak bersifat fixed-price rupiah."
+    },
+    {
+      "id": "COR-2026-0005",
+      "date": "2026-08-05",
+      "type": "Outgoing Letter",
+      "sender": "PT Nusantara Energi",
+      "recipient": "Direktur Jenderal Ketenagalistrikan Kementerian ESDM",
+      "subject": "Permohonan Rekomendasi Teknis Peningkatan Kapasitas Interkoneksi PLTS Cirata Tahap 2",
+      "pic": "Dimas Prasetyo, S.H.",
+      "status": "SENT",
+      "documentLink": "https://docs.legal.local/letters/Surat_DJK_ESDM_Interkoneksi.pdf",
+      "remarks": "Tembusan disampaikan ke Direktur Bisnis Regional PLN."
+    },
+    {
+      "id": "COR-2026-0006",
+      "date": "2026-08-18",
+      "type": "Warning Letter",
+      "sender": "PT Nusantara Energi (Legal & HR Dept)",
+      "recipient": "Sub-kontraktor Sipil PT Pondasi Prima",
+      "subject": "Surat Teguran Keras terkait Pelanggaran Standar K3 di Area Gardu Induk Tegangan Tinggi",
+      "pic": "Dimas Prasetyo, S.H.",
+      "deadline": "2026-08-25",
+      "status": "SENT",
+      "documentLink": "https://docs.legal.local/letters/Surat_Teguran_K3_PondasiPrima.pdf",
+      "remarks": "Menginstruksikan penghentian sementara pekerjaan berisiko tinggi (stop-work order) sampai audit APD tuntas."
+    }
+  ],
+  "knowledge": [
+    {
+      "id": "KB-2026-0001",
+      "title": "UU No. 40 Tahun 2007 tentang Perseroan Terbatas jo. UU No. 6 Tahun 2023 (Cipta Kerja)",
+      "category": "Laws",
+      "legalTopic": "Corporate Law & Governance",
+      "regulationNumber": "Undang-Undang No. 40 Tahun 2007",
+      "date": "2007-08-16",
+      "summary": "Ketentuan dasar pendirian perseroan, organ perseroan (Direksi, Dewan Komisaris, RUPS), pertanggungjawaban fidusia, kuorum keputusan strategis, dan tata cara merger/akuisisi di Indonesia.",
+      "source": "JDIH Kementerian Sekretariat Negara",
+      "link": "https://peraturan.go.id/id/uu-no-40-tahun-2007",
+      "relatedMatter": "Corporate deeds, RUPS kuorum, penjaminan aset Pasal 102.",
+      "tags": [
+        "UUPT",
+        "Corporate",
+        "Direksi",
+        "RUPS",
+        "Fidusia"
+      ]
+    },
+    {
+      "id": "KB-2026-0002",
+      "title": "UU No. 1 Tahun 2024 tentang Perubahan Kedua atas UU No. 11/2008 tentang Informasi dan Transaksi Elektronik",
+      "category": "Laws",
+      "legalTopic": "Digital Law & Cybersecurity",
+      "regulationNumber": "Undang-Undang No. 1 Tahun 2024",
+      "date": "2024-01-02",
+      "summary": "Pengaturan mengenai kekuatan hukum alat bukti elektronik, tanda tangan elektronik tersertifikasi, tanggung jawab PSE, dan perlindungan privasi data digital.",
+      "source": "JDIH Kominfo",
+      "link": "https://jdih.kominfo.go.id/produk_hukum/view/id/861/t/undangundang+nomor+1+tahun+2024",
+      "relatedMatter": "Validitas penandatanganan kontrak digital Privy/DocuSign.",
+      "tags": [
+        "UU ITE",
+        "Tanda Tangan Elektronik",
+        "Kontrak Digital",
+        "Cyber"
+      ]
+    },
+    {
+      "id": "KB-2026-0003",
+      "title": "Peraturan Pemerintah No. 5 Tahun 2021 tentang Penyelenggaraan Perizinan Berusaha Berbasis Risiko",
+      "category": "Government Regulations",
+      "legalTopic": "Licensing & OSS-RBA",
+      "regulationNumber": "Peraturan Pemerintah No. 5 Tahun 2021",
+      "date": "2021-02-02",
+      "summary": "Klasifikasi tingkat risiko usaha (Rendah, Menengah Rendah, Menengah Tinggi, Tinggi), penerbitan NIB, Sertifikat Standar, dan Izin operasional melalui sistem OSS terintegrasi.",
+      "source": "JDIH Kementerian Investasi / BKPM",
+      "link": "https://oss.go.id/panduan/peraturan",
+      "relatedMatter": "Pemenuhan izin operasional IUPTLU, SLO, dan SBU.",
+      "tags": [
+        "PP 5/2021",
+        "OSS RBA",
+        "NIB",
+        "KBLI",
+        "Perizinan Berusaha"
+      ]
+    },
+    {
+      "id": "KB-2026-0004",
+      "title": "Peraturan Pemerintah No. 35 Tahun 2021 tentang PKWT, Alih Daya, Waktu Kerja dan Pemutusan Hubungan Kerja",
+      "category": "Government Regulations",
+      "legalTopic": "Employment & Labor Law",
+      "regulationNumber": "Peraturan Pemerintah No. 35 Tahun 2021",
+      "date": "2021-02-02",
+      "summary": "Pedoman perhitungan uang kompensasi PKWT, durasi maksimal kontrak waktu tertentu hingga 5 tahun, uang pesangon, uang penghargaan masa kerja, dan uang penggantian hak PHK.",
+      "source": "JDIH Kemnaker",
+      "link": "https://jdih.kemnaker.go.id/katalog-peraturan/peraturan-pemerintah/pp-no-35-tahun-2021",
+      "relatedMatter": "Drafting PKWT, perjanjian kerja bersama, kompensasi akhir masa kerja.",
+      "tags": [
+        "PP 35/2021",
+        "Ketenagakerjaan",
+        "PKWT",
+        "Pesangon",
+        "Kompensasi"
+      ]
+    },
+    {
+      "id": "KB-2026-0005",
+      "title": "Peraturan Menteri ESDM No. 11 Tahun 2021 tentang Pelaksanaan Usaha Ketenagalistrikan",
+      "category": "Ministerial Regulations",
+      "legalTopic": "Energy & Power Infrastructure",
+      "regulationNumber": "Permen ESDM No. 11 Tahun 2021",
+      "date": "2021-06-15",
+      "summary": "Ketentuan teknis perizinan usaha penyediaan tenaga listrik, tata cara persetujuan harga jual tenaga listrik PPA, dan kewajiban tingkat komponen dalam negeri (TKDN).",
+      "source": "JDIH Kementerian ESDM",
+      "link": "https://jdih.esdm.go.id",
+      "relatedMatter": "PPA PLN, izin genset, IUPTLU operasional pembangkit.",
+      "tags": [
+        "ESDM",
+        "Ketenagalistrikan",
+        "IUPTLU",
+        "TKDN",
+        "PPA"
+      ]
+    },
+    {
+      "id": "KB-2026-0006",
+      "title": "Putusan Mahkamah Agung No. 1234 K/Pdt/2023: Wanprestasi vs Overmacht (Force Majeure)",
+      "category": "Court Decisions",
+      "legalTopic": "Contractual Disputes & Litigation",
+      "regulationNumber": "Putusan MA RI No. 1234 K/Pdt/2023",
+      "date": "2023-11-20",
+      "summary": "Kaidah hukum bahwa klaim keadaan memaksa (force majeure) karena pandemi atau krisis rantai pasok global tidak serta-merta menghapus kewajiban pembayaran pokok apabila objek kontrak tetap dapat dipenuhi dengan penyesuaian wajar.",
+      "source": "Direktori Putusan Mahkamah Agung RI",
+      "link": "https://putusan3.mahkamahagung.go.id",
+      "relatedMatter": "Kasus Arbitrase BANI GTC GmbH & Kasus Wanprestasi Batubara.",
+      "tags": [
+        "Putusan MA",
+        "Wanprestasi",
+        "Force Majeure",
+        "Overmacht",
+        "Jurisprudensi"
+      ]
+    },
+    {
+      "id": "KB-2026-0007",
+      "title": "Peraturan Presiden No. 49 Tahun 2021 tentang Perubahan atas Perpres 10/2021 Bidang Usaha Penanaman Modal",
+      "category": "Regulatory Updates",
+      "legalTopic": "Foreign Investment & DNI",
+      "regulationNumber": "Perpres No. 49 Tahun 2021",
+      "date": "2021-05-24",
+      "summary": "Pembaruan daftar positif investasi, alokasi penanaman modal dalam negeri, kemitraan UMKM, dan kepemilikan modal asing 100% pada proyek energi terbarukan.",
+      "source": "Sekretariat Kabinet RI",
+      "link": "https://setkab.go.id",
+      "relatedMatter": "Legal Opinion PMA Solar & Joint Venture Project Vulcan.",
+      "tags": [
+        "Daftar Positif Investasi",
+        "PMA",
+        "BKPM",
+        "Foreign Ownership"
+      ]
+    },
+    {
+      "id": "KB-2026-0008",
+      "title": "Pedoman Standar Klausul Arbitrase BANI (Standard BANI Arbitration Clause 2026)",
+      "category": "Internal Policies",
+      "legalTopic": "Dispute Resolution Drafting",
+      "regulationNumber": "BANI Rules of Arbitration 2024 Edition",
+      "date": "2024-01-01",
+      "summary": "Rumusan baku klausul penyelesaian sengketa arbitrase institusional di Badan Arbitrase Nasional Indonesia untuk memitigasi risiko sengketa forum ganda di Pengadilan Negeri.",
+      "source": "Badan Arbitrase Nasional Indonesia (BANI)",
+      "link": "https://baniarbitration.org",
+      "relatedMatter": "Standard EPC, Joint Venture, dan Service Contract.",
+      "tags": [
+        "BANI",
+        "Arbitrase",
+        "Dispute Resolution Clause",
+        "Jurisdiksi"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "TMPL-001",
+      "title": "Non-Disclosure Agreement (Bilingual ID/EN)",
+      "category": "Confidentiality & NDA",
+      "description": "Template baku perjanjian kerahasiaan dua arah (mutual NDA) standar korporat dengan klausul ganti rugi likuidasi dan perlindungan rahasia dagang.",
+      "language": "Bilingual (ID/EN)",
+      "tags": [
+        "NDA",
+        "Kerahasiaan",
+        "Mutual",
+        "Bilingual",
+        "M&A"
+      ],
+      "clausesIncluded": [
+        "Definisi Informasi Rahasia",
+        "Pengecualian",
+        "Kewajiban Pengamanan",
+        "Jangka Waktu 3-5 Tahun",
+        "Ganti Rugi",
+        "Hukum Indonesia"
+      ],
+      "contentSample": "MUTUAL NON-DISCLOSURE AGREEMENT\nPERJANJIAN KERAHASIAAN BERSAMA\n\nThis Mutual Non-Disclosure Agreement (\"Agreement\") is made and entered into on this [DATE] by and between:\nPerjanjian Kerahasiaan Bersama ini (\"Perjanjian\") dibuat dan disepakati pada tanggal [TANGGAL] oleh dan antara:\n\n1. [NAMA PERUSAHAAN PIHAK PERTAMA], a corporation established under the laws of Indonesia...\n2. [NAMA PERUSAHAAN PIHAK KEDUA], a corporation established under the laws of [NEGARA]...\n\nARTICLE 1: CONFIDENTIAL INFORMATION\nPASAL 1: INFORMASI RAHASIA\nFor the purposes of this Agreement, \"Confidential Information\" shall mean all technical, financial, operational...\nUntuk tujuan Perjanjian ini, \"Informasi Rahasia\" berarti segala informasi teknis, keuangan, operasional..."
+    },
+    {
+      "id": "TMPL-002",
+      "title": "Memorandum of Understanding (MoU) Kemitraan Strategis",
+      "category": "Preliminary Agreements",
+      "description": "Nota kesepahaman non-binding untuk eksplorasi kerjasama proyek joint development PLTS / Geothermal sebelum definitive agreement.",
+      "language": "Bahasa Indonesia",
+      "tags": [
+        "MoU",
+        "Nota Kesepahaman",
+        "Kemitraan",
+        "Preliminary",
+        "Non-Binding"
+      ],
+      "clausesIncluded": [
+        "Maksud & Tujuan",
+        "Ruang Lingkup Eksplorasi",
+        "Karakter Non-Mengikat",
+        "Eksklusivitas Sementara",
+        "Kerahasiaan",
+        "Biaya Masing-Masing"
+      ],
+      "contentSample": "MEMORANDUM OF UNDERSTANDING (NOTA KESEPAHAMAN)\nKERJASAMA EKSPLORASI PENGEMBANGAN PROYEK PEMBANGKIT LISTRIK ENERGI TERBARUKAN\n\nNOMOR: MoU-NE-[TAHUN]-[NOMOR]\n\nPada hari ini, [Hari], tanggal [Tanggal/Bulan/Tahun], bertempat di Jakarta, kami yang bertanda tangan di bawah ini:\n1. PT NUSANTARA ENERGI... (\"Pihak Pertama\");\n2. [NAMA MITRA]... (\"Pihak Kedua\");\n\nPASAL 1: SIFAT TIDAK MENGIKAT (NON-BINDING NATURE)\nKecuali ketentuan mengenai Kerahasiaan (Pasal 5) dan Hukum yang Berlaku (Pasal 8), Nota Kesepahaman ini mencerminkan niat baik para pihak semata dan tidak menimbulkan kewajiban hukum yang mengikat secara finansial."
+    },
+    {
+      "id": "TMPL-003",
+      "title": "General Service Agreement (Perjanjian Jasa Profesional)",
+      "category": "Commercial Contracts",
+      "description": "Draft kontrak standar pengadaan jasa konsultansi, IT, engineering, atau maintenance dengan SLA dan milestone pembayaran.",
+      "language": "Bahasa Indonesia",
+      "tags": [
+        "Service Agreement",
+        "Perjanjian Jasa",
+        "SLA",
+        "Vendor",
+        "Commercial"
+      ],
+      "clausesIncluded": [
+        "Scope of Works",
+        "Service Level Agreement",
+        "Termin Pembayaran",
+        "Jaminan Kualitas",
+        "Kompensasi Keterlambatan",
+        "Pengakhiran"
+      ],
+      "contentSample": "PERJANJIAN PENYEDIAAN JASA PROFESIONAL KONSULTANSI DAN PEMELIHARAAN\nNOMOR: KTR-JASA-[TAHUN]-[NOMOR]\n\nPASAL 4: JANGKA WAKTU DAN JADWAL PENYELESAIAN\nPenyedia Jasa wajib menyelesaikan seluruh Ruang Lingkup Pekerjaan dalam jangka waktu [X] hari kalender terhitung sejak penerbitan Surat Perintah Kerja (SPK)."
+    },
+    {
+      "id": "TMPL-004",
+      "title": "EPC Contract (FIDIC Silver Book Adapted)",
+      "category": "Engineering & Construction",
+      "description": "Perjanjian turn-key Engineering, Procurement, and Construction (EPC) untuk pembangunan infrastruktur energi dan industri.",
+      "language": "Bilingual (ID/EN)",
+      "tags": [
+        "EPC",
+        "Konstruksi",
+        "FIDIC",
+        "Turn-key",
+        "Power Plant"
+      ],
+      "clausesIncluded": [
+        "Turn-key Responsibility",
+        "Performance Guarantees",
+        "Liquidated Damages",
+        "Defects Liability Period",
+        "Force Majeure",
+        "BANI Arbitration"
+      ],
+      "contentSample": "ENGINEERING, PROCUREMENT, AND CONSTRUCTION (EPC) AGREEMENT\nPERJANJIAN REKAYASA, PENGADAAN, DAN KONSTRUKSI\n\nARTICLE 12: LIQUIDATED DAMAGES FOR DELAY\nPASAL 12: GANTI RUGI LIKUIDASI ATAS KETERLAMBATAN\nIf the Contractor fails to achieve the Commercial Operation Date (COD) within the Time for Completion...\nApabila Kontraktor gagal mencapai Tanggal Operasi Komersial dalam Jangka Waktu Penyelesaian..."
+    },
+    {
+      "id": "TMPL-005",
+      "title": "Surat Perintah Kerja (SPK) Standard Pengadaan Barang & Jasa",
+      "category": "Procurement Orders",
+      "description": "Format ringkas SPK untuk pengadaan pekerjaan dengan nilai < IDR 500 Juta dengan terms & conditions ringkas di halaman belakang.",
+      "language": "Bahasa Indonesia",
+      "tags": [
+        "SPK",
+        "Surat Perintah Kerja",
+        "Procurement",
+        "Fast Track"
+      ],
+      "clausesIncluded": [
+        "Rincian Item & Volume",
+        "Harga Satuan & PPN 11%",
+        "Waktu Pengiriman",
+        "Lokasi Site",
+        "Denda Keterlambatan 1/1000"
+      ],
+      "contentSample": "SURAT PERINTAH KERJA (SPK)\nNomor: SPK/PROC/[TAHUN]/[NOMOR]\n\nKepada: [Nama Vendor/Kontraktor]\nAlamat: [Alamat Lengkap]\nPerihal: Perintah Pelaksanaan Pekerjaan [Nama Proyek]\n\nTotal Nilai Pekerjaan: Rp [Angka] (termasuk PPN 11%)."
+    },
+    {
+      "id": "TMPL-006",
+      "title": "Surat Peringatan / Somasi Wanprestasi (Legal Notice)",
+      "category": "Dispute & Litigation",
+      "description": "Format somasi pertama dan kedua kepada debitur atau vendor yang lalai memenuhi kewajiban kontraktual.",
+      "language": "Bahasa Indonesia",
+      "tags": [
+        "Somasi",
+        "Wanprestasi",
+        "Teguran",
+        "Litigasi",
+        "Notice"
+      ],
+      "clausesIncluded": [
+        "Dasar Perjanjian",
+        "Uraian Kelalaian",
+        "Kerugian yang Timbul",
+        "Batas Waktu Pemenuhan (7 Hari)",
+        "Reservasi Hak Gugat"
+      ],
+      "contentSample": "SURAT PERINGATAN / SOMASI PERTAMA\nNomor: SOM/LEGAL/[BULAN]/[TAHUN]/[NOMOR]\n\nJakarta, [Tanggal]\n\nKepada Yth.,\nDireksi [Nama Perusahaan Lawan]\n[Alamat Lengkap Lawan]\n\nDengan hormat,\nBertindak untuk dan atas nama serta mewakili kepentingan hukum PT NUSANTARA ENERGI...\nDengan ini kami sampaikan SOMASI PERTAMA terkait kelalaian pemenuhan kewajiban..."
+    },
+    {
+      "id": "TMPL-007",
+      "title": "Format Standar Legal Opinion (Pendapat Hukum Internal)",
+      "category": "Legal Opinions",
+      "description": "Struktur baku opini hukum korporat meliputi Duduk Perkara, Rumusan Masalah, Dasar Hukum, Analisis Yuridis, Kesimpulan, dan Saran Tindakan.",
+      "language": "Bahasa Indonesia",
+      "tags": [
+        "Legal Opinion",
+        "Pendapat Hukum",
+        "Format Baku",
+        "Analisis"
+      ],
+      "clausesIncluded": [
+        "Executive Summary",
+        "Factual Background",
+        "Legal Questions",
+        "Applicable Regulations",
+        "Comprehensive Analysis",
+        "Actionable Recommendations"
+      ],
+      "contentSample": "LEGAL OPINION (PENDAPAT HUKUM)\nNO: LO/LEGAL/[TAHUN]/[NOMOR]\n\nKEPADA: [Nama Pemohon / Direksi]\nDARI: Legal Department\nTANGGAL: [Tanggal]\nPERIHAL: [Topik Opini Hukum]\n\nI. DUDUK PERKARA (FACTUAL BACKGROUND)\nII. POKOK PERMASALAHAN (LEGAL ISSUES)\nIII. DASAR HUKUM (APPLICABLE REGULATIONS)\nIV. ANALISIS HUKUM (LEGAL ANALYSIS)\nV. KESIMPULAN (CONCLUSIONS)\nVI. REKOMENDASI HUKUM (LEGAL RECOMMENDATIONS)"
+    }
+  ],
+  "clauses": [
+    {
+      "id": "CLS-001",
+      "title": "Klausul Kerahasiaan (Confidentiality Clause)",
+      "category": "Confidentiality",
+      "standardLanguage": "Para Pihak sepakat untuk menjaga kerahasiaan seluruh informasi teknis, finansial, dan komersial yang diperoleh sehubungan dengan pelaksanaan Perjanjian ini, dan tidak akan mengungkapkan informasi tersebut kepada pihak ketiga mana pun tanpa persetujuan tertulis sebelumnya dari Pihak yang mengungkapkan, kecuali diwajibkan oleh peraturan perundang-undangan yang berlaku atau perintah pengadilan yang sah. Kewajiban kerahasiaan ini tetap berlaku selama jangka waktu 5 (lima) tahun setelah berakhirnya Perjanjian ini.",
+      "riskNotes": "Pastikan terdapat pengecualian untuk pengungkapan kepada penasihat hukum, auditor, dan lembaga pembiayaan perbankan (lenders).",
+      "tags": [
+        "Confidentiality",
+        "Kerahasiaan",
+        "Standard",
+        "Mutual"
+      ]
+    },
+    {
+      "id": "CLS-002",
+      "title": "Klausul Keadaan Memaksa (Force Majeure Clause)",
+      "category": "Force Majeure",
+      "standardLanguage": "Keadaan Memaksa (Force Majeure) adalah peristiwa yang terjadi di luar kendali wajar salah satu Pihak, yang tidak dapat diprediksi dan dihindari dengan kehati-hatian yang patut, meliputi bencana alam (gempa bumi, banjir bandang, letusan gunung berapi), perang, embargo, kerusuhan massal, epidemik/pandemik yang dinyatakan resmi oleh Pemerintah RI, atau perubahan peraturan perundang-undangan yang secara material melarang pelaksanaan kewajiban. Pihak yang terdampak wajib memberitahukan secara tertulis dalam waktu selambat-lambatnya 7 (tujuh) hari kalender sejak terjadinya peristiwa.",
+      "riskNotes": "Tegaskan bahwa fluktuasi kurs mata uang asing, inflasi, mogok kerja internal karyawan sendiri, atau kesulitan likuiditas finansial TIDAK termasuk Force Majeure.",
+      "tags": [
+        "Force Majeure",
+        "Overmacht",
+        "Bencana",
+        "Mitigasi"
+      ]
+    },
+    {
+      "id": "CLS-003",
+      "title": "Klausul Batasan Tanggung Jawab (Limitation of Liability)",
+      "category": "Limitation of Liability",
+      "standardLanguage": "Total tanggung jawab kumulatif masing-masing Pihak yang timbul dari atau sehubungan dengan Perjanjian ini, baik berdasarkan kontrak, perbuatan melawan hukum (termasuk kelalaian), wanprestasi, atau dasar gugatan lainnya, dalam keadaan apa pun tidak akan melebihi 100% (seratus persen) dari total Nilai Kontrak yang secara aktual telah dibayarkan. Dalam keadaan apa pun, tidak ada Pihak yang bertanggung jawab atas kerugian tidak langsung, kerugian konsekuensial, kehilangan keuntungan (loss of profit), atau kehilangan kesempatan usaha.",
+      "riskNotes": "Pengecualian cap liability wajib diberikan untuk: (i) pelanggaran kerahasiaan, (ii) kesengajaan (willful misconduct) atau kelalaian berat (gross negligence), dan (iii) kewajiban ganti rugi hak cipta/IP indemnity.",
+      "tags": [
+        "Liability",
+        "Cap",
+        "Loss of Profit",
+        "Risk Control"
+      ]
+    },
+    {
+      "id": "CLS-004",
+      "title": "Klausul Ganti Rugi Bebas Tuntutan (Indemnity Clause)",
+      "category": "Indemnity",
+      "standardLanguage": "Penyedia Jasa sepakat untuk membela, mengganti rugi, dan membebaskan Pengguna Jasa beserta direksi, komisaris, karyawan, dan perwakilannya dari dan terhadap segala bentuk klaim, tuntutan hukum, gugatan, kerugian, denda administratif, dan biaya (termasuk biaya advokat yang wajar) yang timbul akibat: (a) pelanggaran ketentuan hukum ketenagakerjaan atau K3 oleh Penyedia Jasa; (b) pelanggaran hak kekayaan intelektual (HAKI) pihak ketiga; atau (c) kelalaian maupun tindakan melawan hukum yang dilakukan personel Penyedia Jasa di lokasi proyek.",
+      "riskNotes": "Klausul indemnity harus unilateral (dari vendor ke korporat) pada kontrak pengadaan barang/jasa bernilai tinggi.",
+      "tags": [
+        "Indemnity",
+        "Ganti Rugi",
+        "HAKI",
+        "K3",
+        "Vendor Risk"
+      ]
+    },
+    {
+      "id": "CLS-005",
+      "title": "Klausul Hukum yang Berlaku & Arbitrase BANI (Governing Law & BANI Arbitration)",
+      "category": "Governing Law & Dispute",
+      "standardLanguage": "Perjanjian ini diatur oleh dan ditafsirkan sesuai dengan hukum Republik Indonesia. Segala sengketa, perselisihan, atau perbedaan pendapat yang timbul dari atau sehubungan dengan pelaksanaan Perjanjian ini, yang tidak dapat diselesaikan secara musyawarah dalam waktu 30 (tiga puluh) hari kalender, akan diputus secara final dan mengikat melalui Arbitrase di Jakarta di bawah naungan Badan Arbitrase Nasional Indonesia (BANI) sesuai dengan Peraturan dan Prosedur Arbitrase BANI yang berlaku, oleh majelis arbitrase yang terdiri dari 3 (tiga) orang arbiter. Putusan arbitrase bersifat final dan tidak dapat diajukan banding atau kasasi.",
+      "riskNotes": "Pastikan menyatakan tegas pelepasan ketentuan Pasal 48 ayat (1) UU Arbitrase agar proses eksekusi tidak tertunda pembatalan sepihak.",
+      "tags": [
+        "Hukum Indonesia",
+        "BANI",
+        "Arbitrase",
+        "Dispute Resolution"
+      ]
+    },
+    {
+      "id": "CLS-006",
+      "title": "Klausul Pengakhiran Kontrak & Pengabaian Pasal 1266 KUHPerdata (Termination)",
+      "category": "Termination",
+      "standardLanguage": "Salah satu Pihak berhak mengakhiri Perjanjian ini dengan pemberitahuan tertulis 14 (empat belas) hari kalender sebelumnya apabila Pihak lainnya melakukan wanprestasi material dan gagal memperbaikinya dalam waktu 30 (tiga puluh) hari kalender setelah menerima surat teguran wanprestasi. Untuk keperluan pengakhiran Perjanjian ini, Para Pihak dengan ini secara tegas mengesampingkan keberlakuan ketentuan Pasal 1266 dan Pasal 1267 Kitab Undang-Undang Hukum Perdata (KUHPerdata) sejauh mengenai keharusan adanya putusan atau penetapan pengadilan untuk membatalkan suatu perjanjian.",
+      "riskNotes": "PENGESAMPINGAN PASAL 1266 KUHPERDATA ADALAH WAJIB di setiap kontrak komersial Indonesia agar pemutusan sepihak tidak perlu menunggu vonis pengadilan berlarut-larut.",
+      "tags": [
+        "Termination",
+        "Pasal 1266 KUHPerdata",
+        "Wanprestasi",
+        "Kompensasi"
+      ]
+    },
+    {
+      "id": "CLS-007",
+      "title": "Klausul Larangan Pengalihan & Change of Control (Assignment & COC)",
+      "category": "Change of Control",
+      "standardLanguage": "Tidak ada Pihak yang berhak mengalihkan (assign) sebagian atau seluruh hak dan/atau kewajibannya berdasarkan Perjanjian ini kepada pihak ketiga mana pun tanpa persetujuan tertulis sebelumnya dari Pihak lainnya. Setiap perubahan kepemilikan saham pengendali (Change of Control) yang mengakibatkan berpindahnya pengendalian efektif atas Pihak Kedua kepada pihak ketiga wajib diberitahukan dan dimintakan persetujuan tertulis kepada Pihak Pertama selambat-lambatnya 30 (tiga puluh) hari sebelum transaksi efektif.",
+      "riskNotes": "Sangat krusial untuk kontrak EPC dan pasokan bahan baku strategis guna mencegah vendor dialihkan ke kompetitor.",
+      "tags": [
+        "Assignment",
+        "Change of Control",
+        "Saham",
+        "Pengendali"
+      ]
+    },
+    {
+      "id": "CLS-008",
+      "title": "Klausul Anti Korupsi, Suap & Kepatuhan Regulasi (Anti-Bribery & Compliance)",
+      "category": "Compliance",
+      "standardLanguage": "Para Pihak menyatakan dan menjamin bahwa dalam pelaksanaan Perjanjian ini, Para Pihak beserta direksi, komisaris, karyawan, agen, dan subkontraktornya akan senantiasa mematuhi peraturan perundang-undangan mengenai pemberantasan tindak pidana korupsi, anti-suap, pencegahan tindak pidana pencucian uang (TPPU), dan UU Tindak Pidana Korporasi (UU Tipikor No. 31/1999 jo. UU No. 20/2001 serta Perma No. 13/2016). Pelanggaran terhadap klausul ini memberikan hak kepada Pihak Pertama untuk memutus Perjanjian seketika tanpa kompensasi.",
+      "riskNotes": "Klausul mandatory untuk seluruh vendor dan mitra korporat guna mitigasi risiko pertanggungjawaban pidana korporasi.",
+      "tags": [
+        "Anti Bribery",
+        "KPK",
+        "Perma 13/2016",
+        "Kepatuhan",
+        "Good Corporate Governance"
+      ]
+    }
+  ],
+  "activityLogs": [
+    {
+      "id": "LOG-001",
+      "timestamp": "2026-08-19 09:15:22",
+      "user": "Budi Santoso, S.H., LL.M.",
+      "module": "LEGAL REQUEST",
+      "action": "CREATE",
+      "recordId": "LR-2026-0010",
+      "description": "Membuat permintaan legal review baru: Master Subscription Agreement SAP Cloud"
+    },
+    {
+      "id": "LOG-002",
+      "timestamp": "2026-08-19 10:30:00",
+      "user": "Siti Rahmawati, S.H., M.H.",
+      "module": "CONTRACTS",
+      "action": "STATUS_CHANGE",
+      "recordId": "CTR-2026-0002",
+      "description": "Mengubah status kontrak Siemens LTSA menjadi EXPIRING (<7 hari)"
+    },
+    {
+      "id": "LOG-003",
+      "timestamp": "2026-08-19 11:45:10",
+      "user": "Dimas Prasetyo, S.H.",
+      "module": "LEGAL OPINION",
+      "action": "EDIT",
+      "recordId": "LO-2026-0004",
+      "description": "Memperbarui draf analisa hukum batasan kepemilikan saham asing PMA"
+    },
+    {
+      "id": "LOG-004",
+      "timestamp": "2026-08-19 14:20:05",
+      "user": "Budi Santoso, S.H., LL.M.",
+      "module": "CORRESPONDENCE",
+      "action": "CREATE",
+      "recordId": "COR-2026-0001",
+      "description": "Menerbitkan Somasi I kepada PT Mineral Sejahtera"
+    },
+    {
+      "id": "LOG-005",
+      "timestamp": "2026-08-19 15:10:44",
+      "user": "Anisa Maharani, S.H.",
+      "module": "COMPLIANCE",
+      "action": "EDIT",
+      "recordId": "CMP-2026-0003",
+      "description": "Menandai status Pelaporan WLKP Kemnaker sebagai OVERDUE"
+    }
+  ]
+}

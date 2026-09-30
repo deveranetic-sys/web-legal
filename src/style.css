@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base: #F9FAFB;
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: #F1F5F9;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-border: #E2E8F0;
+  
+  --color-primary: #6366F1;
+  --color-primary-hover: #4F46E5;
+  --color-primary-soft: #EEF2FF;
+  --color-primary-text: #4338CA;
+  
+  --color-mint-soft: #DCFCE7;
+  --color-mint-text: #166534;
+  
+  --color-peach-soft: #FEF3C7;
+  --color-peach-text: #92400E;
+  
+  --color-rose-soft: #FFE4E6;
+  --color-rose-text: #9F1239;
+  
+  --color-sky-soft: #E0F2FE;
+  --color-sky-text: #075985;
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #F9FAFB;
+    color: #0F172A;
+  }
+  
+  code, kbd, samp, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F9FAFB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+
+/* Pastel Dashboard Design System Utilities */
+.shadow-card {
+  box-shadow: 0 2px 8px -1px rgba(99, 102, 241, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+}
+
+.shadow-floating {
+  box-shadow: 0 10px 25px -3px rgba(99, 102, 241, 0.10), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Standard Buttons */
+.btn-primary {
+  background-color: #6366F1;
+  color: #FFFFFF;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover {
+  background-color: #4F46E5;
+}
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #C7D2FE;
+}
+
+.btn-secondary {
+  background-color: #EEF2FF;
+  color: #4338CA;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-secondary:hover {
+  background-color: #E0E7FF;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-ghost:hover {
+  background-color: #F8FAFC;
+  color: #0F172A;
+}
+
+/* Standard Badges (Pastel Background + Accessible Dark Contrast Text) */
+.badge-success {
+  background-color: #DCFCE7;
+  color: #166534;
+}
+
+.badge-warning {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.badge-danger {
+  background-color: #FFE4E6;
+  color: #9F1239;
+}
+
+.badge-info {
+  background-color: #E0F2FE;
+  color: #075985;
+}
+
+.badge-primary {
+  background-color: #EEF2FF;
+  color: #4338CA;
+}
+
+/* Standard Card */
+.card-pastel {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px -1px rgba(99, 102, 241, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+.card-pastel:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px -2px rgba(99, 102, 241, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
