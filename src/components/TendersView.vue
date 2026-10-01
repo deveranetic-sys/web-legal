@@ -5,15 +5,15 @@
       <div>
         <div class="flex items-center gap-2">
           <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]">
-            Siklus Pengadaan & Tender Multi-Sektor
+            Arsip Dokumen & Kepatuhan Legalitas Tender
           </span>
-          <span class="text-xs text-[#475569] font-medium">Konstruksi, Pertambangan, Migas, Energi & Umum</span>
+          <span class="text-xs text-[#475569] font-medium">Verifikasi Berkas Kualifikasi & Jaminan Warkat Bank</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight mt-1">
-          Tracking Progress Lelang & Audit Dokumen
+          Arsip Legalitas Tender & Verifikasi Dokumen
         </h1>
         <p class="text-sm text-[#475569] mt-1">
-          Sentralisasi pemantauan 8 tahapan lelang SPSE, evaluasi Go/No-Go, mitigasi penawaran &lt;80% HPS, review 4-gate, dan konversi kontrak korporasi.
+          Sentralisasi pengarsipan berkas legalitas lelang, verifikasi keabsahan warkat bank garansi, kepatuhan dokumen kualifikasi, dan transisi ke kontrak korporasi.
         </p>
       </div>
 
@@ -22,7 +22,7 @@
         <button
           @click="legalStore.exportTendersCSV()"
           class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
-          title="Ekspor rekapitulasi progress lelang ke CSV"
+          title="Ekspor rekapitulasi arsip tender ke CSV"
         >
           <Download class="w-4 h-4 text-[#475569]" />
           <span>Ekspor CSV</span>
@@ -33,7 +33,7 @@
           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer"
         >
           <Plus class="w-4 h-4 text-white" />
-          <span>Daftarkan Paket Lelang</span>
+          <span>Registrasi Berkas Tender Baru</span>
         </button>
       </div>
     </div>
@@ -48,7 +48,7 @@
         class="flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all whitespace-nowrap cursor-pointer"
       >
         <FileSpreadsheet class="w-4 h-4 text-[#6366F1]" />
-        <span>Progress & Pipeline Lelang</span>
+        <span>Register & Arsip Tender</span>
         <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]">
           {{ activeTendersCount }}
         </span>
@@ -62,7 +62,7 @@
         class="flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all whitespace-nowrap cursor-pointer"
       >
         <FileCheck2 class="w-4 h-4 text-[#6366F1]" />
-        <span>Audit Dokumen & Gap Analysis</span>
+        <span>Verifikasi Dokumen Legalitas</span>
         <span
           v-if="totalMissingDocs > 0"
           class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FFE4E6] text-[#9F1239] border border-[#FECDD3]"
@@ -79,7 +79,7 @@
         class="flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all whitespace-nowrap cursor-pointer"
       >
         <ShieldCheck class="w-4 h-4 text-[#6366F1]" />
-        <span>Jaminan Bank & Bid Bond</span>
+        <span>Warkat Jaminan Bank (Bonds)</span>
         <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]">
           {{ (legalStore.state.tenderBonds || []).length }}
         </span>

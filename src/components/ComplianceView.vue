@@ -65,6 +65,7 @@
               <th class="py-3 px-4">PIC Pelaksana</th>
               <th class="py-3 px-4">Dokumen Bukti</th>
               <th class="py-3 px-4 text-center">Status Pemenuhan</th>
+              <th class="py-3 px-4 text-center">Pengingat Kalender</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -94,6 +95,26 @@
                   {{ item.status }}
                 </button>
               </td>
+              <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                <div class="flex items-center justify-center gap-1.5">
+                  <button
+                    @click="syncComplianceToGoogle(item)"
+                    class="p-1 px-2 rounded-md hover:bg-indigo-50 text-indigo-700 font-semibold text-[11px] flex items-center gap-1 cursor-pointer border border-indigo-200 transition"
+                    title="Buka di Google Calendar"
+                  >
+                    <Calendar class="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Google Cal</span>
+                  </button>
+                  <button
+                    @click="syncComplianceToICal(item)"
+                    class="p-1 px-2 rounded-md hover:bg-slate-100 text-slate-600 font-semibold text-[11px] flex items-center gap-1 cursor-pointer border border-slate-200 transition"
+                    title="Unduh file .ics"
+                  >
+                    <Download class="w-3.5 h-3.5 text-slate-500" />
+                    <span>.ics</span>
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -104,7 +125,9 @@
 
 <script setup>
 import { computed } from 'vue';
+import { Calendar, Download } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
+import { openGoogleCalendar, downloadICalFile } from '../services/calendarService';
 
 const complianceItems = computed(() => legalStore.state.compliance);
 
@@ -124,5 +147,27 @@ function getStatusBadgeClass(status) {
 function cycleStatus(item) {
   const nextStatus = item.status === 'UPCOMING' ? 'COMPLIANT' : item.status === 'COMPLIANT' ? 'OVERDUE' : 'UPCOMING';
   legalStore.updateComplianceStatus(item.id, nextStatus);
+}
+
+function syncComplianceToGoogle(item) {
+  const event = {
+    title: `[DEADLINE COMPLIANCE] ${item.requirement} - ${item.company}`,
+    description: `Kewajiban: ${item.requirement}\nDasar Hukum: ${item.legalBasis}\nEntitas: ${item.company}\nPIC: ${item.pic}\nStatus: ${item.status}`,
+    location: item.company,
+    startDate: item.deadline
+  };
+  openGoogleCalendar(event);
+  legalStore.triggerToast(`Membuka Google Calendar untuk deadline ${item.requirement}`, 'info');
+}
+
+function syncComplianceToICal(item) {
+  const event = {
+    title: `[DEADLINE COMPLIANCE] ${item.requirement} - ${item.company}`,
+    description: `Kewajiban: ${item.requirement}\nDasar Hukum: ${item.legalBasis}\nEntitas: ${item.company}\nPIC: ${item.pic}\nStatus: ${item.status}`,
+    location: item.company,
+    startDate: item.deadline
+  };
+  downloadICalFile(event);
+  legalStore.triggerToast(`File kalender (.ics) berhasil diunduh untuk ${item.requirement}`, 'success');
 }
 </script>
