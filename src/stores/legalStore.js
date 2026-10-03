@@ -430,6 +430,42 @@ export const legalStore = {
     this.triggerToast(`Opini ${id} status persetujuan: ${approvalStatus}`, 'success');
   },
 
+  // Templates & Letters CRUD
+  addTemplate(payload) {
+    const nextNum = (state.templates.length || 0) + 1;
+    const newId = `TMPL-${String(nextNum).padStart(3, '0')}`;
+    const newTemplate = {
+      id: newId,
+      title: payload.label || payload.title || payload.templateName,
+      templateName: payload.label || payload.title || payload.templateName,
+      category: payload.category || 'Template Surat & Korespondensi',
+      description: payload.description || payload.deskripsi || '',
+      language: payload.language || 'Bahasa Indonesia',
+      tags: payload.tags && payload.tags.length ? payload.tags : ['Template Surat', 'Resmi Korporasi'],
+      clausesIncluded: payload.clausesIncluded && payload.clausesIncluded.length ? payload.clausesIncluded : ['Identitas Para Pihak', 'Dasar Perihal', 'Ketetapan Hukum'],
+      contentSample: payload.contentSample || payload.content || `[DRAF TEMPLATE: ${(payload.label || payload.title || payload.templateName || 'SURAT RESMI').toUpperCase()}]\n\nNomor: [NOMOR_SURAT]\nLampiran: [LAMPIRAN]\nPerihal: ${payload.label || payload.title || payload.templateName}\n\nKepada Yth.,\n[NAMA_PENERIMA]\n[ALAMAT_PENERIMA]\ndi Tempat\n\nDengan hormat,\n\n${payload.description || 'Sehubungan dengan kepentingan operasional dan kepatuhan hukum perusahaan...'}\n\n1. [POKOK_KETENTUAN_1]\n2. [POKOK_KETENTUAN_2]\n\nDemikian surat ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya.\n\n[KOTA], [TANGGAL]\nHormat kami,\nPT NUSANTARA ENERGI\n\n\n[NAMA_PENANDATANGAN]\n[JABATAN]`,
+      fileName: payload.fileName || null,
+      fileSize: payload.fileSize || null,
+      fileDataUrl: payload.fileDataUrl || null,
+      uploadedAt: new Date().toISOString().slice(0, 10),
+      uploadedBy: state.currentUser ? state.currentUser.name : 'Legal Staff'
+    };
+    state.templates.unshift(newTemplate);
+    storage.set(storage.KEYS.TEMPLATES, state.templates);
+    this.addActivityLog('CREATE', 'Template & Klausul', newTemplate.id, `Menambahkan template baru: ${newTemplate.title}`);
+    this.triggerToast(`Template "${newTemplate.title}" berhasil ditambahkan!`, 'success');
+    return newTemplate;
+  },
+
+  deleteTemplate(id) {
+    const tmpl = state.templates.find(t => t.id === id);
+    const title = tmpl ? tmpl.title : id;
+    state.templates = state.templates.filter(t => t.id !== id);
+    storage.set(storage.KEYS.TEMPLATES, state.templates);
+    this.addActivityLog('DELETE', 'Template & Klausul', id, `Menghapus template: ${title}`);
+    this.triggerToast(`Template "${title}" berhasil dihapus.`, 'info');
+  },
+
   // ==========================================
   // TENDER & LELANG MANAGEMENT METHODS
   // ==========================================
