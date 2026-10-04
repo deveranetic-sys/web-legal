@@ -136,20 +136,22 @@ const allResults = computed(() => {
     }
   });
 
-  // Tenders & Lelang
-  (legalStore.state.tenders || []).forEach(t => {
-    const hasDocMatch = t.documents?.some(d => d.name.toLowerCase().includes(q));
-    if (t.title.toLowerCase().includes(q) || t.id.toLowerCase().includes(q) || t.tenderNumber.toLowerCase().includes(q) || t.organizer.toLowerCase().includes(q) || hasDocMatch) {
-      const missingCount = t.documents?.filter(d => d.status === 'KURANG' || d.status === 'KEDALUWARSA').length || 0;
-      results.push({
-        id: t.id,
-        module: 'tenders',
-        type: 'Lelang & Dokumen',
-        title: t.title,
-        subtitle: `Instansi: ${t.organizer} • ${t.stage} • ${missingCount > 0 ? `${missingCount} Dokumen Kurang` : 'Lengkap 100%'}`
-      });
-    }
-  });
+  // Tenders & Lelang (Hanya jika modul aktif)
+  if (legalStore.state.ENABLE_TENDER_MODULE) {
+    (legalStore.state.tenders || []).forEach(t => {
+      const hasDocMatch = t.documents?.some(d => d.name.toLowerCase().includes(q));
+      if (t.title.toLowerCase().includes(q) || t.id.toLowerCase().includes(q) || t.tenderNumber.toLowerCase().includes(q) || t.organizer.toLowerCase().includes(q) || hasDocMatch) {
+        const missingCount = t.documents?.filter(d => d.status === 'KURANG' || d.status === 'KEDALUWARSA').length || 0;
+        results.push({
+          id: t.id,
+          module: 'tenders',
+          type: 'Lelang & Dokumen',
+          title: t.title,
+          subtitle: `Instansi: ${t.organizer} • ${t.stage} • ${missingCount > 0 ? `${missingCount} Dokumen Kurang` : 'Lengkap 100%'}`
+        });
+      }
+    });
+  }
 
   return results.slice(0, 10);
 });

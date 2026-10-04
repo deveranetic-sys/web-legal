@@ -17,22 +17,22 @@
         </p>
       </div>
 
-      <div class="flex items-center gap-2.5 flex-wrap">
+      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
         <!-- Sub-tabs: Klausul vs Template Dokumen -->
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
           <button
             @click="activeSubTab = 'clauses'"
             :class="activeSubTab === 'clauses' ? 'bg-white text-slate-900 font-bold shadow-2xs' : 'text-slate-600 font-medium'"
-            class="px-3 py-1.5 rounded-lg text-xs transition cursor-pointer"
+            class="px-3 py-1.5 rounded-lg text-xs transition cursor-pointer whitespace-nowrap"
           >
-            Perpustakaan Klausul ({{ clauses.length }})
+            Klausul Standar ({{ clauses.length }})
           </button>
           <button
             @click="activeSubTab = 'templates'"
             :class="activeSubTab === 'templates' ? 'bg-white text-slate-900 font-bold shadow-2xs' : 'text-slate-600 font-medium'"
-            class="px-3 py-1.5 rounded-lg text-xs transition cursor-pointer"
+            class="px-3 py-1.5 rounded-lg text-xs transition cursor-pointer whitespace-nowrap"
           >
-            Template Perjanjian & Surat ({{ templates.length }})
+            Template Dokumen ({{ templates.length }})
           </button>
         </div>
 
@@ -40,7 +40,7 @@
         <button
           id="btn-add-template-main"
           @click="isAddModalOpen = true"
-          class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs shadow-md shadow-indigo-600/20 flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
+          class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs shadow-md shadow-indigo-600/20 flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
         >
           <Plus class="w-4 h-4 stroke-[2.5]" />
           <span>Tambah Template</span>
@@ -118,9 +118,10 @@
         </p>
         <button
           @click="isAddModalOpen = true"
-          class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition cursor-pointer"
         >
-          + Tambah Template Baru
+          <Plus class="w-4 h-4" />
+          <span>Tambah Template</span>
         </button>
       </div>
 
@@ -210,7 +211,7 @@
                 class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1 shadow-xs transition"
               >
                 <Zap class="w-3.5 h-3.5" />
-                <span>⚡ Generate Naskah</span>
+                <span>Generate Naskah</span>
               </button>
             </div>
 
@@ -220,7 +221,7 @@
               :title="tmpl.fileName ? 'Unduh berkas asli template' : 'Unduh draf teks'"
             >
               <Download class="w-3.5 h-3.5 text-slate-500" />
-              <span>Unduh</span>
+              <span>Unduh Berkas</span>
             </button>
           </div>
         </div>
@@ -272,14 +273,14 @@
               class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5"
             >
               <Copy class="w-3.5 h-3.5" />
-              <span>Salin Teks Draf</span>
+              <span>Salin Draf</span>
             </button>
             <button
               @click="openGenerator(previewTmpl); previewTmpl = null"
               class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-sm"
             >
               <Zap class="w-3.5 h-3.5" />
-              <span>Isi Variabel & Generate Naskah</span>
+              <span>Generate Naskah</span>
             </button>
           </div>
         </div>

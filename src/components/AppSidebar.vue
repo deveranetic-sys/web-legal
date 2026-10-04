@@ -144,30 +144,30 @@ const menuGroups = computed(() => [
       }
     ]
   },
-  {
-    title: 'Arsip & Kepatuhan Tender',
-    items: [
-      {
-        id: 'tenders',
-        name: 'Register & Arsip Tender',
-        icon: FileSpreadsheet,
-        badge: badges.value.activeTenders || null,
-        badgeClass: 'bg-[#E0F2FE] text-[#075985] border border-[#BAE6FD]'
-      },
-      {
-        id: 'tender-documents',
-        name: 'Verifikasi Dokumen Legalitas',
-        icon: FileCheck2,
-        badge: badges.value.tendersWithMissingDocs ? `${badges.value.tendersWithMissingDocs} Kurang` : null,
-        badgeClass: 'bg-[#FFE4E6] text-[#9F1239] border border-[#FECDD3] font-bold'
-      },
-      {
-        id: 'tender-bonds',
-        name: 'Warkat Jaminan Bank (Bonds)',
-        icon: ShieldCheck
-      }
-    ]
-  },
+  // {
+  //   title: 'Arsip & Kepatuhan Tender',
+  //   items: [
+  //     {
+  //       id: 'tenders',
+  //       name: 'Register & Arsip Tender',
+  //       icon: FileSpreadsheet,
+  //       badge: badges.value.activeTenders || null,
+  //       badgeClass: 'bg-[#E0F2FE] text-[#075985] border border-[#BAE6FD]'
+  //     },
+  //     {
+  //       id: 'tender-documents',
+  //       name: 'Verifikasi Dokumen Legalitas',
+  //       icon: FileCheck2,
+  //       badge: badges.value.tendersWithMissingDocs ? `${badges.value.tendersWithMissingDocs} Kurang` : null,
+  //       badgeClass: 'bg-[#FFE4E6] text-[#9F1239] border border-[#FECDD3] font-bold'
+  //     },
+  //     {
+  //       id: 'tender-bonds',
+  //       name: 'Warkat Jaminan Bank (Bonds)',
+  //       icon: ShieldCheck
+  //     }
+  //   ]
+  // },
   {
     title: 'Korporasi & Regulasi',
     items: [

@@ -17,13 +17,13 @@
         </p>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0 flex-nowrap">
         <button
           @click="printOpinion"
-          class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-2xs transition cursor-pointer flex items-center gap-1.5"
+          class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-2xs transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
         >
           <Printer class="w-4 h-4 text-slate-500" />
-          <span>Cetak Dokumen Opini</span>
+          <span>Cetak Opini</span>
         </button>
       </div>
     </div>

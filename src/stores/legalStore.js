@@ -18,6 +18,9 @@ const state = reactive({
   currentUser: storage.get(storage.KEYS.CURRENT_USER, null),
   currentEntity: storage.get(storage.KEYS.CURRENT_ENTITY, 'PT Nusantara Energi'),
   
+  // Feature Flags
+  ENABLE_TENDER_MODULE: false,
+  
   // Navigation & View
   activeModule: 'dashboard',
   activeTenderTab: 'pipeline',
@@ -219,6 +222,13 @@ export const legalStore = {
 
   // Navigation
   navigate(moduleId, selectId = null) {
+    if (!state.ENABLE_TENDER_MODULE && (moduleId === 'tenders' || moduleId === 'tender-pipeline' || moduleId === 'tender-documents' || moduleId === 'tender-gap' || moduleId === 'tender-bonds')) {
+      state.activeModule = 'dashboard';
+      state.isMobileSidebarOpen = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (moduleId === 'tenders' || moduleId === 'tender-pipeline') {
       state.activeModule = 'tenders';
       state.activeTenderTab = 'pipeline';
@@ -343,6 +353,43 @@ export const legalStore = {
     this.triggerToast(`Permohonan ${id} berhasil dihapus`, 'info');
   },
 
+  // Request Approvals Workflow
+  approveRequest(id, notes = '') {
+    const req = state.requests.find(r => r.id === id);
+    if (!req) return;
+    req.status = 'APPROVED';
+    req.approvalNotes = notes;
+    req.approvedBy = state.currentUser ? state.currentUser.name : 'Head of Legal';
+    req.approvedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    storage.set(storage.KEYS.REQUESTS, state.requests);
+    this.addActivityLog('APPROVE', 'Permintaan Legal', id, `Menyetujui permohonan legal: ${notes || 'Tanpa catatan'}`);
+    this.triggerToast(`Permohonan ${id} berhasil DISETUJUI!`, 'success');
+  },
+
+  rejectRequest(id, reason = '') {
+    const req = state.requests.find(r => r.id === id);
+    if (!req) return;
+    req.status = 'REJECTED';
+    req.rejectionReason = reason;
+    req.rejectedBy = state.currentUser ? state.currentUser.name : 'Head of Legal';
+    req.rejectedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    storage.set(storage.KEYS.REQUESTS, state.requests);
+    this.addActivityLog('REJECT', 'Permintaan Legal', id, `Menolak permohonan legal: ${reason || 'Tidak memenuhi syarat'}`);
+    this.triggerToast(`Permohonan ${id} DITOLAK.`, 'error');
+  },
+
+  requestRevision(id, notes = '') {
+    const req = state.requests.find(r => r.id === id);
+    if (!req) return;
+    req.status = 'REVISION_REQUIRED';
+    req.revisionNotes = notes;
+    req.revisionRequestedBy = state.currentUser ? state.currentUser.name : 'Legal Counsel';
+    req.revisionRequestedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    storage.set(storage.KEYS.REQUESTS, state.requests);
+    this.addActivityLog('REQUEST_REVISION', 'Permintaan Legal', id, `Meminta revisi/klarifikasi permohonan: ${notes}`);
+    this.triggerToast(`Catatan revisi untuk permohonan ${id} berhasil dikirim ke pemohon.`, 'warning');
+  },
+
   // Contracts CRUD
   addContract(payload) {
     const newId = `CTR-2026-00${state.contracts.length + 1}`;
@@ -385,29 +432,215 @@ export const legalStore = {
     this.triggerToast(`Kontrak ${id} berhasil dihapus`, 'info');
   },
 
+  // Licenses CRUD
+  addLicense(payload) {
+    const nextNum = (state.licenses.length || 0) + 1;
+    const newId = `LIC-2026-${String(nextNum).padStart(3, '0')}`;
+    const newLicense = {
+      id: newId,
+      licenseName: payload.licenseName || 'Izin Operasional Baru',
+      licenseType: payload.licenseType || 'OSS RBA / PB-UMKU',
+      licenseNumber: payload.licenseNumber || `${Math.floor(1000 + Math.random() * 9000)}/OSS/ESDM/2026`,
+      authority: payload.authority || 'Kementerian ESDM / BKPM',
+      company: payload.company || state.currentEntity,
+      issueDate: payload.issueDate || new Date().toISOString().slice(0, 10),
+      expiryDate: payload.expiryDate || new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+      status: payload.status || 'ACTIVE',
+      reportingObligation: payload.reportingObligation || 'Laporan berkala per semester via OSS RBA.'
+    };
+    state.licenses.unshift(newLicense);
+    storage.set(storage.KEYS.LICENSES, state.licenses);
+    this.addActivityLog('CREATE', 'Perizinan (OSS/IUP)', newId, `Mendaftarkan izin baru: ${newLicense.licenseName}`);
+    this.triggerToast(`Izin "${newLicense.licenseName}" (${newId}) berhasil didaftarkan!`, 'success');
+    return newLicense;
+  },
+
   // Disputes CRUD
   addDispute(payload) {
     const newId = `DSP-2026-00${state.disputes.length + 1}`;
     const d = {
       id: newId,
       company: payload.company || state.currentEntity,
-      opponent: payload.opponent,
+      opponent: payload.opponent || 'Pihak Tergugat / Rekanan',
       caseType: payload.caseType || 'Perdata',
       courtOrInstitution: payload.courtOrInstitution || 'BANI Jakarta',
-      caseNumber: payload.caseNumber,
+      caseNumber: payload.caseNumber || `${Math.floor(100 + Math.random() * 900)}/Pdt.G/2026/PN.Jkt.Pst`,
       disputeValue: parseFloat(payload.disputeValue) || 0,
       currency: payload.currency || 'IDR',
       legalCounsel: payload.legalCounsel || 'Tim Internal Legal',
-      status: 'ACTIVE',
+      status: payload.status || 'ACTIVE',
       riskLevel: payload.riskLevel || 'HIGH',
-      summary: payload.summary,
+      summary: payload.summary || 'Sengketa pemenuhan prestasi dan kompensasi kontrak.',
       nextHearingDate: payload.nextHearingDate || new Date(Date.now() + 14 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-      timeline: []
+      timeline: [
+        {
+          date: new Date().toISOString().slice(0, 10),
+          title: 'Pendaftaran Berkas Perkara',
+          description: `Perkara didaftarkan ke ${payload.courtOrInstitution || 'BANI / Pengadilan'} oleh ${payload.legalCounsel || 'Tim Legal'}.`
+        }
+      ]
     };
     state.disputes.unshift(d);
     storage.set(storage.KEYS.DISPUTES, state.disputes);
     this.addActivityLog('CREATE', 'Dispute & Litigation', newId, `Pendaftaran perkara sengketa baru vs ${d.opponent}`);
-    this.triggerToast(`Perkara sengketa ${newId} berhasil didaftarkan`, 'success');
+    this.triggerToast(`Perkara sengketa ${newId} berhasil didaftarkan!`, 'success');
+    return d;
+  },
+
+  // LDD Project CRUD
+  addLDDProject(payload) {
+    const nextNum = (state.ldd.length || 0) + 1;
+    const newId = `LDD-2026-${String(nextNum).padStart(3, '0')}`;
+    const newProject = {
+      id: newId,
+      projectName: payload.projectName || 'Uji Tuntas Hukum Target Baru',
+      targetCompany: payload.targetCompany || 'PT Target Korporasi',
+      leadCounsel: payload.leadCounsel || 'Tim Legal M&A',
+      startDate: payload.startDate || new Date().toISOString().slice(0, 10),
+      targetCompletion: payload.targetCompletion || new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+      status: 'IN_PROGRESS',
+      checklist: [
+        { id: `CHK-${newId}-1`, category: 'Aspek Korporasi', item: 'Pemeriksaan Akta Pendirian, Anggaran Dasar & SK Menkumham', status: 'OK', notes: 'Dokumen legalitas dasar lengkap.' },
+        { id: `CHK-${newId}-2`, category: 'Aspek Perizinan', item: 'Verifikasi NIB, IUP Operasional & KSWP Pajak', status: 'FLAG', notes: 'Perlu konfirmasi masa berlaku PB-UMKU.' },
+        { id: `CHK-${newId}-3`, category: 'Aspek Kontrak Material', item: 'Review Perjanjian PPA/EPC & Klausul Change of Control', status: 'OK', notes: 'Klausul pembatasan peralihan saham telah dianalisis.' },
+        { id: `CHK-${newId}-4`, category: 'Ketenagakerjaan', item: 'Pemeriksaan Peraturan Perusahaan & Kepesertaan BPJS', status: 'OK', notes: 'Kepatuhan norma ketenagakerjaan terpenuhi.' }
+      ]
+    };
+    state.ldd.unshift(newProject);
+    storage.set(storage.KEYS.LDD, state.ldd);
+    this.addActivityLog('CREATE', 'Legal Due Diligence', newId, `Membuat proyek LDD baru: ${newProject.projectName}`);
+    this.triggerToast(`Proyek LDD "${newProject.projectName}" berhasil dibuat!`, 'success');
+    return newProject;
+  },
+
+  // Corporate Documents Vault CRUD
+  addCorporateDocument(payload) {
+    const nextNum = (state.documents.length || 0) + 1;
+    const newId = `DOC-2026-${String(nextNum).padStart(3, '0')}`;
+    const newDoc = {
+      id: newId,
+      name: payload.name || payload.documentName || 'Dokumen Arsip Korporasi',
+      documentName: payload.name || payload.documentName || 'Dokumen Arsip Korporasi',
+      documentType: payload.documentType || 'Akta Notaris & Korporasi',
+      category: 'Dokumen Korporasi',
+      documentNumber: payload.documentNumber || payload.number || `${Math.floor(100 + Math.random() * 900)}/NOT/2026`,
+      issuer: payload.issuer || 'Notaris Rekanan Perseroan',
+      company: payload.company || state.currentEntity,
+      issueDate: payload.issueDate || new Date().toISOString().slice(0, 10),
+      expiryDate: payload.expiryDate || null,
+      fileRef: payload.fileRef || `${newId}_Arsip_Resmi.pdf`,
+      fileSize: payload.fileSize || '2.4 MB',
+      notes: payload.notes || 'Arsip tersimpan dengan enkripsi AES-256.'
+    };
+    state.documents.unshift(newDoc);
+    storage.set(storage.KEYS.DOCUMENTS, state.documents);
+    this.addActivityLog('CREATE', 'Dokumen Vault', newId, `Registrasi arsip korporasi baru: ${newDoc.name}`);
+    this.triggerToast(`Arsip "${newDoc.name}" berhasil didaftarkan ke Vault!`, 'success');
+    return newDoc;
+  },
+
+  // Correspondence Register CRUD
+  addCorrespondence(payload) {
+    const nextNum = (state.correspondence.length || 0) + 1;
+    const newId = `COR-2026-${String(nextNum).padStart(4, '0')}`;
+    const newLetter = {
+      id: newId,
+      letterNumber: payload.letterNumber || `${String(nextNum).padStart(3, '0')}/NE-LEG/COR/X/2026`,
+      type: payload.type || 'Surat Somasi',
+      direction: payload.direction || (['Incoming Letter', 'Surat Masuk'].includes(payload.type) ? 'MASUK' : 'KELUAR'),
+      subject: payload.subject || 'Surat Resmi Korespondensi Legal',
+      sender: payload.sender || state.currentEntity,
+      recipient: payload.recipient || 'Pihak Mitra / Rekanan',
+      date: payload.date || new Date().toISOString().slice(0, 10),
+      deadline: payload.deadline || null,
+      pic: payload.pic || (state.currentUser ? state.currentUser.name : 'Legal Counsel'),
+      status: payload.status || 'SENT',
+      summary: payload.summary || payload.remarks || 'Pencatatan korespondensi resmi operasional legal.',
+      remarks: payload.remarks || payload.summary || 'Tercatat dalam Buku Register Surat Legal.',
+      fileName: payload.fileName || (payload.fileRef ? payload.fileRef : null),
+      fileSize: payload.fileSize || (payload.fileName ? '1.8 MB' : null),
+      fileDataUrl: payload.fileDataUrl || null,
+      fileRef: payload.fileRef || (payload.fileName ? payload.fileName : `${newId}_Naskah_Resmi.pdf`),
+      documentLink: payload.documentLink || null,
+      createdAt: new Date().toISOString()
+    };
+    state.correspondence.unshift(newLetter);
+    storage.set(storage.KEYS.CORRESPONDENCE, state.correspondence);
+    this.addActivityLog('CREATE', 'Surat & Korespondensi', newId, `Mencatat surat baru: ${newLetter.subject} (${newLetter.letterNumber})`);
+    this.triggerToast(`Surat "${newLetter.letterNumber}" berhasil dicatat di buku register!`, 'success');
+    return newLetter;
+  },
+
+  updateCorrespondence(id, payload) {
+    const letter = state.correspondence.find(c => c.id === id);
+    if (!letter) return null;
+    
+    if (payload.letterNumber !== undefined) letter.letterNumber = payload.letterNumber;
+    if (payload.type !== undefined) {
+      letter.type = payload.type;
+      if (!payload.direction) {
+        letter.direction = ['Incoming Letter', 'Surat Masuk'].includes(payload.type) ? 'MASUK' : 'KELUAR';
+      }
+    }
+    if (payload.direction !== undefined) letter.direction = payload.direction;
+    if (payload.subject !== undefined) letter.subject = payload.subject;
+    if (payload.sender !== undefined) letter.sender = payload.sender;
+    if (payload.recipient !== undefined) letter.recipient = payload.recipient;
+    if (payload.date !== undefined) letter.date = payload.date;
+    if (payload.deadline !== undefined) letter.deadline = payload.deadline;
+    if (payload.pic !== undefined) letter.pic = payload.pic;
+    if (payload.status !== undefined) letter.status = payload.status;
+    if (payload.summary !== undefined) letter.summary = payload.summary;
+    if (payload.remarks !== undefined) letter.remarks = payload.remarks;
+    if (payload.fileName !== undefined) letter.fileName = payload.fileName;
+    if (payload.fileSize !== undefined) letter.fileSize = payload.fileSize;
+    if (payload.fileDataUrl !== undefined) letter.fileDataUrl = payload.fileDataUrl;
+    if (payload.fileRef !== undefined) letter.fileRef = payload.fileRef;
+    if (payload.documentLink !== undefined) letter.documentLink = payload.documentLink;
+
+    letter.updatedAt = new Date().toISOString();
+
+    storage.set(storage.KEYS.CORRESPONDENCE, state.correspondence);
+    this.addActivityLog('UPDATE', 'Surat & Korespondensi', id, `Memperbarui surat: ${letter.letterNumber} - ${letter.subject}`);
+    this.triggerToast(`Surat "${letter.letterNumber}" berhasil diperbarui!`, 'success');
+    return letter;
+  },
+
+  deleteCorrespondence(id) {
+    const letter = state.correspondence.find(c => c.id === id);
+    const letterName = letter ? (letter.letterNumber || letter.subject) : id;
+    state.correspondence = state.correspondence.filter(c => c.id !== id);
+    storage.set(storage.KEYS.CORRESPONDENCE, state.correspondence);
+    this.addActivityLog('DELETE', 'Surat & Korespondensi', id, `Menghapus pencatatan surat: ${letterName}`);
+    this.triggerToast(`Surat "${letterName}" berhasil dihapus dari register.`, 'info');
+  },
+
+
+  // Knowledge Base & Regulations CRUD
+  addKnowledge(payload) {
+    const nextNum = (state.knowledge.length || 0) + 1;
+    const newId = `KB-2026-${String(nextNum).padStart(4, '0')}`;
+    const newReg = {
+      id: newId,
+      title: payload.title || 'Peraturan Regulasi Baru',
+      category: payload.category || 'Peraturan Menteri ESDM',
+      sector: payload.sector || 'Ketenagalistrikan & Energi',
+      legalTopic: payload.legalTopic || payload.sector || 'Regulasi Sektoral',
+      referenceNumber: payload.referenceNumber || payload.regulationNumber || `${newId}`,
+      regulationNumber: payload.regulationNumber || payload.referenceNumber || `${newId}`,
+      effectiveDate: payload.effectiveDate || payload.date || new Date().toISOString().slice(0, 10),
+      date: payload.effectiveDate || payload.date || new Date().toISOString().slice(0, 10),
+      summary: payload.summary || 'Ringkasan ketentuan regulasi hukum perundang-undangan.',
+      keyProvisions: payload.keyProvisions || payload.summary || 'Poin ketentuan utama dan pasal penting.',
+      source: payload.source || 'JDIH Kementerian Terkait',
+      link: payload.link || 'https://jdih.esdm.go.id',
+      tags: payload.tags || ['Regulasi', 'Sektoral', 'Compliance']
+    };
+    state.knowledge.unshift(newReg);
+    storage.set(storage.KEYS.KNOWLEDGE, state.knowledge);
+    this.addActivityLog('CREATE', 'Database Regulasi', newId, `Menambahkan entri regulasi baru: ${newReg.title}`);
+    this.triggerToast(`Regulasi "${newReg.title}" berhasil ditambahkan ke Database!`, 'success');
+    return newReg;
   },
 
   // Compliance CRUD

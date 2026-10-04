@@ -208,14 +208,14 @@
       <!-- Bottom Action Bar -->
       <div class="p-4 px-6 border-t border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div class="flex items-center gap-2 text-xs text-slate-500">
-          <span>Format: <strong>Word (.doc)</strong>, <strong>PDF / Print</strong>, atau <strong>Salin Teks</strong></span>
+          <span>Format: <strong>Word (.doc)</strong>, <strong>PDF / Print</strong>, atau <strong>Salin Draf</strong></span>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           <!-- Copy Button -->
           <button
             @click="copyGeneratedText"
-            class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition shadow-2xs"
+            class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition shadow-2xs whitespace-nowrap"
           >
             <Copy class="w-3.5 h-3.5 text-slate-600" />
             <span>Salin Draf</span>
@@ -224,19 +224,19 @@
           <!-- Print / PDF Button -->
           <button
             @click="printDocument"
-            class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition shadow-2xs"
+            class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition shadow-2xs whitespace-nowrap"
           >
             <Printer class="w-3.5 h-3.5 text-slate-600" />
-            <span>Cetak / Simpan PDF</span>
+            <span>Cetak PDF</span>
           </button>
 
           <!-- Download Word (.doc) Button -->
           <button
             @click="downloadWord"
-            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-md shadow-indigo-600/20 transition"
+            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-md shadow-indigo-600/20 transition whitespace-nowrap"
           >
             <FileDown class="w-4 h-4" />
-            <span>Unduh File Word (.doc)</span>
+            <span>Unduh Word</span>
           </button>
         </div>
       </div>

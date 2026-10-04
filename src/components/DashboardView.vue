@@ -13,25 +13,25 @@
         </div>
         <h2 class="text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">Executive Legal Operations Dashboard</h2>
         <p class="text-[#475569] text-xs lg:text-sm max-w-2xl leading-relaxed">
-          Sentralisasi portofolio kontrak komersial, permohonan legal unit bisnis, tender pengadaan, sengketa BANI/Litigasi, dan kepatuhan regulasi grup perseroan.
+          Sentralisasi portofolio kontrak komersial, permohonan legal unit bisnis, surat menyurat & somasi, sengketa BANI/Litigasi, dan kepatuhan regulasi grup perseroan.
         </p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2.5 z-10">
+      <div class="flex items-center gap-2.5 z-10 shrink-0 flex-nowrap">
         <button 
           @click="legalStore.exportContractsCSV()"
-          class="flex items-center gap-1.5 rounded-xl bg-[#EEF2FF] hover:bg-[#E0E7FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold px-4 py-2.5 transition active:scale-95 cursor-pointer shadow-xs"
+          class="flex items-center gap-1.5 rounded-xl bg-[#EEF2FF] hover:bg-[#E0E7FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold px-4 py-2.5 transition active:scale-95 cursor-pointer shadow-xs whitespace-nowrap"
         >
           <Download class="w-4 h-4 text-[#4338CA]" />
-          <span>Ekspor Ringkasan</span>
+          <span>Ekspor CSV</span>
         </button>
         <button 
           v-if="canCreateContract"
           @click="openAddContract"
-          class="flex items-center gap-1.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs font-semibold px-4 py-2.5 shadow-sm transition active:scale-95 cursor-pointer focus:ring-3 focus:ring-[#C7D2FE]"
+          class="flex items-center gap-1.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs font-semibold px-4 py-2.5 shadow-sm transition active:scale-95 cursor-pointer focus:ring-3 focus:ring-[#C7D2FE] whitespace-nowrap"
         >
           <Plus class="w-4 h-4" />
-          <span>Daftar Kontrak Baru</span>
+          <span>Tambah Kontrak</span>
         </button>
       </div>
     </div>
@@ -290,8 +290,8 @@
           </div>
         </div>
 
-        <!-- TENDER & LELANG PROGRESS WIDGET -->
-        <div class="bg-white rounded-xl p-5 border border-[#E2E8F0] shadow-card space-y-3">
+        <!-- TENDER & LELANG PROGRESS WIDGET (Hidden when tender module disabled) -->
+        <div v-if="legalStore.state.ENABLE_TENDER_MODULE" class="bg-white rounded-xl p-5 border border-[#E2E8F0] shadow-card space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <FileSpreadsheet class="w-4 h-4 text-[#6366F1]" />

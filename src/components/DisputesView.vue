@@ -18,13 +18,13 @@
       </div>
 
       <!-- Action Button -->
-      <div>
+      <div class="shrink-0">
         <button
           @click="isAddModalOpen = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-purple-600/20 transition cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-purple-600/20 transition cursor-pointer whitespace-nowrap"
         >
           <Plus class="w-4 h-4" />
-          <span>Daftarkan Perkara Baru</span>
+          <span>Tambah Perkara</span>
         </button>
       </div>
     </div>
@@ -125,9 +125,9 @@
 
           <button
             @click="selectedDispute = disp"
-            class="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition cursor-pointer self-start sm:self-auto"
+            class="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition cursor-pointer self-start sm:self-auto whitespace-nowrap"
           >
-            Lihat Kronologi & Tahapan Sidang ({{ disp.timeline?.length || 0 }})
+            Lihat Kronologi
           </button>
         </div>
       </div>
@@ -145,7 +145,7 @@
             <span class="font-mono text-xs font-bold text-purple-700">{{ selectedDispute.caseNumber }}</span>
             <h3 class="font-extrabold text-slate-900 text-base mt-0.5">Kronologi Tahapan Perkara</h3>
           </div>
-          <button @click="selectedDispute = null" class="text-slate-400 hover:text-slate-600">✕</button>
+          <button @click="selectedDispute = null" class="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>
         </div>
 
         <div class="p-6 overflow-y-auto space-y-4 text-xs">
@@ -174,37 +174,211 @@
             <span class="text-xs text-slate-500 font-medium">Sidang: {{ selectedDispute.nextHearingDate }}</span>
             <button
               @click="syncDisputeToGoogle(selectedDispute)"
-              class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-purple-700 font-bold text-xs hover:bg-slate-100 cursor-pointer flex items-center gap-1.5 shadow-2xs"
+              class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-purple-700 font-bold text-xs hover:bg-slate-100 cursor-pointer flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
             >
               <Calendar class="w-3.5 h-3.5 text-purple-600" />
               <span>Google Calendar</span>
             </button>
             <button
               @click="syncDisputeToICal(selectedDispute)"
-              class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-100 cursor-pointer flex items-center gap-1.5 shadow-2xs"
+              class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-100 cursor-pointer flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
             >
               <Download class="w-3.5 h-3.5 text-slate-500" />
-              <span>File .ics</span>
+              <span>Unduh .ics</span>
             </button>
           </div>
 
-          <button @click="selectedDispute = null" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs cursor-pointer">
+          <button @click="selectedDispute = null" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs cursor-pointer whitespace-nowrap">
             Tutup
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Tambah Perkara / Sengketa Baru -->
+    <div
+      v-if="isAddModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isAddModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Plus class="w-5 h-5 text-purple-400" />
+            <h3 class="font-extrabold text-white text-base">Pendaftaran Perkara & Sengketa Baru</h3>
+          </div>
+          <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitNewDispute" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nomor Perkara / Register *</label>
+              <input
+                v-model="newDisputeForm.caseNumber"
+                type="text"
+                required
+                placeholder="45/BANI/ARB/2026"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 font-mono"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Pihak Lawan (Opponent) *</label>
+              <input
+                v-model="newDisputeForm.opponent"
+                type="text"
+                required
+                placeholder="PT Mitra Jaya Abadi"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Jenis Sengketa</label>
+              <select
+                v-model="newDisputeForm.caseType"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Arbitrase BANI">Arbitrase BANI</option>
+                <option value="Perdata / Wanprestasi">Perdata / Wanprestasi</option>
+                <option value="Perburuhan (PHI)">Perburuhan (PHI)</option>
+                <option value="Tata Usaha Negara (PTUN)">Tata Usaha Negara (PTUN)</option>
+                <option value="Sengketa Lahan">Sengketa Lahan</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Lembaga / Pengadilan</label>
+              <input
+                v-model="newDisputeForm.courtOrInstitution"
+                type="text"
+                required
+                placeholder="BANI Arbitration Jakarta"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nilai Klaim / Tuntutan (Rp)</label>
+              <input
+                v-model.number="newDisputeForm.disputeValue"
+                type="number"
+                step="10000000"
+                required
+                placeholder="2500000000"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 font-mono font-bold"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tingkat Risiko Eksposur</label>
+              <select
+                v-model="newDisputeForm.riskLevel"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none font-bold"
+              >
+                <option value="HIGH">Tinggi (High Risk)</option>
+                <option value="MEDIUM">Sedang (Medium Risk)</option>
+                <option value="LOW">Rendah (Low Risk)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Entitas Perseroan</label>
+              <select
+                v-model="newDisputeForm.company"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
+                <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
+                <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Jadwal Sidang Berikutnya</label>
+              <input
+                v-model="newDisputeForm.nextHearingDate"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Kuasa Hukum / Counsel Penanggung Jawab</label>
+            <input
+              v-model="newDisputeForm.legalCounsel"
+              type="text"
+              placeholder="Tim Litigasi Internal & Retained Lawyer"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Ringkasan Pokok Perkara & Petitum *</label>
+            <textarea
+              v-model="newDisputeForm.summary"
+              required
+              rows="3"
+              placeholder="Jelaskan dasar tuntutan, kronologi wanprestasi/perbuatan melawan hukum, serta langkah mitigasi..."
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isAddModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Perkara
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { Plus, Calendar, Download } from 'lucide-vue-next';
 import { legalStore, formatIDR } from '../stores/legalStore';
 import { openGoogleCalendar, downloadICalFile } from '../services/calendarService';
 
 const isAddModalOpen = ref(false);
 const selectedDispute = ref(null);
+
+const newDisputeForm = reactive({
+  caseNumber: '',
+  opponent: '',
+  caseType: 'Arbitrase BANI',
+  courtOrInstitution: 'BANI Arbitration Jakarta',
+  disputeValue: 5000000000,
+  riskLevel: 'HIGH',
+  company: 'PT Nusantara Energi',
+  nextHearingDate: new Date(Date.now() + 14 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+  legalCounsel: 'Tim Internal Legal Counsel',
+  summary: ''
+});
+
+function submitNewDispute() {
+  legalStore.addDispute({ ...newDisputeForm });
+  isAddModalOpen.value = false;
+  newDisputeForm.caseNumber = '';
+  newDisputeForm.opponent = '';
+  newDisputeForm.summary = '';
+}
 
 const disputes = computed(() => legalStore.state.disputes);
 

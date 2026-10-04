@@ -18,21 +18,21 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-2.5 flex-wrap">
+      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
         <button
           @click="openAddCorporateModal"
-          class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+          class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer whitespace-nowrap"
         >
           <Plus class="w-4 h-4 text-[#475569]" />
-          <span>Registrasi Arsip Korporasi</span>
+          <span>Registrasi Arsip</span>
         </button>
 
         <button
           @click="isAddVaultModalOpen = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs sm:text-sm font-semibold shadow-xs focus:ring-3 focus:ring-[#C7D2FE] transition-all cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs sm:text-sm font-semibold shadow-xs focus:ring-3 focus:ring-[#C7D2FE] transition-all cursor-pointer whitespace-nowrap"
         >
           <UploadCloud class="w-4 h-4 text-white" />
-          <span>Upload Dokumen Kualifikasi</span>
+          <span>Upload Dokumen</span>
         </button>
       </div>
     </div>
@@ -556,7 +556,145 @@
               class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs flex items-center gap-1.5"
             >
               <UploadCloud class="w-3.5 h-3.5" />
-              <span>Simpan ke Dokumen Vault</span>
+              <span>Simpan Dokumen</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: REGISTRASI ARSIP KORPORASI BARU        -->
+    <!-- ============================================== -->
+    <div
+      v-if="isAddCorporateModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
+      @click.self="isAddCorporateModalOpen = false"
+    >
+      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-[#E2E8F0] flex flex-col max-h-[90vh]">
+        <div class="px-6 py-4 bg-[#1E293B] text-white flex items-center justify-between border-b border-[#1E293B]">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-400/30">
+              <Plus class="w-4 h-4" />
+            </div>
+            <div>
+              <h3 class="text-sm font-bold">Registrasi Arsip Legal Korporasi</h3>
+              <p class="text-[11px] text-slate-300">Penyimpanan akta, sertifikat aset, dan dokumen legalitas grup</p>
+            </div>
+          </div>
+          <button @click="isAddCorporateModalOpen = false" class="text-slate-400 hover:text-white transition cursor-pointer">
+            <X class="w-5 h-5" />
+          </button>
+        </div>
+
+        <form @submit.prevent="submitAddCorporateDoc" class="p-6 overflow-y-auto space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-[#0F172A] mb-1">
+              Nama Dokumen / Judul Berkas Arsip *
+            </label>
+            <input
+              v-model="newCorpForm.name"
+              type="text"
+              required
+              placeholder="Contoh: Akta Notaris No. 45 - Perubahan Susunan Direksi & Komisaris"
+              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-[#0F172A] mb-1">Jenis / Kategori Arsip</label>
+              <select
+                v-model="newCorpForm.documentType"
+                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
+              >
+                <option value="Akta Notaris & Korporasi">Akta Notaris & Korporasi</option>
+                <option value="SK Pengesahan Kemenkumham">SK Pengesahan Kemenkumham</option>
+                <option value="Sertifikat Tanah & Aset (HGB/SHM)">Sertifikat Tanah & Aset (HGB/SHM)</option>
+                <option value="Perizinan Dasar (NIB/NPWP)">Perizinan Dasar (NIB/NPWP)</option>
+                <option value="Sertifikasi Mutu (ISO/SMK3)">Sertifikasi Mutu (ISO/SMK3)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-[#0F172A] mb-1">Nomor Registrasi / Akta *</label>
+              <input
+                v-model="newCorpForm.number"
+                type="text"
+                required
+                placeholder="45/NOT-JKT/2026"
+                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] font-mono"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-[#0F172A] mb-1">Instansi Penerbit / Notaris</label>
+              <input
+                v-model="newCorpForm.issuer"
+                type="text"
+                required
+                placeholder="Notaris Hj. Fatimah, S.H., M.Kn."
+                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-[#0F172A] mb-1">Entitas Perseroan</label>
+              <select
+                v-model="newCorpForm.company"
+                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
+              >
+                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
+                <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
+                <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-[#0F172A] mb-1">Tanggal Dokumen *</label>
+              <input
+                v-model="newCorpForm.issueDate"
+                type="date"
+                required
+                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-[#0F172A] mb-1">Masa Berlaku (Jika Ada)</label>
+              <input
+                v-model="newCorpForm.expiryDate"
+                type="date"
+                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-[#0F172A] mb-1">Catatan & Keterangan</label>
+            <textarea
+              v-model="newCorpForm.notes"
+              rows="2"
+              placeholder="Catatan klausul pembatasan, riwayat perubahan, atau keterangan lokasi salinan fisik..."
+              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
+            <button
+              type="button"
+              @click="isAddCorporateModalOpen = false"
+              class="px-4 py-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl transition cursor-pointer text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs flex items-center gap-1.5"
+            >
+              <Plus class="w-3.5 h-3.5" />
+              <span>Simpan Arsip</span>
             </button>
           </div>
         </form>
@@ -651,6 +789,7 @@ const filterStatus = ref('ALL');
 const activeVaultTab = ref('ALL'); // 'ALL' | 'KUALIFIKASI' | 'KORPORASI'
 
 const isAddVaultModalOpen = ref(false);
+const isAddCorporateModalOpen = ref(false);
 const isLinkTenderModalOpen = ref(false);
 const selectedVaultDoc = ref(null);
 const targetTenderId = ref(null);
@@ -666,6 +805,17 @@ const newDocForm = ref({
   expiryDate: '',
   fileRef: '',
   fileSize: '',
+  notes: ''
+});
+
+const newCorpForm = ref({
+  name: '',
+  documentType: 'Akta Notaris & Korporasi',
+  number: '',
+  issuer: 'Notaris Hj. Fatimah, S.H., M.Kn.',
+  company: 'PT Nusantara Energi',
+  issueDate: new Date().toISOString().slice(0, 10),
+  expiryDate: '',
   notes: ''
 });
 
@@ -803,7 +953,22 @@ function downloadDoc(doc) {
 }
 
 function openAddCorporateModal() {
-  legalStore.triggerToast('Registrasi Dokumen Legal Korporasi baru berhasil disinkronisasikan ke Vault.', 'info');
+  isAddCorporateModalOpen.value = true;
+}
+
+function submitAddCorporateDoc() {
+  legalStore.addCorporateDocument(newCorpForm.value);
+  isAddCorporateModalOpen.value = false;
+  newCorpForm.value = {
+    name: '',
+    documentType: 'Akta Notaris & Korporasi',
+    number: '',
+    issuer: 'Notaris Hj. Fatimah, S.H., M.Kn.',
+    company: 'PT Nusantara Energi',
+    issueDate: new Date().toISOString().slice(0, 10),
+    expiryDate: '',
+    notes: ''
+  };
 }
 
 function openLinkTenderModal(doc) {

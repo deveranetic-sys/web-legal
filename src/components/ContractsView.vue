@@ -18,10 +18,10 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0 flex-nowrap">
         <button
           @click="legalStore.exportContractsCSV()"
-          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] text-sm font-semibold shadow-xs transition-colors cursor-pointer whitespace-nowrap"
           title="Ekspor daftar kontrak ke file CSV"
         >
           <Download class="w-4 h-4 text-[#475569]" />
@@ -31,12 +31,12 @@
         <button
           v-if="canCreateContract"
           @click="legalStore.state.isAddContractModalOpen = true"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] text-sm font-semibold shadow-sm hover:shadow-md transition-all cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] text-sm font-semibold shadow-sm hover:shadow-md transition-all cursor-pointer whitespace-nowrap"
         >
-          <Plus class="w-4 h-4 text-[#6366F1]" />
-          <span>Daftarkan Kontrak Baru</span>
+          <Plus class="w-4 h-4 text-white" />
+          <span>Tambah Kontrak</span>
         </button>
-        <div v-else class="text-xs text-[#475569] bg-slate-100 px-3 py-2 rounded-lg border border-[#E2E8F0]">
+        <div v-else class="text-xs text-[#475569] bg-slate-100 px-3 py-2 rounded-lg border border-[#E2E8F0] whitespace-nowrap">
           Peran <span class="font-bold text-[#0F172A]">{{ legalStore.state.currentUser?.role }}</span> dibatasi (hanya baca).
         </div>
       </div>
@@ -351,9 +351,9 @@
                 </p>
                 <button
                   @click="resetFilters"
-                  class="mt-4 px-3 py-1.5 text-xs font-semibold text-[#0F172A] bg-blue-50 text-[#4338CA] hover:bg-blue-100 rounded-lg transition-colors cursor-pointer border border-[#C7D2FE]"
+                  class="mt-4 px-3 py-1.5 text-xs font-semibold text-[#4338CA] bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors cursor-pointer border border-[#C7D2FE]"
                 >
-                  Bersihkan Filter
+                  Reset Filter
                 </button>
               </td>
             </tr>

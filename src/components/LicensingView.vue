@@ -18,13 +18,13 @@
       </div>
 
       <!-- Action Button -->
-      <div>
+      <div class="shrink-0">
         <button
           @click="isAddModalOpen = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-600/20 transition cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-600/20 transition cursor-pointer whitespace-nowrap"
         >
           <Plus class="w-4 h-4" />
-          <span>Daftarkan Izin Baru</span>
+          <span>Tambah Izin</span>
         </button>
       </div>
     </div>
@@ -132,13 +132,13 @@
     <!-- Modal Detail License -->
     <div
       v-if="selectedLicense"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
       @click.self="selectedLicense = null"
     >
       <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200 space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-slate-200">
           <h3 class="font-extrabold text-slate-900 text-base">{{ selectedLicense.licenseName }}</h3>
-          <button @click="selectedLicense = null" class="text-slate-400 hover:text-slate-600">✕</button>
+          <button @click="selectedLicense = null" class="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>
         </div>
         <div class="space-y-2 text-xs text-slate-700">
           <div><span class="text-slate-400 block">Nomor Izin:</span> <span class="font-mono font-bold">{{ selectedLicense.licenseNumber }}</span></div>
@@ -154,11 +154,141 @@
         </div>
       </div>
     </div>
+
+    <!-- MODAL: Tambah Izin Usaha / Operasional Baru -->
+    <div
+      v-if="isAddModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isAddModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Plus class="w-5 h-5 text-emerald-400" />
+            <h3 class="font-extrabold text-white text-base">Pendaftaran Izin Berusaha Baru</h3>
+          </div>
+          <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitNewLicense" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Nama Izin / Sertifikat Standar *</label>
+            <input
+              v-model="newForm.licenseName"
+              type="text"
+              required
+              placeholder="Contoh: Izin Usaha Penyediaan Tenaga Listrik (IUPTLU)"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tipe Dokumen Izin</label>
+              <select
+                v-model="newForm.licenseType"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="OSS RBA (NIB)">OSS RBA (NIB)</option>
+                <option value="PB-UMKU Sektoral">PB-UMKU Sektoral</option>
+                <option value="Izin Lingkungan (AMDAL)">Izin Lingkungan (AMDAL)</option>
+                <option value="Sertifikat Laik Operasi (SLO)">Sertifikat Laik Operasi (SLO)</option>
+                <option value="IUP Operasi Produksi">IUP Operasi Produksi</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nomor Registrasi Izin *</label>
+              <input
+                v-model="newForm.licenseNumber"
+                type="text"
+                required
+                placeholder="0220001234567"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 font-mono"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Instansi Penerbit</label>
+              <select
+                v-model="newForm.authority"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Kementerian ESDM">Kementerian ESDM</option>
+                <option value="Kementerian Investasi / BKPM">Kementerian Investasi / BKPM</option>
+                <option value="Kementerian LHK">Kementerian LHK</option>
+                <option value="Kementerian Perhubungan">Kementerian Perhubungan</option>
+                <option value="Dinas PMPTSP Provinsi">Dinas PMPTSP Provinsi</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Entitas Pemegang Izin</label>
+              <select
+                v-model="newForm.company"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
+                <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
+                <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tanggal Terbit</label>
+              <input
+                v-model="newForm.issueDate"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Masa Berlaku *</label>
+              <input
+                v-model="newForm.expiryDate"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Kewajiban Pelaporan & Kepatuhan</label>
+            <textarea
+              v-model="newForm.reportingObligation"
+              rows="2"
+              placeholder="Contoh: Laporan berkala per semester dan audit lingkungan berkala..."
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isAddModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Izin
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { Plus, Search, Eye } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 
@@ -166,6 +296,25 @@ const searchQuery = ref('');
 const filterStatus = ref('ALL');
 const isAddModalOpen = ref(false);
 const selectedLicense = ref(null);
+
+const newForm = reactive({
+  licenseName: '',
+  licenseType: 'OSS RBA (NIB)',
+  licenseNumber: '',
+  authority: 'Kementerian ESDM',
+  company: 'PT Nusantara Energi',
+  issueDate: new Date().toISOString().slice(0, 10),
+  expiryDate: new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+  status: 'ACTIVE',
+  reportingObligation: 'Laporan kepatuhan berkala per semester via portal OSS RBA.'
+});
+
+function submitNewLicense() {
+  legalStore.addLicense({ ...newForm });
+  isAddModalOpen.value = false;
+  newForm.licenseName = '';
+  newForm.licenseNumber = '';
+}
 
 const licenses = computed(() => legalStore.state.licenses);
 

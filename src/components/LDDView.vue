@@ -17,17 +17,28 @@
         </p>
       </div>
 
-      <!-- Project Switcher -->
-      <div class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-1.5 shadow-2xs">
-        <span class="text-xs text-slate-500 font-medium">Pilih Proyek LDD:</span>
-        <select
-          v-model="selectedProjectId"
-          class="bg-transparent text-xs font-bold text-slate-800 outline-none cursor-pointer"
+      <!-- Project Switcher & Actions -->
+      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
+        <div class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-1.5 shadow-2xs">
+          <FolderKanban class="w-4 h-4 text-emerald-600" />
+          <span class="text-xs text-slate-500 font-medium">Proyek:</span>
+          <select
+            v-model="selectedProjectId"
+            class="bg-transparent text-xs font-bold text-slate-800 outline-none cursor-pointer"
+          >
+            <option v-for="item in lddList" :key="item.id" :value="item.id">
+              {{ item.projectName }}
+            </option>
+          </select>
+        </div>
+
+        <button
+          @click="isAddModalOpen = true"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition cursor-pointer whitespace-nowrap"
         >
-          <option v-for="item in lddList" :key="item.id" :value="item.id">
-            {{ item.projectName }}
-          </option>
-        </select>
+          <Plus class="w-4 h-4" />
+          <span>Tambah Proyek</span>
+        </button>
       </div>
     </div>
 
@@ -94,15 +105,130 @@
         </table>
       </div>
     </div>
+
+    <!-- MODAL: Tambah Proyek LDD Baru -->
+    <div
+      v-if="isAddModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isAddModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Plus class="w-5 h-5 text-emerald-400" />
+            <h3 class="font-extrabold text-white text-base">Inisiasi Proyek Uji Tuntas (LDD)</h3>
+          </div>
+          <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitNewLDD" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Nama Proyek LDD / Transaksi *</label>
+            <input
+              v-model="newLDDForm.projectName"
+              type="text"
+              required
+              placeholder="Contoh: Akuisisi 60% Saham PT Barito Hydro Power"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Target Korporasi *</label>
+              <input
+                v-model="newLDDForm.targetCompany"
+                type="text"
+                required
+                placeholder="PT Barito Hydro Power"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Lead Counsel</label>
+              <input
+                v-model="newLDDForm.leadCounsel"
+                type="text"
+                placeholder="Tim Legal M&A Corporate"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
+              <input
+                v-model="newLDDForm.startDate"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Target Penyelesaian</label>
+              <input
+                v-model="newLDDForm.targetCompletion"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isAddModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Proyek
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive, watch } from 'vue';
+import { Plus, FolderKanban } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 
 const lddList = computed(() => legalStore.state.ldd);
 const selectedProjectId = ref(lddList.value[0]?.id || 'LDD-2026-001');
+const isAddModalOpen = ref(false);
+
+const newLDDForm = reactive({
+  projectName: '',
+  targetCompany: '',
+  leadCounsel: 'Tim Legal M&A Corporate',
+  startDate: new Date().toISOString().slice(0, 10),
+  targetCompletion: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10)
+});
+
+function submitNewLDD() {
+  const created = legalStore.addLDDProject({ ...newLDDForm });
+  if (created && created.id) {
+    selectedProjectId.value = created.id;
+  }
+  isAddModalOpen.value = false;
+  newLDDForm.projectName = '';
+  newLDDForm.targetCompany = '';
+}
+
+watch(lddList, (newList) => {
+  if (!newList.some(p => p.id === selectedProjectId.value) && newList.length > 0) {
+    selectedProjectId.value = newList[0].id;
+  }
+}, { deep: true });
 
 const activeLDD = computed(() => {
   return lddList.value.find(p => p.id === selectedProjectId.value) || lddList.value[0];

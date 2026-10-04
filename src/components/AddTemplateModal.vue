@@ -64,7 +64,7 @@
               @click="applySuggestion(sug)"
               class="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 text-[10px] font-medium transition cursor-pointer border border-slate-200"
             >
-              + {{ sug }}
+              {{ sug }}
             </button>
           </div>
         </div>
@@ -220,7 +220,7 @@
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
               class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer border border-transparent"
             >
-              {{ form.clausesIncluded.includes(clause) ? '✓ ' : '+ ' }}{{ clause }}
+              {{ form.clausesIncluded.includes(clause) ? '✓ ' : '' }}{{ clause }}
             </button>
           </div>
         </div>
@@ -235,11 +235,11 @@
             <div class="flex items-center gap-2">
               <FileText class="w-4 h-4 text-indigo-600" />
               <span class="font-bold text-slate-800 text-xs">
-                Pratinjau / Sesuaikan Naskah Draf Template (Opsional)
+                Pratinjau Draf Naskah (Opsional)
               </span>
             </div>
             <span class="text-[11px] text-slate-500 font-medium">
-              {{ isDraftExpanded ? 'Sembunyikan ▲' : 'Tampilkan & Edit ▼' }}
+              {{ isDraftExpanded ? 'Sembunyikan ▲' : 'Buka Draf ▼' }}
             </span>
           </button>
 
@@ -270,7 +270,7 @@
             class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-md shadow-indigo-600/20 transition cursor-pointer text-xs flex items-center gap-2"
           >
             <CheckCircle2 class="w-4 h-4 stroke-[2.5]" />
-            <span>Simpan & Daftarkan Template</span>
+            <span>Simpan Template</span>
           </button>
         </div>
 
