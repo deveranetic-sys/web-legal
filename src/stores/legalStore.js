@@ -410,7 +410,7 @@ export const legalStore = {
       expiryDate: payload.expiryDate,
       contractValue: parseFloat(payload.contractValue) || 0,
       currency: payload.currency || 'IDR',
-      pic: payload.pic || state.currentUser.name,
+      pic: payload.pic || state.currentUser?.name || 'Legal Staff',
       legalPic: payload.legalPic || 'Budi Santoso, S.H.',
       status: autoStatus,
       renewalStatus: payload.renewalStatus || 'Renewable',
@@ -423,6 +423,54 @@ export const legalStore = {
     this.addActivityLog('CREATE', 'Manajemen Kontrak', newId, `Pendaftaran kontrak baru: ${newContract.contractTitle}`);
     this.triggerToast(`Kontrak ${newId} berhasil didaftarkan!`, 'success');
     return newContract;
+  },
+
+  updateContract(id, payload) {
+    const c = state.contracts.find(item => item.id === id);
+    if (!c) return null;
+    if (payload.contractTitle !== undefined) c.contractTitle = payload.contractTitle;
+    if (payload.contractNumber !== undefined) c.contractNumber = payload.contractNumber;
+    if (payload.company !== undefined) c.company = payload.company;
+    if (payload.counterparty !== undefined) c.counterparty = payload.counterparty;
+    if (payload.contractType !== undefined) c.contractType = payload.contractType;
+    if (payload.effectiveDate !== undefined) c.effectiveDate = payload.effectiveDate;
+    if (payload.expiryDate !== undefined) {
+      c.expiryDate = payload.expiryDate;
+      const days = calculateDaysRemaining(payload.expiryDate);
+      if (days <= 0) c.status = 'EXPIRED';
+      else if (days <= 30) c.status = 'EXPIRING';
+      else if (c.status === 'EXPIRED' || c.status === 'EXPIRING') c.status = 'ACTIVE';
+    }
+    if (payload.contractValue !== undefined) c.contractValue = parseFloat(payload.contractValue) || 0;
+    if (payload.pic !== undefined) c.pic = payload.pic;
+    if (payload.legalPic !== undefined) c.legalPic = payload.legalPic;
+    if (payload.status !== undefined) c.status = payload.status;
+    if (payload.renewalStatus !== undefined) c.renewalStatus = payload.renewalStatus;
+    if (payload.keyObligations !== undefined) c.keyObligations = payload.keyObligations;
+    if (payload.paymentTerms !== undefined) c.paymentTerms = payload.paymentTerms;
+
+    storage.set(storage.KEYS.CONTRACTS, state.contracts);
+    this.addActivityLog('UPDATE', 'Manajemen Kontrak', id, `Memperbarui data kontrak: ${c.contractTitle}`);
+    this.triggerToast(`Kontrak ${id} berhasil diperbarui!`, 'success');
+    return c;
+  },
+
+  addContractAddendum(contractId, addendumPayload) {
+    const c = state.contracts.find(item => item.id === contractId);
+    if (!c) return;
+    if (!c.addendums) c.addendums = [];
+    const addendum = {
+      id: `ADD-${c.id}-${c.addendums.length + 1}`,
+      number: addendumPayload.number || `ADD/${c.contractNumber}/${c.addendums.length + 1}`,
+      date: addendumPayload.date || new Date().toISOString().slice(0, 10),
+      scope: addendumPayload.scope || 'Penyesuaian Klausul Kontrak',
+      changes: addendumPayload.changes || 'Perubahan jangka waktu dan/atau nilai kompensasi.',
+      fileRef: addendumPayload.fileRef || null
+    };
+    c.addendums.push(addendum);
+    storage.set(storage.KEYS.CONTRACTS, state.contracts);
+    this.addActivityLog('ADD_ADDENDUM', 'Manajemen Kontrak', contractId, `Menambahkan adendum ${addendum.number} ke kontrak ${contractId}`);
+    this.triggerToast(`Adendum ${addendum.number} berhasil ditambahkan!`, 'success');
   },
 
   deleteContract(id) {
@@ -453,6 +501,34 @@ export const legalStore = {
     this.addActivityLog('CREATE', 'Perizinan (OSS/IUP)', newId, `Mendaftarkan izin baru: ${newLicense.licenseName}`);
     this.triggerToast(`Izin "${newLicense.licenseName}" (${newId}) berhasil didaftarkan!`, 'success');
     return newLicense;
+  },
+
+  updateLicense(id, payload) {
+    const lic = state.licenses.find(l => l.id === id);
+    if (!lic) return null;
+    if (payload.licenseName !== undefined) lic.licenseName = payload.licenseName;
+    if (payload.licenseType !== undefined) lic.licenseType = payload.licenseType;
+    if (payload.licenseNumber !== undefined) lic.licenseNumber = payload.licenseNumber;
+    if (payload.authority !== undefined) lic.authority = payload.authority;
+    if (payload.company !== undefined) lic.company = payload.company;
+    if (payload.issueDate !== undefined) lic.issueDate = payload.issueDate;
+    if (payload.expiryDate !== undefined) lic.expiryDate = payload.expiryDate;
+    if (payload.status !== undefined) lic.status = payload.status;
+    if (payload.reportingObligation !== undefined) lic.reportingObligation = payload.reportingObligation;
+    
+    storage.set(storage.KEYS.LICENSES, state.licenses);
+    this.addActivityLog('UPDATE', 'Perizinan (OSS/IUP)', id, `Memperbarui izin: ${lic.licenseName}`);
+    this.triggerToast(`Izin "${lic.licenseName}" berhasil diperbarui!`, 'success');
+    return lic;
+  },
+
+  deleteLicense(id) {
+    const lic = state.licenses.find(l => l.id === id);
+    const name = lic ? lic.licenseName : id;
+    state.licenses = state.licenses.filter(l => l.id !== id);
+    storage.set(storage.KEYS.LICENSES, state.licenses);
+    this.addActivityLog('DELETE', 'Perizinan (OSS/IUP)', id, `Menghapus izin: ${name}`);
+    this.triggerToast(`Izin "${name}" berhasil dihapus`, 'info');
   },
 
   // Disputes CRUD
@@ -487,6 +563,37 @@ export const legalStore = {
     return d;
   },
 
+  updateDispute(id, payload) {
+    const d = state.disputes.find(item => item.id === id);
+    if (!d) return null;
+    if (payload.caseNumber !== undefined) d.caseNumber = payload.caseNumber;
+    if (payload.opponent !== undefined) d.opponent = payload.opponent;
+    if (payload.caseType !== undefined) d.caseType = payload.caseType;
+    if (payload.courtOrInstitution !== undefined) d.courtOrInstitution = payload.courtOrInstitution;
+    if (payload.disputeValue !== undefined) d.disputeValue = parseFloat(payload.disputeValue) || 0;
+    if (payload.currency !== undefined) d.currency = payload.currency;
+    if (payload.company !== undefined) d.company = payload.company;
+    if (payload.legalCounsel !== undefined) d.legalCounsel = payload.legalCounsel;
+    if (payload.status !== undefined) d.status = payload.status;
+    if (payload.riskLevel !== undefined) d.riskLevel = payload.riskLevel;
+    if (payload.summary !== undefined) d.summary = payload.summary;
+    if (payload.nextHearingDate !== undefined) d.nextHearingDate = payload.nextHearingDate;
+    
+    storage.set(storage.KEYS.DISPUTES, state.disputes);
+    this.addActivityLog('UPDATE', 'Dispute & Litigation', id, `Memperbarui perkara sengketa: ${d.caseNumber}`);
+    this.triggerToast(`Perkara sengketa ${d.caseNumber} berhasil diperbarui!`, 'success');
+    return d;
+  },
+
+  deleteDispute(id) {
+    const d = state.disputes.find(item => item.id === id);
+    const name = d ? (d.caseNumber || d.opponent) : id;
+    state.disputes = state.disputes.filter(item => item.id !== id);
+    storage.set(storage.KEYS.DISPUTES, state.disputes);
+    this.addActivityLog('DELETE', 'Dispute & Litigation', id, `Menghapus data sengketa: ${name}`);
+    this.triggerToast(`Perkara sengketa ${name} berhasil dihapus`, 'info');
+  },
+
   // LDD Project CRUD
   addLDDProject(payload) {
     const nextNum = (state.ldd.length || 0) + 1;
@@ -498,7 +605,7 @@ export const legalStore = {
       leadCounsel: payload.leadCounsel || 'Tim Legal M&A',
       startDate: payload.startDate || new Date().toISOString().slice(0, 10),
       targetCompletion: payload.targetCompletion || new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-      status: 'IN_PROGRESS',
+      status: payload.status || 'IN_PROGRESS',
       checklist: [
         { id: `CHK-${newId}-1`, category: 'Aspek Korporasi', item: 'Pemeriksaan Akta Pendirian, Anggaran Dasar & SK Menkumham', status: 'OK', notes: 'Dokumen legalitas dasar lengkap.' },
         { id: `CHK-${newId}-2`, category: 'Aspek Perizinan', item: 'Verifikasi NIB, IUP Operasional & KSWP Pajak', status: 'FLAG', notes: 'Perlu konfirmasi masa berlaku PB-UMKU.' },
@@ -511,6 +618,44 @@ export const legalStore = {
     this.addActivityLog('CREATE', 'Legal Due Diligence', newId, `Membuat proyek LDD baru: ${newProject.projectName}`);
     this.triggerToast(`Proyek LDD "${newProject.projectName}" berhasil dibuat!`, 'success');
     return newProject;
+  },
+
+  toggleLDDChecklistItem(projectId, itemId, newStatus, newNotes = null) {
+    const p = state.ldd.find(item => item.id === projectId);
+    if (!p || !p.checklist) return;
+    const item = p.checklist.find(c => c.id === itemId);
+    if (!item) return;
+    item.status = newStatus;
+    if (newNotes !== null) item.notes = newNotes;
+    storage.set(storage.KEYS.LDD, state.ldd);
+    this.addActivityLog('UPDATE_CHECKLIST', 'Legal Due Diligence', projectId, `Ubah status item LDD (${item.item.slice(0, 25)}...) ke ${newStatus}`);
+    this.triggerToast(`Status audit butir LDD diperbarui ke ${newStatus}`, 'info');
+  },
+
+  addLDDChecklistItem(projectId, itemPayload) {
+    const p = state.ldd.find(item => item.id === projectId);
+    if (!p) return;
+    if (!p.checklist) p.checklist = [];
+    const newItem = {
+      id: `CHK-${projectId}-${Date.now().toString().slice(-4)}`,
+      category: itemPayload.category || 'Aspek Tambahan',
+      item: itemPayload.item,
+      status: itemPayload.status || 'OK',
+      notes: itemPayload.notes || 'Catatan pemeriksaan uji tuntas.'
+    };
+    p.checklist.push(newItem);
+    storage.set(storage.KEYS.LDD, state.ldd);
+    this.addActivityLog('ADD_ITEM', 'Legal Due Diligence', projectId, `Tambah butir checklist LDD: ${newItem.item}`);
+    this.triggerToast(`Butir checklist LDD baru berhasil ditambahkan!`, 'success');
+  },
+
+  deleteLDDProject(projectId) {
+    const p = state.ldd.find(item => item.id === projectId);
+    const name = p ? p.projectName : projectId;
+    state.ldd = state.ldd.filter(item => item.id !== projectId);
+    storage.set(storage.KEYS.LDD, state.ldd);
+    this.addActivityLog('DELETE', 'Legal Due Diligence', projectId, `Menghapus proyek LDD: ${name}`);
+    this.triggerToast(`Proyek LDD "${name}" berhasil dihapus`, 'info');
   },
 
   // Corporate Documents Vault CRUD
@@ -537,6 +682,33 @@ export const legalStore = {
     this.addActivityLog('CREATE', 'Dokumen Vault', newId, `Registrasi arsip korporasi baru: ${newDoc.name}`);
     this.triggerToast(`Arsip "${newDoc.name}" berhasil didaftarkan ke Vault!`, 'success');
     return newDoc;
+  },
+
+  updateCorporateDocument(id, payload) {
+    const doc = state.documents.find(d => d.id === id);
+    if (!doc) return null;
+    if (payload.name !== undefined) { doc.name = payload.name; doc.documentName = payload.name; }
+    if (payload.documentType !== undefined) doc.documentType = payload.documentType;
+    if (payload.documentNumber !== undefined) doc.documentNumber = payload.documentNumber;
+    if (payload.issuer !== undefined) doc.issuer = payload.issuer;
+    if (payload.company !== undefined) doc.company = payload.company;
+    if (payload.issueDate !== undefined) doc.issueDate = payload.issueDate;
+    if (payload.expiryDate !== undefined) doc.expiryDate = payload.expiryDate;
+    if (payload.notes !== undefined) doc.notes = payload.notes;
+
+    storage.set(storage.KEYS.DOCUMENTS, state.documents);
+    this.addActivityLog('UPDATE', 'Dokumen Vault', id, `Memperbarui arsip korporasi: ${doc.name}`);
+    this.triggerToast(`Arsip "${doc.name}" berhasil diperbarui!`, 'success');
+    return doc;
+  },
+
+  deleteCorporateDocument(id) {
+    const doc = state.documents.find(d => d.id === id);
+    const name = doc ? (doc.name || doc.documentName) : id;
+    state.documents = state.documents.filter(d => d.id !== id);
+    storage.set(storage.KEYS.DOCUMENTS, state.documents);
+    this.addActivityLog('DELETE', 'Dokumen Vault', id, `Menghapus arsip korporasi: ${name}`);
+    this.triggerToast(`Arsip "${name}" dihapus dari Vault`, 'info');
   },
 
   // Correspondence Register CRUD
@@ -615,7 +787,6 @@ export const legalStore = {
     this.triggerToast(`Surat "${letterName}" berhasil dihapus dari register.`, 'info');
   },
 
-
   // Knowledge Base & Regulations CRUD
   addKnowledge(payload) {
     const nextNum = (state.knowledge.length || 0) + 1;
@@ -643,7 +814,84 @@ export const legalStore = {
     return newReg;
   },
 
+  updateKnowledge(id, payload) {
+    const item = state.knowledge.find(k => k.id === id);
+    if (!item) return null;
+    if (payload.title !== undefined) item.title = payload.title;
+    if (payload.category !== undefined) item.category = payload.category;
+    if (payload.sector !== undefined) { item.sector = payload.sector; item.legalTopic = payload.sector; }
+    if (payload.regulationNumber !== undefined) { item.regulationNumber = payload.regulationNumber; item.referenceNumber = payload.regulationNumber; }
+    if (payload.date !== undefined) { item.date = payload.date; item.effectiveDate = payload.date; }
+    if (payload.summary !== undefined) { item.summary = payload.summary; item.keyProvisions = payload.summary; }
+    if (payload.source !== undefined) item.source = payload.source;
+    if (payload.link !== undefined) item.link = payload.link;
+
+    storage.set(storage.KEYS.KNOWLEDGE, state.knowledge);
+    this.addActivityLog('UPDATE', 'Database Regulasi', id, `Memperbarui regulasi: ${item.title}`);
+    this.triggerToast(`Regulasi "${item.title}" berhasil diperbarui!`, 'success');
+    return item;
+  },
+
+  deleteKnowledge(id) {
+    const item = state.knowledge.find(k => k.id === id);
+    const title = item ? item.title : id;
+    state.knowledge = state.knowledge.filter(k => k.id !== id);
+    storage.set(storage.KEYS.KNOWLEDGE, state.knowledge);
+    this.addActivityLog('DELETE', 'Database Regulasi', id, `Menghapus regulasi: ${title}`);
+    this.triggerToast(`Regulasi "${title}" berhasil dihapus`, 'info');
+  },
+
   // Compliance CRUD
+  addComplianceObligation(payload) {
+    const nextNum = (state.compliance.length || 0) + 1;
+    const newId = `CMP-2026-${String(nextNum).padStart(3, '0')}`;
+    const newComp = {
+      id: newId,
+      requirement: payload.requirement || 'Kewajiban Kepatuhan Legal Baru',
+      legalBasis: payload.legalBasis || 'UU No. 30/2009 & Regulasi Terkait',
+      frequency: payload.frequency || 'Per Semester',
+      authority: payload.authority || 'Kementerian ESDM / KLHK',
+      company: payload.company || state.currentEntity,
+      deadline: payload.deadline || new Date(Date.now() + 60 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+      pic: payload.pic || (state.currentUser ? state.currentUser.name : 'Compliance Specialist'),
+      status: payload.status || 'UPCOMING',
+      riskScore: payload.riskScore || 'MEDIUM'
+    };
+    state.compliance.unshift(newComp);
+    storage.set(storage.KEYS.COMPLIANCE, state.compliance);
+    this.addActivityLog('CREATE', 'Compliance', newId, `Menambahkan kewajiban kepatuhan: ${newComp.requirement}`);
+    this.triggerToast(`Kewajiban kepatuhan "${newComp.requirement}" berhasil ditambahkan!`, 'success');
+    return newComp;
+  },
+
+  updateComplianceObligation(id, payload) {
+    const comp = state.compliance.find(c => c.id === id);
+    if (!comp) return null;
+    if (payload.requirement !== undefined) comp.requirement = payload.requirement;
+    if (payload.legalBasis !== undefined) comp.legalBasis = payload.legalBasis;
+    if (payload.frequency !== undefined) comp.frequency = payload.frequency;
+    if (payload.authority !== undefined) comp.authority = payload.authority;
+    if (payload.company !== undefined) comp.company = payload.company;
+    if (payload.deadline !== undefined) comp.deadline = payload.deadline;
+    if (payload.pic !== undefined) comp.pic = payload.pic;
+    if (payload.status !== undefined) comp.status = payload.status;
+    if (payload.riskScore !== undefined) comp.riskScore = payload.riskScore;
+
+    storage.set(storage.KEYS.COMPLIANCE, state.compliance);
+    this.addActivityLog('UPDATE', 'Compliance', id, `Memperbarui kewajiban kepatuhan: ${comp.requirement}`);
+    this.triggerToast(`Kewajiban kepatuhan "${comp.requirement}" berhasil diperbarui!`, 'success');
+    return comp;
+  },
+
+  deleteComplianceObligation(id) {
+    const comp = state.compliance.find(c => c.id === id);
+    const title = comp ? comp.requirement : id;
+    state.compliance = state.compliance.filter(c => c.id !== id);
+    storage.set(storage.KEYS.COMPLIANCE, state.compliance);
+    this.addActivityLog('DELETE', 'Compliance', id, `Menghapus kewajiban kepatuhan: ${title}`);
+    this.triggerToast(`Kewajiban kepatuhan "${title}" berhasil dihapus`, 'info');
+  },
+
   updateComplianceStatus(id, newStatus) {
     const comp = state.compliance.find(c => c.id === id);
     if (!comp) return;
@@ -653,7 +901,64 @@ export const legalStore = {
     this.triggerToast(`Kepatuhan ${id} diset ke ${newStatus}`, 'success');
   },
 
-  // Legal Opinion Approval
+  // Legal Opinions CRUD
+  addOpinion(payload) {
+    const nextNum = (state.opinions.length || 0) + 1;
+    const newId = `LO-2026-${String(nextNum).padStart(3, '0')}`;
+    const newOp = {
+      id: newId,
+      opinionNumber: payload.opinionNumber || `${String(nextNum).padStart(3, '0')}/LO/NE-LEG/${new Date().getFullYear()}`,
+      title: payload.title || 'Legal Opinion Kajian Korporasi',
+      subject: payload.title || 'Kajian Risiko & Opini Hukum',
+      requestor: payload.requestor || 'Direksi Perseroan',
+      company: payload.company || state.currentEntity,
+      author: payload.author || (state.currentUser ? state.currentUser.name : 'Legal Counsel'),
+      reviewer: payload.reviewer || 'General Counsel / Head of Legal',
+      date: payload.date || new Date().toISOString().slice(0, 10),
+      background: payload.background || 'Latar belakang permohonan kajian hukum.',
+      legalAnalysis: payload.legalAnalysis || 'Analisis yuridis berdasarkan peraturan perundang-undangan dan perjanjian yang berlaku.',
+      conclusion: payload.conclusion || 'Kesimpulan hukum komprehensif.',
+      recommendation: payload.recommendation || 'Langkah mitigasi risiko hukum yang disarankan.',
+      approval: payload.approval || 'PENDING_APPROVAL'
+    };
+    state.opinions.unshift(newOp);
+    storage.set(storage.KEYS.LEGAL_OPINIONS, state.opinions);
+    this.addActivityLog('CREATE', 'Legal Opinion', newId, `Menyusun opini hukum baru: ${newOp.title}`);
+    this.triggerToast(`Opini hukum "${newOp.title}" (${newId}) berhasil didaftarkan!`, 'success');
+    return newOp;
+  },
+
+  updateOpinion(id, payload) {
+    const op = state.opinions.find(o => o.id === id);
+    if (!op) return null;
+    if (payload.title !== undefined) { op.title = payload.title; op.subject = payload.title; }
+    if (payload.opinionNumber !== undefined) op.opinionNumber = payload.opinionNumber;
+    if (payload.requestor !== undefined) op.requestor = payload.requestor;
+    if (payload.company !== undefined) op.company = payload.company;
+    if (payload.author !== undefined) op.author = payload.author;
+    if (payload.reviewer !== undefined) op.reviewer = payload.reviewer;
+    if (payload.date !== undefined) op.date = payload.date;
+    if (payload.background !== undefined) op.background = payload.background;
+    if (payload.legalAnalysis !== undefined) op.legalAnalysis = payload.legalAnalysis;
+    if (payload.conclusion !== undefined) op.conclusion = payload.conclusion;
+    if (payload.recommendation !== undefined) op.recommendation = payload.recommendation;
+    if (payload.approval !== undefined) op.approval = payload.approval;
+
+    storage.set(storage.KEYS.LEGAL_OPINIONS, state.opinions);
+    this.addActivityLog('UPDATE', 'Legal Opinion', id, `Memperbarui opini hukum: ${op.title}`);
+    this.triggerToast(`Opini hukum "${op.title}" berhasil diperbarui!`, 'success');
+    return op;
+  },
+
+  deleteOpinion(id) {
+    const op = state.opinions.find(o => o.id === id);
+    const title = op ? op.title : id;
+    state.opinions = state.opinions.filter(o => o.id !== id);
+    storage.set(storage.KEYS.LEGAL_OPINIONS, state.opinions);
+    this.addActivityLog('DELETE', 'Legal Opinion', id, `Menghapus opini hukum: ${title}`);
+    this.triggerToast(`Opini hukum "${title}" berhasil dihapus`, 'info');
+  },
+
   updateOpinionApproval(id, approvalStatus) {
     const op = state.opinions.find(o => o.id === id);
     if (!op) return;
@@ -661,6 +966,49 @@ export const legalStore = {
     storage.set(storage.KEYS.LEGAL_OPINIONS, state.opinions);
     this.addActivityLog('APPROVAL', 'Legal Opinion', id, `Memperbarui status approval opini hukum: ${approvalStatus}`);
     this.triggerToast(`Opini ${id} status persetujuan: ${approvalStatus}`, 'success');
+  },
+
+  // Clauses Library CRUD
+  addClause(payload) {
+    const nextNum = (state.clauses.length || 0) + 1;
+    const newId = `CLS-${String(nextNum).padStart(3, '0')}`;
+    const newClause = {
+      id: newId,
+      title: payload.title || 'Klausul Standar Baru',
+      category: payload.category || 'Proteksi Risiko & Liabilitas',
+      standardModel: payload.standardModel || 'Standar Korporasi',
+      description: payload.description || 'Deskripsi fungsi dan tujuan klausul.',
+      content: payload.content || 'Isi klausul kontrak resmi...'
+    };
+    state.clauses.unshift(newClause);
+    storage.set(storage.KEYS.CLAUSES, state.clauses);
+    this.addActivityLog('CREATE', 'Template & Klausul', newId, `Menambahkan klausul baru: ${newClause.title}`);
+    this.triggerToast(`Klausul "${newClause.title}" berhasil ditambahkan ke perpustakaan!`, 'success');
+    return newClause;
+  },
+
+  updateClause(id, payload) {
+    const cl = state.clauses.find(item => item.id === id);
+    if (!cl) return null;
+    if (payload.title !== undefined) cl.title = payload.title;
+    if (payload.category !== undefined) cl.category = payload.category;
+    if (payload.standardModel !== undefined) cl.standardModel = payload.standardModel;
+    if (payload.description !== undefined) cl.description = payload.description;
+    if (payload.content !== undefined) cl.content = payload.content;
+
+    storage.set(storage.KEYS.CLAUSES, state.clauses);
+    this.addActivityLog('UPDATE', 'Template & Klausul', id, `Memperbarui klausul: ${cl.title}`);
+    this.triggerToast(`Klausul "${cl.title}" berhasil diperbarui!`, 'success');
+    return cl;
+  },
+
+  deleteClause(id) {
+    const cl = state.clauses.find(item => item.id === id);
+    const title = cl ? cl.title : id;
+    state.clauses = state.clauses.filter(item => item.id !== id);
+    storage.set(storage.KEYS.CLAUSES, state.clauses);
+    this.addActivityLog('DELETE', 'Template & Klausul', id, `Menghapus klausul: ${title}`);
+    this.triggerToast(`Klausul "${title}" berhasil dihapus`, 'info');
   },
 
   // Templates & Letters CRUD
@@ -1392,6 +1740,26 @@ export const legalStore = {
     storage.set(storage.KEYS.TENDER_VAULT, state.tenderVault);
     this.addActivityLog('CREATE', 'Bank Dokumen Kualifikasi', newId, `Menambahkan master dokumen kualifikasi lelang: ${doc.name}`);
     this.triggerToast(`Dokumen kualifikasi "${doc.name}" berhasil ditambahkan ke Bank Dokumen`, 'success');
+  },
+
+  updateTenderVaultDoc(id, payload) {
+    const doc = state.tenderVault.find(d => d.id === id);
+    if (!doc) return null;
+    if (payload.name !== undefined) doc.name = payload.name;
+    if (payload.code !== undefined) doc.code = payload.code;
+    if (payload.category !== undefined) doc.category = payload.category;
+    if (payload.issuer !== undefined) doc.issuer = payload.issuer;
+    if (payload.number !== undefined) doc.number = payload.number;
+    if (payload.issueDate !== undefined) doc.issueDate = payload.issueDate;
+    if (payload.expiryDate !== undefined) doc.expiryDate = payload.expiryDate;
+    if (payload.notes !== undefined) doc.notes = payload.notes;
+    if (payload.fileRef !== undefined) doc.fileRef = payload.fileRef;
+    if (payload.fileSize !== undefined) doc.fileSize = payload.fileSize;
+
+    storage.set(storage.KEYS.TENDER_VAULT, state.tenderVault);
+    this.addActivityLog('UPDATE', 'Bank Dokumen Kualifikasi', id, `Memperbarui dokumen kualifikasi: ${doc.name}`);
+    this.triggerToast(`Dokumen kualifikasi "${doc.name}" berhasil diperbarui!`, 'success');
+    return doc;
   },
 
   deleteTenderVaultDoc(id) {

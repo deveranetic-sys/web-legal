@@ -57,19 +57,42 @@
       </div>
     </div>
 
+    <!-- Empty State -->
+    <div v-if="filteredKnowledge.length === 0" class="text-center py-12 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
+      <p class="text-sm font-bold text-slate-700">Tidak ada regulasi yang sesuai pencarian</p>
+      <p class="text-xs text-slate-500">Silakan ubah filter atau kata kunci pencarian Anda.</p>
+    </div>
+
     <!-- Regulation Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div
         v-for="item in filteredKnowledge"
         :key="item.id"
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition space-y-3 flex flex-col justify-between"
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition space-y-3 flex flex-col justify-between group"
       >
         <div class="space-y-2">
           <div class="flex items-center justify-between gap-2">
             <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-[#FDE68A]">
               {{ item.category }}
             </span>
-            <span class="text-[11px] font-mono text-slate-400">{{ item.effectiveDate || item.date }}</span>
+            <div class="flex items-center gap-1">
+              <span class="text-[11px] font-mono text-slate-400">{{ item.effectiveDate || item.date }}</span>
+              <!-- Card actions -->
+              <button
+                @click="openEditModal(item)"
+                class="p-1 rounded text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition cursor-pointer"
+                title="Edit Regulasi"
+              >
+                <Pencil class="w-3.5 h-3.5" />
+              </button>
+              <button
+                @click="confirmDelete(item)"
+                class="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                title="Hapus Regulasi"
+              >
+                <Trash2 class="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug">
@@ -83,12 +106,14 @@
 
         <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
           <span class="text-slate-500">Sektor: <span class="font-bold text-slate-700">{{ item.sector || item.legalTopic }}</span></span>
-          <button
-            @click="selectedReg = item"
-            class="text-amber-700 hover:text-amber-800 font-bold cursor-pointer whitespace-nowrap"
-          >
-            Lihat Poin
-          </button>
+          <div class="flex items-center gap-2">
+            <button
+              @click="selectedReg = item"
+              class="text-amber-700 hover:text-amber-800 font-bold cursor-pointer whitespace-nowrap"
+            >
+              Lihat Poin
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -120,13 +145,30 @@
             <div v-if="selectedReg.source">Sumber JDIH: <span class="font-semibold text-slate-700">{{ selectedReg.source }}</span></div>
             <div v-if="selectedReg.link" class="pt-1">
               <a :href="selectedReg.link" target="_blank" class="text-indigo-600 hover:underline font-bold inline-flex items-center gap-1">
-                Buka Tautan JDIH Resmi ↗
+                <span>Buka Tautan JDIH Resmi</span>
+                <ExternalLink class="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
         </div>
 
-        <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
+          <div class="flex items-center gap-1.5">
+            <button
+              @click="openEditModal(selectedReg); selectedReg = null"
+              class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-bold cursor-pointer inline-flex items-center gap-1"
+            >
+              <Pencil class="w-3.5 h-3.5" />
+              <span>Edit</span>
+            </button>
+            <button
+              @click="confirmDelete(selectedReg)"
+              class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-bold cursor-pointer inline-flex items-center gap-1"
+            >
+              <Trash2 class="w-3.5 h-3.5" />
+              <span>Hapus</span>
+            </button>
+          </div>
           <button @click="selectedReg = null" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold cursor-pointer">
             Tutup
           </button>
@@ -275,18 +317,147 @@
         </form>
       </div>
     </div>
+
+    <!-- MODAL: Edit Regulasi -->
+    <div
+      v-if="isEditModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isEditModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-slate-900 text-white border-b border-slate-900 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Pencil class="w-5 h-5 text-amber-400" />
+            <h3 class="font-extrabold text-white text-base">Edit Regulasi & Preseden Hukum</h3>
+          </div>
+          <button @click="isEditModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitEditRegulation" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Judul Peraturan / Regulasi *</label>
+            <input
+              v-model="editRegForm.title"
+              type="text"
+              required
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Kategori Dokumen Hukum</label>
+              <select
+                v-model="editRegForm.category"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Undang-Undang">Undang-Undang (UU)</option>
+                <option value="Peraturan Pemerintah">Peraturan Pemerintah (PP)</option>
+                <option value="Peraturan Menteri ESDM">Peraturan Menteri ESDM</option>
+                <option value="Peraturan BKPM">Peraturan BKPM</option>
+                <option value="Peraturan KLHK">Peraturan KLHK</option>
+                <option value="Putusan Mahkamah Agung">Putusan Mahkamah Agung</option>
+                <option value="Peraturan Perusahaan">Peraturan Internal Perusahaan</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Sektor Industri Terkait</label>
+              <select
+                v-model="editRegForm.sector"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Ketenagalistrikan & Energi">Ketenagalistrikan & Energi</option>
+                <option value="Pertambangan Mineral & Batubara">Pertambangan Mineral & Batubara</option>
+                <option value="Korporat & Penanaman Modal (PMA)">Korporat & Penanaman Modal (PMA)</option>
+                <option value="Ketenagakerjaan & Hubungan Industrial">Ketenagakerjaan & Hubungan Industrial</option>
+                <option value="Lingkungan Hidup & Kehutanan">Lingkungan Hidup & Kehutanan</option>
+                <option value="Perpajakan & Bea Cukai">Perpajakan & Bea Cukai</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nomor Referensi / Regulasi *</label>
+              <input
+                v-model="editRegForm.regulationNumber"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900 font-mono"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tanggal Berlaku Efektif</label>
+              <input
+                v-model="editRegForm.date"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Sumber Dokumen / Instansi</label>
+              <input
+                v-model="editRegForm.source"
+                type="text"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tautan Web JDIH (URL)</label>
+              <input
+                v-model="editRegForm.link"
+                type="url"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Ringkasan Ketentuan / Abstrak *</label>
+            <textarea
+              v-model="editRegForm.summary"
+              required
+              rows="3"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-slate-900 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isEditModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, reactive } from 'vue';
-import { Search, Plus } from 'lucide-vue-next';
+import { Search, Plus, Pencil, Trash2, ExternalLink } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 
 const searchQuery = ref('');
 const filterCategory = ref('ALL');
 const isAddModalOpen = ref(false);
+const isEditModalOpen = ref(false);
 const selectedReg = ref(null);
+const editingRegId = ref(null);
 
 const newRegForm = reactive({
   title: '',
@@ -300,6 +471,17 @@ const newRegForm = reactive({
   keyProvisions: ''
 });
 
+const editRegForm = reactive({
+  title: '',
+  category: '',
+  sector: '',
+  regulationNumber: '',
+  date: '',
+  source: '',
+  link: '',
+  summary: ''
+});
+
 function submitNewRegulation() {
   legalStore.addKnowledge({ ...newRegForm });
   isAddModalOpen.value = false;
@@ -307,6 +489,35 @@ function submitNewRegulation() {
   newRegForm.referenceNumber = '';
   newRegForm.summary = '';
   newRegForm.keyProvisions = '';
+}
+
+function openEditModal(item) {
+  editingRegId.value = item.id;
+  editRegForm.title = item.title || '';
+  editRegForm.category = item.category || 'Peraturan Menteri ESDM';
+  editRegForm.sector = item.sector || item.legalTopic || 'Ketenagalistrikan & Energi';
+  editRegForm.regulationNumber = item.regulationNumber || item.referenceNumber || '';
+  editRegForm.date = item.date || item.effectiveDate || new Date().toISOString().slice(0, 10);
+  editRegForm.source = item.source || '';
+  editRegForm.link = item.link || '';
+  editRegForm.summary = item.summary || item.keyProvisions || '';
+  isEditModalOpen.value = true;
+}
+
+function submitEditRegulation() {
+  if (!editingRegId.value) return;
+  legalStore.updateKnowledge(editingRegId.value, { ...editRegForm });
+  isEditModalOpen.value = false;
+  editingRegId.value = null;
+}
+
+function confirmDelete(item) {
+  if (confirm(`Apakah Anda yakin ingin menghapus regulasi "${item.title}"?`)) {
+    if (selectedReg.value?.id === item.id) {
+      selectedReg.value = null;
+    }
+    legalStore.deleteKnowledge(item.id);
+  }
 }
 
 const knowledge = computed(() => legalStore.state.knowledge);

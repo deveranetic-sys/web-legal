@@ -18,9 +18,13 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <span class="text-xs bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-xl border border-[#BBF7D0] font-bold">
-          ✓ Audit Trail Kepatuhan Aktif
-        </span>
+        <button
+          @click="isAddModalOpen = true"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-600/20 transition cursor-pointer whitespace-nowrap"
+        >
+          <Plus class="w-4 h-4" />
+          <span>Tambah Kewajiban</span>
+        </button>
       </div>
     </div>
 
@@ -63,9 +67,9 @@
               <th class="py-3 px-4">Entitas Perseroan</th>
               <th class="py-3 px-4">Batas Akhir (Deadline)</th>
               <th class="py-3 px-4">PIC Pelaksana</th>
-              <th class="py-3 px-4">Dokumen Bukti</th>
               <th class="py-3 px-4 text-center">Status Pemenuhan</th>
               <th class="py-3 px-4 text-center">Pengingat Kalender</th>
+              <th class="py-3 px-4 text-right">Aksi</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -79,12 +83,6 @@
                 {{ item.deadline }}
               </td>
               <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap">{{ item.pic }}</td>
-              <td class="py-3.5 px-4 whitespace-nowrap">
-                <span v-if="item.evidenceDoc" class="text-[#4338CA] hover:underline cursor-pointer font-medium text-xs">
-                  {{ item.evidenceDoc }}
-                </span>
-                <span v-else class="text-slate-400 italic text-[11px]">Belum diunggah</span>
-              </td>
               <td class="py-3.5 px-4 text-center whitespace-nowrap">
                 <button
                   @click="cycleStatus(item)"
@@ -115,19 +113,313 @@
                   </button>
                 </div>
               </td>
+              <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                <div class="flex items-center justify-end gap-1.5">
+                  <button
+                    @click="openEditCompliance(item)"
+                    class="p-1.5 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 cursor-pointer"
+                    title="Edit Kewajiban"
+                  >
+                    <Pencil class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="confirmDeleteCompliance(item)"
+                    class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
+                    title="Hapus Kewajiban"
+                  >
+                    <Trash2 class="w-4 h-4" />
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- MODAL: Tambah Kewajiban Kepatuhan Baru -->
+    <div
+      v-if="isAddModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isAddModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Plus class="w-5 h-5 text-indigo-400" />
+            <h3 class="font-extrabold text-white text-base">Tambah Kewajiban Kepatuhan Baru</h3>
+          </div>
+          <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitNewCompliance" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Nama Kewajiban Kepatuhan *</label>
+            <input
+              v-model="newForm.requirement"
+              type="text"
+              required
+              placeholder="Contoh: Laporan Kinerja Pengelolaan Lingkungan (RKL-RPL) Semester I"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Dasar Hukum / Regulasi *</label>
+              <input
+                v-model="newForm.legalBasis"
+                type="text"
+                required
+                placeholder="Misal: PP No. 22/2021 & AMDAL"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Frekuensi Pelaporan</label>
+              <select
+                v-model="newForm.frequency"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Per Semester">Per Semester</option>
+                <option value="Triwulanan (Quarterly)">Triwulanan (Quarterly)</option>
+                <option value="Tahunan (Annual)">Tahunan (Annual)</option>
+                <option value="Insidental / Sesuai Permintaan">Insidental / Sesuai Permintaan</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Instansi Pengawas</label>
+              <input
+                v-model="newForm.authority"
+                type="text"
+                placeholder="Kementerian ESDM / KLHK / BKPM"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Entitas Perseroan</label>
+              <select
+                v-model="newForm.company"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
+                <option value="PT Indo Mineral Tambang">PT Indo Mineral Tambang</option>
+                <option value="PT Trans Nusantara Logistik">PT Trans Nusantara Logistik</option>
+                <option value="PT Energi Hijau Persada">PT Energi Hijau Persada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Batas Akhir (Deadline) *</label>
+              <input
+                v-model="newForm.deadline"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">PIC Pelaksana</label>
+              <input
+                v-model="newForm.pic"
+                type="text"
+                placeholder="Nama PIC Legal / HSE"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isAddModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Kewajiban
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: Edit Kewajiban Kepatuhan -->
+    <div
+      v-if="isEditModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isEditModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-slate-900 text-white border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Pencil class="w-5 h-5 text-amber-400" />
+            <h3 class="font-extrabold text-white text-base">Perbarui Kewajiban Kepatuhan</h3>
+          </div>
+          <button @click="isEditModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitEditCompliance" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Nama Kewajiban Kepatuhan *</label>
+            <input
+              v-model="editForm.requirement"
+              type="text"
+              required
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Dasar Hukum *</label>
+              <input
+                v-model="editForm.legalBasis"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Frekuensi</label>
+              <select
+                v-model="editForm.frequency"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Per Semester">Per Semester</option>
+                <option value="Triwulanan (Quarterly)">Triwulanan (Quarterly)</option>
+                <option value="Tahunan (Annual)">Tahunan (Annual)</option>
+                <option value="Insidental / Sesuai Permintaan">Insidental / Sesuai Permintaan</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Batas Akhir (Deadline) *</label>
+              <input
+                v-model="editForm.deadline"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Status Kepatuhan</label>
+              <select
+                v-model="editForm.status"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-bold"
+              >
+                <option value="COMPLIANT">COMPLIANT (Terpenuhi)</option>
+                <option value="UPCOMING">UPCOMING (Mendatang)</option>
+                <option value="OVERDUE">OVERDUE (Terlambat)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">PIC Pelaksana</label>
+            <input
+              v-model="editForm.pic"
+              type="text"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isEditModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { Calendar, Download } from 'lucide-vue-next';
+import { ref, computed, reactive } from 'vue';
+import { Calendar, Download, Plus, Pencil, Trash2 } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 import { openGoogleCalendar, downloadICalFile } from '../services/calendarService';
+
+const isAddModalOpen = ref(false);
+const isEditModalOpen = ref(false);
+
+const newForm = reactive({
+  requirement: '',
+  legalBasis: '',
+  frequency: 'Per Semester',
+  authority: 'Kementerian ESDM / KLHK',
+  company: 'PT Nusantara Energi',
+  deadline: new Date(Date.now() + 60 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+  pic: 'Compliance Specialist',
+  status: 'UPCOMING'
+});
+
+const editForm = reactive({
+  id: '',
+  requirement: '',
+  legalBasis: '',
+  frequency: '',
+  authority: '',
+  company: '',
+  deadline: '',
+  pic: '',
+  status: 'UPCOMING'
+});
+
+function openEditCompliance(item) {
+  Object.assign(editForm, {
+    id: item.id,
+    requirement: item.requirement || '',
+    legalBasis: item.legalBasis || '',
+    frequency: item.frequency || 'Per Semester',
+    authority: item.authority || '',
+    company: item.company || 'PT Nusantara Energi',
+    deadline: item.deadline || '',
+    pic: item.pic || '',
+    status: item.status || 'UPCOMING'
+  });
+  isEditModalOpen.value = true;
+}
+
+function submitNewCompliance() {
+  legalStore.addComplianceObligation({ ...newForm });
+  isAddModalOpen.value = false;
+  newForm.requirement = '';
+  newForm.legalBasis = '';
+}
+
+function submitEditCompliance() {
+  legalStore.updateComplianceObligation(editForm.id, { ...editForm });
+  isEditModalOpen.value = false;
+}
+
+function confirmDeleteCompliance(item) {
+  if (confirm(`Hapus kewajiban kepatuhan "${item.requirement}"?`)) {
+    legalStore.deleteComplianceObligation(item.id);
+  }
+}
 
 const complianceItems = computed(() => legalStore.state.compliance);
 

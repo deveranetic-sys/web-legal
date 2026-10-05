@@ -115,13 +115,30 @@
                   {{ lic.status === 'ACTIVE' ? 'Aktif' : 'Perpanjangan' }}
                 </span>
               </td>
-              <td class="py-3.5 px-4 text-right">
-                <button
-                  @click="selectedLicense = lic"
-                  class="p-1.5 rounded-lg text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 cursor-pointer"
-                >
-                  <Eye class="w-4 h-4" />
-                </button>
+              <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                <div class="flex items-center justify-end gap-1.5">
+                  <button
+                    @click="selectedLicense = lic"
+                    class="p-1.5 rounded-lg text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 cursor-pointer"
+                    title="Pratinjau Detail Izin"
+                  >
+                    <Eye class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="openEditLicense(lic)"
+                    class="p-1.5 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 cursor-pointer"
+                    title="Perbarui Data Izin"
+                  >
+                    <Pencil class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="confirmDeleteLicense(lic)"
+                    class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
+                    title="Hapus Izin"
+                  >
+                    <Trash2 class="w-4 h-4" />
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -284,17 +301,152 @@
         </form>
       </div>
     </div>
+
+    <!-- MODAL: Edit Izin Berusaha -->
+    <div
+      v-if="isEditModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isEditModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-slate-900 text-white border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Pencil class="w-5 h-5 text-amber-400" />
+            <h3 class="font-extrabold text-white text-base">Perbarui Data Izin Berusaha</h3>
+          </div>
+          <button @click="isEditModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitEditLicense" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Nama Izin / Sertifikat Standar *</label>
+            <input
+              v-model="editForm.licenseName"
+              type="text"
+              required
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tipe Dokumen Izin</label>
+              <select
+                v-model="editForm.licenseType"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="OSS RBA (NIB)">OSS RBA (NIB)</option>
+                <option value="PB-UMKU Sektoral">PB-UMKU Sektoral</option>
+                <option value="Izin Lingkungan (AMDAL)">Izin Lingkungan (AMDAL)</option>
+                <option value="Sertifikat Laik Operasi (SLO)">Sertifikat Laik Operasi (SLO)</option>
+                <option value="IUP Operasi Produksi">IUP Operasi Produksi</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nomor Registrasi Izin *</label>
+              <input
+                v-model="editForm.licenseNumber"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 font-mono"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Instansi Penerbit *</label>
+              <input
+                v-model="editForm.authority"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Entitas Pemegang Izin</label>
+              <select
+                v-model="editForm.company"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
+                <option value="PT Indo Mineral Tambang">PT Indo Mineral Tambang</option>
+                <option value="PT Trans Nusantara Logistik">PT Trans Nusantara Logistik</option>
+                <option value="PT Energi Hijau Persada">PT Energi Hijau Persada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tanggal Terbit</label>
+              <input
+                v-model="editForm.issueDate"
+                type="date"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Masa Berlaku *</label>
+              <input
+                v-model="editForm.expiryDate"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Status Izin</label>
+              <select
+                v-model="editForm.status"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none font-bold"
+              >
+                <option value="ACTIVE">Aktif (Valid)</option>
+                <option value="RENEWAL_IN_PROGRESS">Perpanjangan</option>
+                <option value="EXPIRED">Kedaluwarsa</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Kewajiban Pelaporan & Kepatuhan</label>
+            <textarea
+              v-model="editForm.reportingObligation"
+              rows="2"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isEditModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, reactive } from 'vue';
-import { Plus, Search, Eye } from 'lucide-vue-next';
+import { Plus, Search, Eye, Pencil, Trash2 } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 
 const searchQuery = ref('');
 const filterStatus = ref('ALL');
 const isAddModalOpen = ref(false);
+const isEditModalOpen = ref(false);
 const selectedLicense = ref(null);
 
 const newForm = reactive({
@@ -308,6 +460,46 @@ const newForm = reactive({
   status: 'ACTIVE',
   reportingObligation: 'Laporan kepatuhan berkala per semester via portal OSS RBA.'
 });
+
+const editForm = reactive({
+  id: '',
+  licenseName: '',
+  licenseType: '',
+  licenseNumber: '',
+  authority: '',
+  company: '',
+  issueDate: '',
+  expiryDate: '',
+  status: 'ACTIVE',
+  reportingObligation: ''
+});
+
+function openEditLicense(lic) {
+  Object.assign(editForm, {
+    id: lic.id,
+    licenseName: lic.licenseName || '',
+    licenseType: lic.licenseType || 'OSS RBA (NIB)',
+    licenseNumber: lic.licenseNumber || '',
+    authority: lic.authority || '',
+    company: lic.company || 'PT Nusantara Energi',
+    issueDate: lic.issueDate || '',
+    expiryDate: lic.expiryDate || '',
+    status: lic.status || 'ACTIVE',
+    reportingObligation: lic.reportingObligation || ''
+  });
+  isEditModalOpen.value = true;
+}
+
+function submitEditLicense() {
+  legalStore.updateLicense(editForm.id, { ...editForm });
+  isEditModalOpen.value = false;
+}
+
+function confirmDeleteLicense(lic) {
+  if (confirm(`Apakah Anda yakin ingin menghapus izin "${lic.licenseName}" (${lic.licenseNumber})?`)) {
+    legalStore.deleteLicense(lic.id);
+  }
+}
 
 function submitNewLicense() {
   legalStore.addLicense({ ...newForm });

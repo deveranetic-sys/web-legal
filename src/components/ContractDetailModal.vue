@@ -113,25 +113,63 @@
         </div>
 
         <!-- Tab 3: Riwayat Addendum -->
-        <div v-if="activeSubTab === 'addendum'" class="space-y-3">
+        <div v-if="activeSubTab === 'addendum'" class="space-y-4">
           <div class="p-3 bg-[#F9FAFB] rounded-xl border border-[#E2E8F0] flex items-center justify-between">
             <div>
               <span class="font-semibold text-[#0F172A] block">Ketentuan Opsi Perpanjangan (Renewal)</span>
               <span class="text-[#475569] text-xs">{{ contract.renewalStatus }}</span>
             </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]">
-              Terdaftar
-            </span>
+            <button
+              @click="showAddAddendum = !showAddAddendum"
+              class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition cursor-pointer flex items-center gap-1"
+            >
+              <span>{{ showAddAddendum ? 'Tutup Form' : '+ Tambah Addendum' }}</span>
+            </button>
           </div>
 
+          <!-- Add Addendum Form -->
+          <form v-if="showAddAddendum" @submit.prevent="submitAddendum" class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-200 space-y-3">
+            <h4 class="font-bold text-xs text-indigo-900">Form Pendaftaran Addendum Baru</h4>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-[11px] text-slate-700 mb-0.5">Nomor Surat Addendum *</label>
+                <input v-model="addendumForm.number" required type="text" placeholder="Misal: ADD/001/PPA/2026" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500 font-mono" />
+              </div>
+              <div>
+                <label class="block font-semibold text-[11px] text-slate-700 mb-0.5">Tanggal Efektif Addendum *</label>
+                <input v-model="addendumForm.date" required type="date" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div class="col-span-2">
+                <label class="block font-semibold text-[11px] text-slate-700 mb-0.5">Ruang Lingkup Perubahan *</label>
+                <input v-model="addendumForm.scope" required type="text" placeholder="Misal: Perpanjangan jangka waktu & penyesuaian tarif" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div class="col-span-2">
+                <label class="block font-semibold text-[11px] text-slate-700 mb-0.5">Rincian Perubahan Klausul</label>
+                <textarea v-model="addendumForm.changes" rows="2" placeholder="Tuliskan butir pasal atau ketentuan yang diamandemen..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500"></textarea>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-1">
+              <button type="button" @click="showAddAddendum = false" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 cursor-pointer">
+                Batal
+              </button>
+              <button type="submit" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-xs">
+                Simpan Addendum
+              </button>
+            </div>
+          </form>
+
           <div v-if="contract.addendums && contract.addendums.length > 0" class="border-l-2 border-[#6366F1] pl-4 py-2 space-y-3">
-            <div v-for="add in contract.addendums" :key="add.id">
-              <div class="text-xs font-semibold text-[#0F172A]">{{ add.number }} • {{ add.date }}</div>
-              <div class="text-xs text-[#475569]">{{ add.notes }}</div>
+            <div v-for="add in contract.addendums" :key="add.id" class="bg-white p-3 rounded-lg border border-slate-200">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-indigo-700 font-mono">{{ add.number }}</span>
+                <span class="text-[11px] text-slate-500">{{ add.date }}</span>
+              </div>
+              <div class="text-xs font-semibold text-[#0F172A] mt-1">{{ add.scope || 'Amandemen Kontrak' }}</div>
+              <div class="text-xs text-[#475569] mt-0.5">{{ add.changes || add.notes }}</div>
             </div>
           </div>
 
-          <div v-else class="p-6 text-center text-[#94A3B8] bg-[#F9FAFB] rounded-xl border border-[#E2E8F0]">
+          <div v-else-if="!showAddAddendum" class="p-6 text-center text-[#94A3B8] bg-[#F9FAFB] rounded-xl border border-[#E2E8F0]">
             Belum ada addendum yang tercatat untuk kontrak ini.
           </div>
         </div>
@@ -173,10 +211,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { legalStore, formatIDR, calculateDaysRemaining } from '../stores/legalStore';
 
 const activeSubTab = ref('overview');
+const showAddAddendum = ref(false);
+const addendumForm = reactive({
+  number: '',
+  date: new Date().toISOString().slice(0, 10),
+  scope: '',
+  changes: ''
+});
 
 const tabs = [
   { id: 'overview', label: '1. Ringkasan & Klausul' },
@@ -189,6 +234,15 @@ const contract = computed(() => legalStore.state.selectedContract);
 
 function closeModal() {
   legalStore.state.isContractDetailModalOpen = false;
+}
+
+function submitAddendum() {
+  if (!contract.value) return;
+  legalStore.addContractAddendum(contract.value.id, { ...addendumForm });
+  showAddAddendum.value = false;
+  addendumForm.number = '';
+  addendumForm.scope = '';
+  addendumForm.changes = '';
 }
 
 function getStatusBadgeClass(c) {

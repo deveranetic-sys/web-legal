@@ -123,12 +123,29 @@
             </div>
           </div>
 
-          <button
-            @click="selectedDispute = disp"
-            class="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition cursor-pointer self-start sm:self-auto whitespace-nowrap"
-          >
-            Lihat Kronologi
-          </button>
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              @click="openEditDispute(disp)"
+              class="p-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition cursor-pointer flex items-center gap-1"
+              title="Edit Data Sengketa"
+            >
+              <Pencil class="w-3.5 h-3.5" />
+              <span>Edit</span>
+            </button>
+            <button
+              @click="confirmDeleteDispute(disp)"
+              class="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition cursor-pointer flex items-center gap-1"
+              title="Hapus Data Sengketa"
+            >
+              <Trash2 class="w-3.5 h-3.5" />
+            </button>
+            <button
+              @click="selectedDispute = disp"
+              class="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition cursor-pointer whitespace-nowrap"
+            >
+              Lihat Kronologi
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -347,16 +364,165 @@
         </form>
       </div>
     </div>
+
+    <!-- MODAL: Edit Perkara / Sengketa -->
+    <div
+      v-if="isEditModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      @click.self="isEditModalOpen = false"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-slate-900 text-white border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Pencil class="w-5 h-5 text-amber-400" />
+            <h3 class="font-extrabold text-white text-base">Perbarui Data Sengketa</h3>
+          </div>
+          <button @click="isEditModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        </div>
+
+        <form @submit.prevent="submitEditDispute" class="p-6 space-y-4 text-xs sm:text-sm">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nomor Perkara / Register *</label>
+              <input
+                v-model="editDisputeForm.caseNumber"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 font-mono"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Pihak Lawan (Opponent) *</label>
+              <input
+                v-model="editDisputeForm.opponent"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Klasifikasi Sengketa</label>
+              <select
+                v-model="editDisputeForm.caseType"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="Arbitrase BANI">Arbitrase BANI</option>
+                <option value="Gugatan Perdata (Wanprestasi)">Gugatan Perdata (Wanprestasi)</option>
+                <option value="Gugatan Perdata (PMH)">Gugatan Perdata (PMH)</option>
+                <option value="Sengketa Tata Usaha Negara (PTUN)">Sengketa Tata Usaha Negara (PTUN)</option>
+                <option value="Ketenagakerjaan (PHI)">Ketenagakerjaan (PHI)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Pengadilan / Lembaga</label>
+              <input
+                v-model="editDisputeForm.courtOrInstitution"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Nilai Tuntutan / Gugatan (IDR)</label>
+              <input
+                v-model.number="editDisputeForm.disputeValue"
+                type="number"
+                min="0"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 font-mono font-bold"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Tingkat Risiko</label>
+              <select
+                v-model="editDisputeForm.riskLevel"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none font-bold"
+              >
+                <option value="HIGH">HIGH (Kritis/Material)</option>
+                <option value="MEDIUM">MEDIUM (Sedang)</option>
+                <option value="LOW">LOW (Rendah)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Entitas Internal Tergugat/Penggugat</label>
+              <select
+                v-model="editDisputeForm.company"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none"
+              >
+                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
+                <option value="PT Indo Mineral Tambang">PT Indo Mineral Tambang</option>
+                <option value="PT Trans Nusantara Logistik">PT Trans Nusantara Logistik</option>
+                <option value="PT Energi Hijau Persada">PT Energi Hijau Persada</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1">Jadwal Sidang Berikutnya</label>
+              <input
+                v-model="editDisputeForm.nextHearingDate"
+                type="date"
+                required
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Kuasa Hukum / Legal Counsel</label>
+            <input
+              v-model="editDisputeForm.legalCounsel"
+              type="text"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Ringkasan Pokok Perkara & Posisi Kasus *</label>
+            <textarea
+              v-model="editDisputeForm.summary"
+              required
+              rows="3"
+              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              @click="isEditModalOpen = false"
+              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, reactive } from 'vue';
-import { Plus, Calendar, Download } from 'lucide-vue-next';
+import { Plus, Calendar, Download, Pencil, Trash2 } from 'lucide-vue-next';
 import { legalStore, formatIDR } from '../stores/legalStore';
 import { openGoogleCalendar, downloadICalFile } from '../services/calendarService';
 
 const isAddModalOpen = ref(false);
+const isEditModalOpen = ref(false);
 const selectedDispute = ref(null);
 
 const newDisputeForm = reactive({
@@ -371,6 +537,48 @@ const newDisputeForm = reactive({
   legalCounsel: 'Tim Internal Legal Counsel',
   summary: ''
 });
+
+const editDisputeForm = reactive({
+  id: '',
+  caseNumber: '',
+  opponent: '',
+  caseType: '',
+  courtOrInstitution: '',
+  disputeValue: 0,
+  riskLevel: 'HIGH',
+  company: '',
+  nextHearingDate: '',
+  legalCounsel: '',
+  summary: ''
+});
+
+function openEditDispute(disp) {
+  Object.assign(editDisputeForm, {
+    id: disp.id,
+    caseNumber: disp.caseNumber || '',
+    opponent: disp.opponent || '',
+    caseType: disp.caseType || 'Arbitrase BANI',
+    courtOrInstitution: disp.courtOrInstitution || '',
+    disputeValue: disp.disputeValue || 0,
+    riskLevel: disp.riskLevel || 'HIGH',
+    company: disp.company || 'PT Nusantara Energi',
+    nextHearingDate: disp.nextHearingDate || '',
+    legalCounsel: disp.legalCounsel || '',
+    summary: disp.summary || ''
+  });
+  isEditModalOpen.value = true;
+}
+
+function submitEditDispute() {
+  legalStore.updateDispute(editDisputeForm.id, { ...editDisputeForm });
+  isEditModalOpen.value = false;
+}
+
+function confirmDeleteDispute(disp) {
+  if (confirm(`Hapus perkara sengketa "${disp.caseNumber}" (${disp.company} vs ${disp.opponent})?`)) {
+    legalStore.deleteDispute(disp.id);
+  }
+}
 
 function submitNewDispute() {
   legalStore.addDispute({ ...newDisputeForm });
