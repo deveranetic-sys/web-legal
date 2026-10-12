@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Progres Sistem Manajemen Legal (Web-Legal)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+      line-height: 1.5;
+      font-size: 13px;
+      padding: 24px;
+    }
+    .page-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 32px 36px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-tag {
+      background: #f0fdf4;
+      color: #16a34a;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .subtitle {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .meta-box {
+      text-align: right;
+      font-size: 11px;
+      color: #64748b;
+    }
+    .meta-box strong {
+      color: #0f172a;
+      font-size: 12px;
+      display: block;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px 14px;
+      border-radius: 10px;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 2px;
+    }
+    .stat-val.green { color: #059669; }
+    .stat-val.blue { color: #2563eb; }
+    .stat-val.indigo { color: #4f46e5; }
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    /* Section */
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 20px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Feature Cards */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #2563eb;
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+    .feature-card.green-border { border-left-color: #10b981; }
+    .feature-card.purple-border { border-left-color: #8b5cf6; }
+    .feature-card.amber-border { border-left-color: #f59e0b; }
+    .feature-card.emerald-border { border-left-color: #059669; }
+    .feature-card.indigo-border { border-left-color: #6366f1; }
+
+    .feature-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .feature-desc {
+      font-size: 11.5px;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    /* Table */
+    .table-container {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+    th {
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 700;
+      padding: 9px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+    
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+    .badge-ready {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    /* Callout */
+    .callout {
+      background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+      color: #ffffff;
+      padding: 16px 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .callout-text h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #6ee7b7;
+      margin-bottom: 3px;
+    }
+    .callout-text p {
+      font-size: 11.5px;
+      color: #e2e8f0;
+      line-height: 1.4;
+    }
+    .callout-badge {
+      background: #10b981;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10.5px;
+      color: #94a3b8;
+    }
+
+    /* Print styling */
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        font-size: 11.5px;
+      }
+      .page-container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .stat-card, .feature-card, .table-container, .callout {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <div class="brand-title">
+          ⚖️ Modul Legal & Kepatuhan Perusahaan
+          <span class="brand-tag">Update Hari Ini</span>
+        </div>
+        <div class="subtitle">Laporan Pembaruan Fitur & Kesiapan Sistem (Web-Legal)</div>
+      </div>
+      <div class="meta-box">
+        <strong>Tanggal: 5 Oktober 2026</strong>
+        Scope: Frontend & State Modul Legal
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-val green">10 / 10</div>
+        <div class="stat-lbl">Modul Legal Selesai CRUD</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val blue">+3.650 Baris</div>
+        <div class="stat-lbl">Penambahan Logika & Komponen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val indigo">Full Reactive</div>
+        <div class="stat-lbl">Pinia Legal Store Terpadu</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val green">Docx & MD Ready</div>
+        <div class="stat-lbl">Dokumen Penawaran Resmi</div>
+      </div>
+    </div>
+
+    <!-- Highlights -->
+    <div class="section-title">✨ Rincian Perubahan Hari Ini (5 Oktober 2026)</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-title">📑 1. Manajemen Kontrak & Modal Detail</div>
+        <div class="feature-desc">
+          Penyempurnaan siklus hidup kontrak: pembuatan kontrak baru, filter jenis/status, upload berkas, perpanjangan masa berlaku, dan modal detail informasi para pihak.
+        </div>
+      </div>
+      <div class="feature-card green-border">
+        <div class="feature-title">⚖️ 2. Penanganan Sengketa (Disputes & Litigation)</div>
+        <div class="feature-desc">
+          Pencatatan perkara perdata/pidana/PHI, kronologi sengketa, potensi kerugian finansial, kuasa hukum penanggung jawab, dan update tahapan persidangan.
+        </div>
+      </div>
+      <div class="feature-card purple-border">
+        <div class="feature-title">🏢 3. Perizinan & Kepatuhan Regulasi (Licensing & Compliance)</div>
+        <div class="feature-desc">
+          Monitoring perizinan instansi/OSS, peringatan kedaluwarsa izin, audit kepatuhan internal, dan checklist kepatuhan regulasi sektoral.
+        </div>
+      </div>
+      <div class="feature-card amber-border">
+        <div class="feature-title">💡 4. Legal Opinion & Legal Due Diligence (LDD)</div>
+        <div class="feature-desc">
+          Alur permintaan kajian hukum antar-divisi, penerbitan opini hukum, serta formulir audit uji tuntas (LDD) terhadap mitra/rekanan bisnis.
+        </div>
+      </div>
+      <div class="feature-card indigo-border">
+        <div class="feature-title">📨 5. Persuratan Legal & Template Draft Otomatis</div>
+        <div class="feature-desc">
+          Registrasi surat masuk/keluar, pelampiran berkas, tracking disposisi, dan generator draf dokumen hukum otomatis berbasis template standar.
+        </div>
+      </div>
+      <div class="feature-card emerald-border">
+        <div class="feature-title">📚 6. Dokumen Spesifikasi & Penawaran ERP SSO</div>
+        <div class="feature-desc">
+          Pembuatan berkas penawaran resmi dan spesifikasi integrasi SSO dalam format Markdown dan Microsoft Word (DOCX) via script otomatis.
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Status -->
+    <div class="section-title">📋 Matriks Komponen & Fitur Web-Legal</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Sub-Modul Legal</th>
+            <th>Fungsi Operasional</th>
+            <th>Fitur CRUD & Aksi</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Kontrak & Perjanjian</strong></td>
+            <td>Pengelolaan kontrak vendor, klien, & addendum</td>
+            <td>Tambah, Edit, Detail, Hapus, Filter</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sengketa & Litigasi</strong></td>
+            <td>Tracking perkara pengadilan, mediasi, & somasi</td>
+            <td>Tambah, Edit Kasus, Tahapan, Hapus</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Perizinan (Licensing)</strong></td>
+            <td>Tracking izin operasional, OSS, & izin edar</td>
+            <td>Tambah Izin, Perpanjang, Detail, Hapus</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Kepatuhan (Compliance)</strong></td>
+            <td>Checklist kepatuhan regulasi & audit internal</td>
+            <td>Input Kepatuhan, Evaluasi, Hapus</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Legal Opinion</strong></td>
+            <td>Permohonan & publikasi pendapat hukum</td>
+            <td>Form Request, Terbitkan Opini, Hapus</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Legal Due Diligence (LDD)</strong></td>
+            <td>Audit hukum calon rekanan / transaksi korporat</td>
+            <td>Input Proyek LDD, Temuan, Rekomendasi</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Persuratan (Documents)</strong></td>
+            <td>E-Office surat masuk, keluar, & disposisi internal</td>
+            <td>Input Surat, Lampiran File, Filter Kategori</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Template Klausul</strong></td>
+            <td>Pustaka klausul standar & template kontrak siap pakai</td>
+            <td>Tambah Template, Download, Edit Klausul</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+          <tr>
+            <td><strong>Basis Pengetahuan (Knowledge)</strong></td>
+            <td>Repositori regulasi, perundangan, & SOP hukum</td>
+            <td>Pencarian Aturan, Tambah Referensi</td>
+            <td><span class="badge badge-ready">● Lengkap</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Callout -->
+    <div class="callout">
+      <div class="callout-text">
+        <h4>📦 Kesiapan Dokumen Penawaran & Integrasi SSO</h4>
+        <p>Telah ditambahkan dokumen penawaran resmi dan rincian modul dalam format Word (<strong>DOKUMEN_PENAWARAN_DAN_SPESIFIKASI_MODUL_LEGAL.docx</strong>) yang siap diserahkan kepada pihak manajemen/klien.</p>
+      </div>
+      <div class="callout-badge">Proposal Ready</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Enterprise Legal Management System (Web-Legal) — Progress Update</span>
+      <span>Surya Era Teknologi • 5 Oktober 2026</span>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -414,646 +414,34 @@
       </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- MODAL: UPLOAD DOKUMEN KUALIFIKASI BARU        -->
-    <!-- ============================================== -->
-    <div
-      v-if="isAddVaultModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
-      @click.self="isAddVaultModalOpen = false"
-    >
-      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-[#E2E8F0] flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white flex items-center justify-between border-b border-[#1E293B]">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-blue-50 text-[#4338CA] flex items-center justify-center border border-[#C7D2FE] text-[#6366F1]">
-              <UploadCloud class="w-4 h-4" />
-            </div>
-            <div>
-              <h3 class="text-sm font-bold">Registrasi Dokumen Kualifikasi Lelang</h3>
-              <p class="text-[11px] text-slate-300">Simpan dokumen master kualifikasi ke dalam Dokumen Vault</p>
-            </div>
-          </div>
-          <button @click="isAddVaultModalOpen = false" class="text-slate-400 hover:text-white transition cursor-pointer">
-            <X class="w-5 h-5" />
-          </button>
-        </div>
+    <!-- Modals (Extracted) -->
+    <AddVaultDocModal
+      :is-open="isAddVaultModalOpen"
+      @close="isAddVaultModalOpen = false"
+    />
 
-        <form @submit.prevent="submitAddVaultDoc" class="p-6 overflow-y-auto space-y-4 text-xs">
-          <!-- File Dropzone & Direct Upload -->
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">
-              File Dokumen Asli (Upload dari Direktori Komputer) *
-            </label>
-            <input
-              type="file"
-              ref="vaultFileInputRef"
-              @change="onVaultFilePicked"
-              class="hidden"
-            />
-            <div
-              v-if="!newDocForm.fileRef"
-              @click="triggerVaultFileBrowse"
-              class="border-2 border-dashed border-[#C7D2FE] hover:border-[#C7D2FE] rounded-xl p-5 text-center bg-[#F8FAFC] hover:bg-blue-50/50 transition cursor-pointer"
-            >
-              <UploadCloud class="w-8 h-8 text-[#6366F1] mx-auto mb-2" />
-              <div class="font-bold text-[#0F172A] text-xs">Klik untuk memilih file dari komputer / direktori lokal</div>
-              <div class="text-[11px] text-[#475569] mt-0.5">Mendukung format PDF, DOCX, ZIP, JPG (Maks. 50 MB)</div>
-            </div>
-            <div
-              v-else
-              class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-[#BBF7D0]"
-            >
-              <div class="flex items-center gap-2.5 min-w-0">
-                <Paperclip class="w-4 h-4 text-emerald-600 shrink-0" />
-                <div class="min-w-0">
-                  <div class="font-bold text-[#0F172A] text-xs truncate">{{ newDocForm.fileRef }}</div>
-                  <div class="text-[11px] text-[#475569]">Ukuran: {{ newDocForm.fileSize || 'Terlampir' }}</div>
-                </div>
-              </div>
-              <button
-                type="button"
-                @click="triggerVaultFileBrowse"
-                class="px-2.5 py-1 bg-white hover:bg-slate-100 text-[#0F172A] border border-slate-200 rounded-lg text-[11px] font-bold transition cursor-pointer"
-              >
-                Ganti File
-              </button>
-            </div>
-          </div>
+    <AddCorporateDocModal
+      :is-open="isAddCorporateModalOpen"
+      @close="isAddCorporateModalOpen = false"
+    />
 
-          <!-- Document Code & Name -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Kode Master *</label>
-              <input
-                v-model="newDocForm.code"
-                type="text"
-                placeholder="Contoh: NIB-2025"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none font-mono"
-              />
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block font-bold text-[#0F172A] mb-1">Nama Dokumen Kualifikasi *</label>
-              <input
-                v-model="newDocForm.name"
-                type="text"
-                placeholder="Nama sertifikat / perizinan / laporan"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-          </div>
+    <LinkTenderModal
+      :is-open="isLinkTenderModalOpen"
+      :selected-doc="selectedVaultDoc"
+      @close="isLinkTenderModalOpen = false"
+    />
 
-          <!-- Category & Number -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Kategori Dokumen *</label>
-              <select
-                v-model="newDocForm.category"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white"
-              >
-                <option value="Legal Administrasi">Legal Administrasi</option>
-                <option value="Kualifikasi Teknis">Kualifikasi Teknis</option>
-                <option value="Kepatuhan & Integritas">Kepatuhan & Integritas</option>
-                <option value="Finansial & Keuangan">Finansial & Keuangan</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Nomor Registrasi / SK</label>
-              <input
-                v-model="newDocForm.number"
-                type="text"
-                placeholder="Nomor dokumen resmi"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none font-mono"
-              />
-            </div>
-          </div>
+    <EditVaultDocModal
+      :is-open="isEditVaultModalOpen"
+      :doc="editingVaultDoc"
+      @close="isEditVaultModalOpen = false"
+    />
 
-          <!-- Issuer & Dates -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Instansi Penerbit</label>
-              <input
-                v-model="newDocForm.issuer"
-                type="text"
-                placeholder="Kementerian / Lembaga / KAP"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Tanggal Terbit</label>
-              <input
-                v-model="newDocForm.issueDate"
-                type="date"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Masa Berlaku (Kosongkan bila Permanen)</label>
-              <input
-                v-model="newDocForm.expiryDate"
-                type="date"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-          </div>
-
-          <!-- Notes -->
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Catatan / Ringkasan Dokumen</label>
-            <textarea
-              v-model="newDocForm.notes"
-              rows="2"
-              placeholder="Keterangan batasan, ruang lingkup kualifikasi, atau catatan legal..."
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
-            <button
-              type="button"
-              @click="isAddVaultModalOpen = false"
-              class="px-4 py-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl transition cursor-pointer text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs flex items-center gap-1.5"
-            >
-              <UploadCloud class="w-3.5 h-3.5" />
-              <span>Simpan Dokumen</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- ============================================== -->
-    <!-- MODAL: REGISTRASI ARSIP KORPORASI BARU        -->
-    <!-- ============================================== -->
-    <div
-      v-if="isAddCorporateModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
-      @click.self="isAddCorporateModalOpen = false"
-    >
-      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-[#E2E8F0] flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white flex items-center justify-between border-b border-[#1E293B]">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-400/30">
-              <Plus class="w-4 h-4" />
-            </div>
-            <div>
-              <h3 class="text-sm font-bold">Registrasi Arsip Legal Korporasi</h3>
-              <p class="text-[11px] text-slate-300">Penyimpanan akta, sertifikat aset, dan dokumen legalitas grup</p>
-            </div>
-          </div>
-          <button @click="isAddCorporateModalOpen = false" class="text-slate-400 hover:text-white transition cursor-pointer">
-            <X class="w-5 h-5" />
-          </button>
-        </div>
-
-        <form @submit.prevent="submitAddCorporateDoc" class="p-6 overflow-y-auto space-y-4 text-xs">
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">
-              Nama Dokumen / Judul Berkas Arsip *
-            </label>
-            <input
-              v-model="newCorpForm.name"
-              type="text"
-              required
-              placeholder="Contoh: Akta Notaris No. 45 - Perubahan Susunan Direksi & Komisaris"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-            />
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Jenis / Kategori Arsip</label>
-              <select
-                v-model="newCorpForm.documentType"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
-              >
-                <option value="Akta Notaris & Korporasi">Akta Notaris & Korporasi</option>
-                <option value="SK Pengesahan Kemenkumham">SK Pengesahan Kemenkumham</option>
-                <option value="Sertifikat Tanah & Aset (HGB/SHM)">Sertifikat Tanah & Aset (HGB/SHM)</option>
-                <option value="Perizinan Dasar (NIB/NPWP)">Perizinan Dasar (NIB/NPWP)</option>
-                <option value="Sertifikasi Mutu (ISO/SMK3)">Sertifikasi Mutu (ISO/SMK3)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Nomor Registrasi / Akta *</label>
-              <input
-                v-model="newCorpForm.number"
-                type="text"
-                required
-                placeholder="45/NOT-JKT/2026"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] font-mono"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Instansi Penerbit / Notaris</label>
-              <input
-                v-model="newCorpForm.issuer"
-                type="text"
-                required
-                placeholder="Notaris Hj. Fatimah, S.H., M.Kn."
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Entitas Perseroan</label>
-              <select
-                v-model="newCorpForm.company"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
-              >
-                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
-                <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
-                <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Tanggal Dokumen *</label>
-              <input
-                v-model="newCorpForm.issueDate"
-                type="date"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Masa Berlaku (Jika Ada)</label>
-              <input
-                v-model="newCorpForm.expiryDate"
-                type="date"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Catatan & Keterangan</label>
-            <textarea
-              v-model="newCorpForm.notes"
-              rows="2"
-              placeholder="Catatan klausul pembatasan, riwayat perubahan, atau keterangan lokasi salinan fisik..."
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] resize-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
-            <button
-              type="button"
-              @click="isAddCorporateModalOpen = false"
-              class="px-4 py-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl transition cursor-pointer text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs flex items-center gap-1.5"
-            >
-              <Plus class="w-3.5 h-3.5" />
-              <span>Simpan Arsip</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- ============================================== -->
-    <!-- MODAL: TAUTKAN DOKUMEN KE PAKET LELANG        -->
-    <!-- ============================================== -->
-    <div
-      v-if="isLinkTenderModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
-      @click.self="isLinkTenderModalOpen = false"
-    >
-      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#E2E8F0]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white flex items-center justify-between border-b border-[#1E293B]">
-          <div class="flex items-center gap-2">
-            <Link2 class="w-4 h-4 text-[#6366F1]" />
-            <h3 class="text-sm font-bold">Tautkan ke Paket Lelang</h3>
-          </div>
-          <button @click="isLinkTenderModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer">
-            <X class="w-5 h-5" />
-          </button>
-        </div>
-
-        <div class="p-6 space-y-4 text-xs">
-          <div v-if="selectedVaultDoc" class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-            <div class="font-bold text-[#0F172A] text-sm">{{ selectedVaultDoc.name }}</div>
-            <div class="text-[#475569]">Kode: <span class="font-mono text-[#0F172A] font-bold">{{ selectedVaultDoc.code }}</span> • {{ selectedVaultDoc.number }}</div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Pilih Paket Lelang Sasaran *</label>
-            <select
-              v-model="targetTenderId"
-              class="w-full py-2.5 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A] text-xs font-semibold"
-            >
-              <option v-for="t in tenders" :key="t.id" :value="t.id">
-                {{ t.id }} - {{ t.title }} ({{ t.company }})
-              </option>
-            </select>
-          </div>
-
-          <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
-            <button
-              type="button"
-              @click="isLinkTenderModalOpen = false"
-              class="px-4 py-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl transition cursor-pointer text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="button"
-              @click="executeLinkToTender"
-              class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs"
-            >
-              Tautkan Dokumen Sekarang
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ============================================== -->
-    <!-- MODAL: EDIT DOKUMEN KUALIFIKASI VAULT         -->
-    <!-- ============================================== -->
-    <div
-      v-if="isEditVaultModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
-      @click.self="isEditVaultModalOpen = false"
-    >
-      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-[#E2E8F0] flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white flex items-center justify-between border-b border-[#1E293B]">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-blue-50 text-[#4338CA] flex items-center justify-center border border-[#C7D2FE] text-[#6366F1]">
-              <Pencil class="w-4 h-4" />
-            </div>
-            <div>
-              <h3 class="text-sm font-bold">Edit Dokumen Kualifikasi Lelang</h3>
-              <p class="text-[11px] text-slate-300">Perbarui rincian dokumen master di Dokumen Vault</p>
-            </div>
-          </div>
-          <button @click="isEditVaultModalOpen = false" class="text-slate-400 hover:text-white transition cursor-pointer">
-            <X class="w-5 h-5" />
-          </button>
-        </div>
-
-        <form @submit.prevent="submitEditVaultDoc" class="p-6 overflow-y-auto space-y-4 text-xs">
-          <!-- Document Code & Name -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Kode Master *</label>
-              <input
-                v-model="editDocForm.code"
-                type="text"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none font-mono"
-              />
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block font-bold text-[#0F172A] mb-1">Nama Dokumen Kualifikasi *</label>
-              <input
-                v-model="editDocForm.name"
-                type="text"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-          </div>
-
-          <!-- Category & Number -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Kategori Dokumen *</label>
-              <select
-                v-model="editDocForm.category"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white"
-              >
-                <option value="Legal Administrasi">Legal Administrasi</option>
-                <option value="Kualifikasi Teknis">Kualifikasi Teknis</option>
-                <option value="Kepatuhan & Integritas">Kepatuhan & Integritas</option>
-                <option value="Finansial & Keuangan">Finansial & Keuangan</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Nomor Registrasi / SK</label>
-              <input
-                v-model="editDocForm.number"
-                type="text"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none font-mono"
-              />
-            </div>
-          </div>
-
-          <!-- Issuer & Dates -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Instansi Penerbit</label>
-              <input
-                v-model="editDocForm.issuer"
-                type="text"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Tanggal Terbit</label>
-              <input
-                v-model="editDocForm.issueDate"
-                type="date"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Masa Berlaku</label>
-              <input
-                v-model="editDocForm.expiryDate"
-                type="date"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-              />
-            </div>
-          </div>
-
-          <!-- File Ref Info -->
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Referensi Nama Berkas Digital</label>
-            <input
-              v-model="editDocForm.fileRef"
-              type="text"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none font-mono"
-            />
-          </div>
-
-          <!-- Notes -->
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Catatan / Ringkasan Dokumen</label>
-            <textarea
-              v-model="editDocForm.notes"
-              rows="2"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
-            <button
-              type="button"
-              @click="isEditVaultModalOpen = false"
-              class="px-4 py-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl transition cursor-pointer text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs flex items-center gap-1.5"
-            >
-              <span>Simpan Perubahan</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- ============================================== -->
-    <!-- MODAL: EDIT ARSIP LEGAL KORPORASI             -->
-    <!-- ============================================== -->
-    <div
-      v-if="isEditCorporateModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
-      @click.self="isEditCorporateModalOpen = false"
-    >
-      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-[#E2E8F0] flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white flex items-center justify-between border-b border-[#1E293B]">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-400/30">
-              <Pencil class="w-4 h-4" />
-            </div>
-            <div>
-              <h3 class="text-sm font-bold">Edit Arsip Legal Korporasi</h3>
-              <p class="text-[11px] text-slate-300">Perbarui data akta, sertifikat aset, dan dokumen legalitas grup</p>
-            </div>
-          </div>
-          <button @click="isEditCorporateModalOpen = false" class="text-slate-400 hover:text-white transition cursor-pointer">
-            <X class="w-5 h-5" />
-          </button>
-        </div>
-
-        <form @submit.prevent="submitEditCorporateDoc" class="p-6 overflow-y-auto space-y-4 text-xs">
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">
-              Nama Dokumen / Judul Berkas Arsip *
-            </label>
-            <input
-              v-model="editCorpForm.name"
-              type="text"
-              required
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-            />
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Jenis / Kategori Arsip</label>
-              <select
-                v-model="editCorpForm.documentType"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
-              >
-                <option value="Akta Notaris & Korporasi">Akta Notaris & Korporasi</option>
-                <option value="SK Pengesahan Kemenkumham">SK Pengesahan Kemenkumham</option>
-                <option value="Sertifikat Tanah & Aset (HGB/SHM)">Sertifikat Tanah & Aset (HGB/SHM)</option>
-                <option value="Perizinan Dasar (NIB/NPWP)">Perizinan Dasar (NIB/NPWP)</option>
-                <option value="Sertifikasi Mutu (ISO/SMK3)">Sertifikasi Mutu (ISO/SMK3)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Nomor Registrasi / Akta *</label>
-              <input
-                v-model="editCorpForm.number"
-                type="text"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] font-mono"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Instansi Penerbit / Notaris</label>
-              <input
-                v-model="editCorpForm.issuer"
-                type="text"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Entitas Perseroan</label>
-              <select
-                v-model="editCorpForm.company"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
-              >
-                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
-                <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
-                <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Tanggal Dokumen *</label>
-              <input
-                v-model="editCorpForm.issueDate"
-                type="date"
-                required
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Masa Berlaku (Jika Ada)</label>
-              <input
-                v-model="editCorpForm.expiryDate"
-                type="date"
-                class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Catatan & Keterangan</label>
-            <textarea
-              v-model="editCorpForm.notes"
-              rows="2"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] resize-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
-            <button
-              type="button"
-              @click="isEditCorporateModalOpen = false"
-              class="px-4 py-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl transition cursor-pointer text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus:ring-3 focus:ring-[#C7D2FE] border border-[#C7D2FE] font-bold rounded-xl shadow-md transition cursor-pointer text-xs flex items-center gap-1.5"
-            >
-              <span>Simpan Perubahan</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <EditCorporateDocModal
+      :is-open="isEditCorporateModalOpen"
+      :doc="editingCorporateDoc"
+      @close="isEditCorporateModalOpen = false"
+    />
 
   </div>
 </template>
@@ -1074,11 +462,16 @@ import {
   Pencil,
   Link2,
   Trash2,
-  Paperclip,
-  FolderSearch,
-  X
+  FolderSearch
 } from 'lucide-vue-next';
 import { legalStore, calculateDaysRemaining } from '../stores/legalStore';
+
+// Extracted Modals
+import AddVaultDocModal from './Documents/Modals/AddVaultDocModal.vue';
+import AddCorporateDocModal from './Documents/Modals/AddCorporateDocModal.vue';
+import LinkTenderModal from './Documents/Modals/LinkTenderModal.vue';
+import EditVaultDocModal from './Documents/Modals/EditVaultDocModal.vue';
+import EditCorporateDocModal from './Documents/Modals/EditCorporateDocModal.vue';
 
 // State
 const searchQuery = ref('');
@@ -1091,60 +484,10 @@ const isAddCorporateModalOpen = ref(false);
 const isEditVaultModalOpen = ref(false);
 const isEditCorporateModalOpen = ref(false);
 const isLinkTenderModalOpen = ref(false);
+
 const selectedVaultDoc = ref(null);
-const targetTenderId = ref(null);
-const vaultFileInputRef = ref(null);
-
-const editingVaultDocId = ref(null);
-const editingCorporateDocId = ref(null);
-
-const newDocForm = ref({
-  name: '',
-  code: '',
-  category: 'Legal Administrasi',
-  number: '',
-  issuer: '',
-  issueDate: new Date().toISOString().slice(0, 10),
-  expiryDate: '',
-  fileRef: '',
-  fileSize: '',
-  notes: ''
-});
-
-const editDocForm = ref({
-  name: '',
-  code: '',
-  category: 'Legal Administrasi',
-  number: '',
-  issuer: '',
-  issueDate: '',
-  expiryDate: '',
-  fileRef: '',
-  fileSize: '',
-  notes: ''
-});
-
-const newCorpForm = ref({
-  name: '',
-  documentType: 'Akta Notaris & Korporasi',
-  number: '',
-  issuer: 'Notaris Hj. Fatimah, S.H., M.Kn.',
-  company: 'PT Nusantara Energi',
-  issueDate: new Date().toISOString().slice(0, 10),
-  expiryDate: '',
-  notes: ''
-});
-
-const editCorpForm = ref({
-  name: '',
-  documentType: 'Akta Notaris & Korporasi',
-  number: '',
-  issuer: '',
-  company: 'PT Nusantara Energi',
-  issueDate: '',
-  expiryDate: '',
-  notes: ''
-});
+const editingVaultDoc = ref(null);
+const editingCorporateDoc = ref(null);
 
 // Store Datasets
 const corporateDocs = computed(() => (legalStore.state.documents || []).map(d => ({
@@ -1156,8 +499,6 @@ const vaultDocs = computed(() => (legalStore.state.tenderVault || []).map(d => (
   ...d,
   isQualificationDoc: true
 })));
-
-const tenders = computed(() => legalStore.state.tenders || []);
 
 const totalAllVaultCount = computed(() => corporateDocs.value.length + vaultDocs.value.length);
 
@@ -1233,28 +574,6 @@ const displayedDocuments = computed(() => {
   });
 });
 
-// File Upload helper
-function triggerVaultFileBrowse() {
-  if (vaultFileInputRef.value) {
-    vaultFileInputRef.value.click();
-  }
-}
-
-function onVaultFilePicked(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  newDocForm.value.fileRef = file.name;
-  if (file.size < 1024 * 1024) {
-    newDocForm.value.fileSize = (file.size / 1024).toFixed(1) + ' KB';
-  } else {
-    newDocForm.value.fileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
-  }
-  if (!newDocForm.value.name) {
-    const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-    newDocForm.value.name = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-  }
-}
-
 function getStatusBadgeClass(doc) {
   if (!doc.expiryDate) return 'bg-emerald-50 text-emerald-800 border-[#BBF7D0]';
   const days = calculateDaysRemaining(doc.expiryDate);
@@ -1283,41 +602,9 @@ function openAddCorporateModal() {
   isAddCorporateModalOpen.value = true;
 }
 
-function submitAddCorporateDoc() {
-  legalStore.addCorporateDocument(newCorpForm.value);
-  isAddCorporateModalOpen.value = false;
-  newCorpForm.value = {
-    name: '',
-    documentType: 'Akta Notaris & Korporasi',
-    number: '',
-    issuer: 'Notaris Hj. Fatimah, S.H., M.Kn.',
-    company: 'PT Nusantara Energi',
-    issueDate: new Date().toISOString().slice(0, 10),
-    expiryDate: '',
-    notes: ''
-  };
-}
-
 function openEditCorporateModal(doc) {
-  editingCorporateDocId.value = doc.id;
-  editCorpForm.value = {
-    name: doc.name || doc.documentName || '',
-    documentType: doc.documentType || doc.category || 'Akta Notaris & Korporasi',
-    number: doc.documentNumber || doc.number || '',
-    issuer: doc.issuer || '',
-    company: doc.company || 'PT Nusantara Energi',
-    issueDate: doc.issueDate || new Date().toISOString().slice(0, 10),
-    expiryDate: doc.expiryDate || '',
-    notes: doc.notes || ''
-  };
+  editingCorporateDoc.value = doc;
   isEditCorporateModalOpen.value = true;
-}
-
-function submitEditCorporateDoc() {
-  if (!editingCorporateDocId.value) return;
-  legalStore.updateCorporateDocument(editingCorporateDocId.value, editCorpForm.value);
-  isEditCorporateModalOpen.value = false;
-  editingCorporateDocId.value = null;
 }
 
 function confirmDeleteCorporateDoc(doc) {
@@ -1329,56 +616,12 @@ function confirmDeleteCorporateDoc(doc) {
 
 function openLinkTenderModal(doc) {
   selectedVaultDoc.value = doc;
-  targetTenderId.value = tenders.value[0]?.id || null;
   isLinkTenderModalOpen.value = true;
 }
 
-function executeLinkToTender() {
-  if (!selectedVaultDoc.value || !targetTenderId.value) return;
-  legalStore.linkVaultDocToTender(selectedVaultDoc.value.id, targetTenderId.value);
-  isLinkTenderModalOpen.value = false;
-  selectedVaultDoc.value = null;
-}
-
-function submitAddVaultDoc() {
-  legalStore.addTenderVaultDoc(newDocForm.value);
-  isAddVaultModalOpen.value = false;
-  newDocForm.value = {
-    name: '',
-    code: '',
-    category: 'Legal Administrasi',
-    number: '',
-    issuer: '',
-    issueDate: new Date().toISOString().slice(0, 10),
-    expiryDate: '',
-    fileRef: '',
-    fileSize: '',
-    notes: ''
-  };
-}
-
 function openEditVaultModal(doc) {
-  editingVaultDocId.value = doc.id;
-  editDocForm.value = {
-    name: doc.name || '',
-    code: doc.code || '',
-    category: doc.category || 'Legal Administrasi',
-    number: doc.number || '',
-    issuer: doc.issuer || '',
-    issueDate: doc.issueDate || new Date().toISOString().slice(0, 10),
-    expiryDate: doc.expiryDate || '',
-    fileRef: doc.fileRef || '',
-    fileSize: doc.fileSize || '',
-    notes: doc.notes || ''
-  };
+  editingVaultDoc.value = doc;
   isEditVaultModalOpen.value = true;
-}
-
-function submitEditVaultDoc() {
-  if (!editingVaultDocId.value) return;
-  legalStore.updateTenderVaultDoc(editingVaultDocId.value, editDocForm.value);
-  isEditVaultModalOpen.value = false;
-  editingVaultDocId.value = null;
 }
 
 function confirmDeleteVaultDoc(doc) {

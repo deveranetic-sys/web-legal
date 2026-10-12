@@ -41,7 +41,12 @@
           v-if="activeTab === 'templates'"
           id="btn-add-letter-template"
           @click="openAddTemplate"
-          class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs shadow-sm transition cursor-pointer flex items-center gap-1.5 hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap"
+          :class="[
+            'px-3.5 py-2 rounded-xl',
+            'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800',
+            'text-white font-bold text-xs shadow-sm transition cursor-pointer',
+            'flex items-center gap-1.5 hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap'
+          ]"
         >
           <Plus class="w-4 h-4 stroke-[2.5]" />
           <span>Tambah Template</span>
@@ -52,7 +57,12 @@
           v-if="activeTab === 'register'"
           id="btn-catat-surat"
           @click="openAddCorrespondence"
-          class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold shadow-sm transition cursor-pointer flex items-center gap-1.5 hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap"
+          :class="[
+            'px-3.5 py-2 rounded-xl',
+            'bg-slate-900 hover:bg-black text-white text-xs font-bold shadow-sm',
+            'transition cursor-pointer flex items-center gap-1.5',
+            'hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap'
+          ]"
         >
           <Send class="w-4 h-4" />
           <span>Catat Surat</span>
@@ -411,605 +421,31 @@
         </div>
       </div>
     </div>
+    <!-- Form Modal (Create & Edit) -->
+    <CorrespondenceFormModal
+      :is-open="isFormModalOpen"
+      :is-edit="isEditMode"
+      :initial-data="currentFormData"
+      @close="isFormModalOpen = false"
+      @submit="handleFormSubmit"
+    />
+div>
 
-    <!-- MODAL 1: Catat Surat Resmi Baru (CREATE) -->
-    <div
-      v-if="isAddCorrespondenceModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="isAddCorrespondenceModalOpen = false"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <Send class="w-5 h-5 text-indigo-400" />
-            <div>
-              <h3 class="font-extrabold text-white text-base">Catat Surat Resmi Baru</h3>
-              <p class="text-xs text-slate-400">Pencatatan korespondensi legal & lampiran berkas</p>
-            </div>
-          </div>
-          <button @click="isAddCorrespondenceModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
+    <!-- Detail Modal -->
+    <CorrespondenceDetailModal
+      :is-open="!!selectedCorrDetail"
+      :item="selectedCorrDetail"
+      @close="selectedCorrDetail = null"
+      @edit="openEditCorrespondence"
+    />
 
-        <form @submit.prevent="submitNewCorrespondence" class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Nomor Surat Resmi *</label>
-              <input
-                v-model="newCorrForm.letterNumber"
-                type="text"
-                required
-                placeholder="045/NE-LEG/SOM/X/2026"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-mono"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Arah Surat *</label>
-              <select
-                v-model="newCorrForm.direction"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-semibold"
-              >
-                <option value="KELUAR">Surat Keluar (Outgoing)</option>
-                <option value="MASUK">Surat Masuk (Incoming)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Jenis Surat</label>
-              <select
-                v-model="newCorrForm.type"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
-              >
-                <option value="Surat Somasi">Surat Somasi (Peringatan)</option>
-                <option value="Surat Kuasa Khusus">Surat Kuasa Khusus</option>
-                <option value="Surat Perintah Kerja (SPK)">Surat Perintah Kerja (SPK)</option>
-                <option value="Surat Tanggapan Wanprestasi">Surat Tanggapan Wanprestasi</option>
-                <option value="Nota Dinas Legal">Nota Dinas Legal</option>
-                <option value="Surat Permohonan Izin">Surat Permohonan Izin</option>
-                <option value="Incoming Letter">Surat Masuk / Klarifikasi</option>
-                <option value="Legal Notice">Legal Notice & Peringatan</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">PIC Legal Counsel</label>
-              <input
-                v-model="newCorrForm.pic"
-                type="text"
-                placeholder="Dimas Prasetyo, S.H."
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Perihal / Pokok Surat *</label>
-            <input
-              v-model="newCorrForm.subject"
-              type="text"
-              required
-              placeholder="Contoh: Surat Somasi I atas Keterlambatan Pengiriman Pasokan Batubara"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-            />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Pengirim Surat *</label>
-              <input
-                v-model="newCorrForm.sender"
-                type="text"
-                required
-                placeholder="PT Nusantara Energi (Legal Dept)"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Tujuan / Penerima *</label>
-              <input
-                v-model="newCorrForm.recipient"
-                type="text"
-                required
-                placeholder="Direksi PT Mineral Sejahtera"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Tanggal Surat</label>
-              <input
-                v-model="newCorrForm.date"
-                type="date"
-                required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Tenggat Waktu / Batas</label>
-              <input
-                v-model="newCorrForm.deadline"
-                type="date"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Status Pengiriman</label>
-              <select
-                v-model="newCorrForm.status"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-bold"
-              >
-                <option value="SENT">Terkirim (SENT)</option>
-                <option value="RECEIVED">Diterima (RECEIVED)</option>
-                <option value="IN_REVIEW">Dalam Review (IN_REVIEW)</option>
-                <option value="REPLIED">Dibalas (REPLIED)</option>
-                <option value="DRAFT">Draf (DRAFT)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Ringkasan & Keterangan</label>
-            <textarea
-              v-model="newCorrForm.summary"
-              rows="2"
-              placeholder="Catatan nomor resi pos/kurir, pokok tuntutan waktu penyelesaian, atau tembusan surat..."
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 resize-none"
-            ></textarea>
-          </div>
-
-          <!-- File Attachment Uploader -->
-          <div class="space-y-2 pt-2 border-t border-slate-100">
-            <label class="block font-bold text-slate-800">Berkas Lampiran Surat (Attachment)</label>
-            <div
-              class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl p-4 text-center bg-slate-50 transition cursor-pointer relative"
-              @click="$refs.newFileInput.click()"
-            >
-              <input
-                ref="newFileInput"
-                type="file"
-                class="hidden"
-                accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.zip"
-                @change="handleNewFileUpload"
-              />
-              <div v-if="!newCorrForm.fileName" class="space-y-1">
-                <UploadCloud class="w-7 h-7 text-slate-400 mx-auto" />
-                <p class="text-xs font-semibold text-slate-700">Klik untuk unggah berkas surat (PDF, Word, Scan)</p>
-                <p class="text-[10px] text-slate-400">Ukuran maksimal hingga 25 MB</p>
-              </div>
-              <div v-else class="flex items-center justify-between p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs">
-                <div class="flex items-center gap-2 truncate">
-                  <Paperclip class="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span class="font-bold truncate">{{ newCorrForm.fileName }}</span>
-                  <span class="text-emerald-700 font-mono text-[10px]">({{ newCorrForm.fileSize }})</span>
-                </div>
-                <button
-                  type="button"
-                  @click.stop="removeNewFile"
-                  class="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
-                  title="Hapus berkas"
-                >
-                  <X class="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-            <button
-              type="button"
-              @click="isAddCorrespondenceModalOpen = false"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold cursor-pointer shadow-md transition text-xs"
-            >
-              Simpan Surat
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- MODAL 2: Edit Data Surat (UPDATE) -->
-    <div
-      v-if="isEditModalOpen && editCorrForm"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="isEditModalOpen = false"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 flex flex-col max-h-[90vh]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <Edit3 class="w-5 h-5 text-indigo-400" />
-            <div>
-              <h3 class="font-extrabold text-white text-base">Edit Data Korespondensi</h3>
-              <p class="text-xs text-slate-400 font-mono">{{ editCorrForm.letterNumber }}</p>
-            </div>
-          </div>
-          <button @click="isEditModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
-
-        <form @submit.prevent="submitEditCorrespondence" class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Nomor Surat Resmi *</label>
-              <input
-                v-model="editCorrForm.letterNumber"
-                type="text"
-                required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-mono"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Arah Surat *</label>
-              <select
-                v-model="editCorrForm.direction"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-semibold"
-              >
-                <option value="KELUAR">Surat Keluar (Outgoing)</option>
-                <option value="MASUK">Surat Masuk (Incoming)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Jenis Surat</label>
-              <select
-                v-model="editCorrForm.type"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
-              >
-                <option value="Surat Somasi">Surat Somasi (Peringatan)</option>
-                <option value="Surat Kuasa Khusus">Surat Kuasa Khusus</option>
-                <option value="Surat Perintah Kerja (SPK)">Surat Perintah Kerja (SPK)</option>
-                <option value="Surat Tanggapan Wanprestasi">Surat Tanggapan Wanprestasi</option>
-                <option value="Nota Dinas Legal">Nota Dinas Legal</option>
-                <option value="Surat Permohonan Izin">Surat Permohonan Izin</option>
-                <option value="Incoming Letter">Surat Masuk / Klarifikasi</option>
-                <option value="Legal Notice">Legal Notice & Peringatan</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">PIC Legal Counsel</label>
-              <input
-                v-model="editCorrForm.pic"
-                type="text"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Perihal / Pokok Surat *</label>
-            <input
-              v-model="editCorrForm.subject"
-              type="text"
-              required
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-            />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Pengirim Surat *</label>
-              <input
-                v-model="editCorrForm.sender"
-                type="text"
-                required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Tujuan / Penerima *</label>
-              <input
-                v-model="editCorrForm.recipient"
-                type="text"
-                required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Tanggal Surat</label>
-              <input
-                v-model="editCorrForm.date"
-                type="date"
-                required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Tenggat Waktu / Batas</label>
-              <input
-                v-model="editCorrForm.deadline"
-                type="date"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-              />
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Status Pengiriman</label>
-              <select
-                v-model="editCorrForm.status"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-bold"
-              >
-                <option value="SENT">Terkirim (SENT)</option>
-                <option value="RECEIVED">Diterima (RECEIVED)</option>
-                <option value="IN_REVIEW">Dalam Review (IN_REVIEW)</option>
-                <option value="REPLIED">Dibalas (REPLIED)</option>
-                <option value="DRAFT">Draf (DRAFT)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Ringkasan & Keterangan</label>
-            <textarea
-              v-model="editCorrForm.summary"
-              rows="2"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 resize-none"
-            ></textarea>
-          </div>
-
-          <!-- File Attachment Uploader -->
-          <div class="space-y-2 pt-2 border-t border-slate-100">
-            <label class="block font-bold text-slate-800">Berkas Lampiran Surat</label>
-            <div
-              class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl p-4 text-center bg-slate-50 transition cursor-pointer relative"
-              @click="$refs.editFileInput.click()"
-            >
-              <input
-                ref="editFileInput"
-                type="file"
-                class="hidden"
-                accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.zip"
-                @change="handleEditFileUpload"
-              />
-              <div v-if="!editCorrForm.fileName && !editCorrForm.fileRef" class="space-y-1">
-                <UploadCloud class="w-7 h-7 text-slate-400 mx-auto" />
-                <p class="text-xs font-semibold text-slate-700">Klik untuk mengganti/unggah berkas lampiran</p>
-                <p class="text-[10px] text-slate-400">PDF, Word, atau Scan Resmi</p>
-              </div>
-              <div v-else class="flex items-center justify-between p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs">
-                <div class="flex items-center gap-2 truncate">
-                  <Paperclip class="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span class="font-bold truncate">{{ editCorrForm.fileName || editCorrForm.fileRef }}</span>
-                  <span class="text-emerald-700 font-mono text-[10px]">({{ editCorrForm.fileSize || '1.5 MB' }})</span>
-                </div>
-                <button
-                  type="button"
-                  @click.stop="removeEditFile"
-                  class="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
-                  title="Hapus lampiran"
-                >
-                  <X class="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-            <button
-              type="button"
-              @click="isEditModalOpen = false"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
-            >
-              Simpan Perubahan
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- MODAL 3: Detail Rincian Surat Lengkap (READ - All Full Details are here) -->
-    <div
-      v-if="selectedCorrDetail"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="selectedCorrDetail = null"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 flex flex-col max-h-[90vh]">
-        <!-- Header -->
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
-              <FileText class="w-5 h-5" />
-            </div>
-            <div>
-              <h3 class="font-extrabold text-white text-base">Rincian Lengkap Surat</h3>
-              <p class="text-xs text-slate-400 font-mono">{{ selectedCorrDetail.letterNumber || selectedCorrDetail.id }}</p>
-            </div>
-          </div>
-          <button @click="selectedCorrDetail = null" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
-
-        <!-- Body Details -->
-        <div class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm">
-          <!-- Badges & Status Banner -->
-          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <div class="flex items-center gap-2">
-              <span
-                :class="isIncoming(selectedCorrDetail) ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'"
-                class="px-2.5 py-1 rounded-lg text-xs font-bold inline-flex items-center gap-1"
-              >
-                <ArrowDownLeft v-if="isIncoming(selectedCorrDetail)" class="w-3.5 h-3.5" />
-                <ArrowUpRight v-else class="w-3.5 h-3.5" />
-                {{ isIncoming(selectedCorrDetail) ? 'Surat Masuk (Incoming)' : 'Surat Keluar (Outgoing)' }}
-              </span>
-              <span class="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold">
-                {{ selectedCorrDetail.type }}
-              </span>
-            </div>
-            <div>
-              <span
-                :class="getStatusBadgeClass(selectedCorrDetail.status)"
-                class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider"
-              >
-                {{ selectedCorrDetail.status }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Perihal & Subjek -->
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Perihal / Pokok Surat</span>
-            <h4 class="text-base font-bold text-slate-900 mt-1 leading-snug">{{ selectedCorrDetail.subject }}</h4>
-          </div>
-
-          <!-- Pihak Terlibat Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-200">
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Pihak Pengirim</span>
-              <div class="font-bold text-slate-800 mt-0.5">{{ selectedCorrDetail.sender }}</div>
-            </div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Pihak Tujuan / Penerima</span>
-              <div class="font-bold text-slate-800 mt-0.5">{{ selectedCorrDetail.recipient }}</div>
-            </div>
-          </div>
-
-          <!-- Metadata & Waktu Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-200">
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Tanggal Surat</span>
-              <span class="font-bold text-slate-800 mt-0.5 block">{{ selectedCorrDetail.date }}</span>
-            </div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">PIC Legal Counsel</span>
-              <span class="font-bold text-slate-800 mt-0.5 block">{{ selectedCorrDetail.pic || 'Legal Counsel' }}</span>
-            </div>
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Batas Respons / Deadline</span>
-              <span class="font-bold text-rose-600 mt-0.5 block">{{ selectedCorrDetail.deadline || 'Tidak ditentukan' }}</span>
-            </div>
-          </div>
-
-          <!-- Disposisi / Ringkasan Catatan -->
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Catatan Disposisi & Ringkasan</span>
-            <div class="p-3.5 bg-slate-100 rounded-xl text-slate-700 leading-relaxed text-xs">
-              {{ selectedCorrDetail.summary || selectedCorrDetail.remarks || 'Tercatat dalam Buku Agenda Register Resmi Divisi Legal.' }}
-            </div>
-          </div>
-
-          <!-- Lampiran Berkas Digital -->
-          <div class="pt-2 border-t border-slate-200">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Berkas Lampiran Digital</span>
-            <div v-if="hasAttachment(selectedCorrDetail)" class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl flex items-center justify-between gap-3">
-              <div class="flex items-center gap-2 truncate">
-                <Paperclip class="w-5 h-5 text-emerald-600 shrink-0" />
-                <div>
-                  <div class="font-bold text-emerald-900 truncate">{{ getAttachmentName(selectedCorrDetail) }}</div>
-                  <div class="text-[10px] text-emerald-700">{{ selectedCorrDetail.fileSize || 'Dokumen Resmi' }}</div>
-                </div>
-              </div>
-              <button
-                @click="downloadAttachment(selectedCorrDetail)"
-                class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1 shadow-xs transition shrink-0"
-              >
-                <Download class="w-3.5 h-3.5" />
-                <span>Unduh Berkas</span>
-              </button>
-            </div>
-            <div v-else class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 text-xs italic">
-              Tidak ada berkas lampiran digital yang terunggah.
-            </div>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-          <button
-            @click="copyLetterInfo(selectedCorrDetail)"
-            class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-200 text-slate-700 font-semibold text-xs cursor-pointer flex items-center gap-1 transition"
-          >
-            <Copy class="w-3.5 h-3.5" />
-            <span>Salin Info</span>
-          </button>
-          <div class="flex items-center gap-2">
-            <button
-              @click="openEditCorrespondence(selectedCorrDetail); selectedCorrDetail = null"
-              class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1 transition shadow-xs"
-            >
-              <Edit3 class="w-3.5 h-3.5" />
-              <span>Edit Surat</span>
-            </button>
-            <button
-              @click="selectedCorrDetail = null"
-              class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs cursor-pointer transition"
-            >
-              Tutup
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Preview Template Draf -->
-    <div
-      v-if="previewTmpl"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150"
-    >
-      <div class="w-full max-w-3xl rounded-2xl bg-white shadow-2xl overflow-hidden border border-slate-200 flex flex-col max-h-[85vh]">
-        <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-          <div>
-            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800">
-              {{ previewTmpl.category }}
-            </span>
-            <h3 class="text-lg font-bold text-slate-900 mt-1">{{ previewTmpl.title || previewTmpl.templateName }}</h3>
-          </div>
-          <button
-            @click="previewTmpl = null"
-            class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200 cursor-pointer"
-          >
-            <X class="w-5 h-5" />
-          </button>
-        </div>
-
-        <div class="p-6 overflow-y-auto space-y-4">
-          <p class="text-xs text-slate-500">{{ previewTmpl.description }}</p>
-
-          <div v-if="previewTmpl.fileName" class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
-            <Paperclip class="w-4 h-4 text-emerald-600" />
-            <span>Berkas Lampiran: <strong>{{ previewTmpl.fileName }}</strong> ({{ previewTmpl.fileSize }})</span>
-          </div>
-
-          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs leading-relaxed whitespace-pre-line select-all border border-slate-800">
-            {{ previewTmpl.contentSample }}
-          </div>
-        </div>
-
-        <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <span class="text-xs text-slate-500">{{ previewTmpl.language || 'Bahasa Indonesia' }}</span>
-          <div class="flex items-center gap-2">
-            <button
-              @click="copyText(previewTmpl.contentSample)"
-              class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5"
-            >
-              <Copy class="w-3.5 h-3.5" />
-              <span>Salin Naskah</span>
-            </button>
-            <button
-              @click="openGenerator(previewTmpl); previewTmpl = null"
-              class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-sm"
-            >
-              <Zap class="w-3.5 h-3.5" />
-              <span>Generate Naskah</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Preview Template Modal -->
+    <PreviewTemplateModal
+      :is-open="!!previewTmpl"
+      :template="previewTmpl"
+      @close="previewTmpl = null"
+      @generate="openGenerator"
+    />
 
     <!-- Modal Interactive Template Generator -->
     <TemplateGeneratorModal
@@ -1051,6 +487,9 @@ import {
 import { legalStore } from '../stores/legalStore';
 import TemplateGeneratorModal from './TemplateGeneratorModal.vue';
 import AddTemplateModal from './AddTemplateModal.vue';
+import CorrespondenceFormModal from './Correspondence/CorrespondenceFormModal.vue';
+import CorrespondenceDetailModal from './Correspondence/CorrespondenceDetailModal.vue';
+import PreviewTemplateModal from './Correspondence/PreviewTemplateModal.vue';
 
 const activeTab = ref('register');
 const corrSearch = ref('');
@@ -1058,47 +497,14 @@ const filterDirection = ref('ALL');
 const filterStatus = ref('ALL');
 const templateSearch = ref('');
 const isAddModalOpen = ref(false);
-const isAddCorrespondenceModalOpen = ref(false);
-const isEditModalOpen = ref(false);
 const previewTmpl = ref(null);
 const selectedTemplateForGen = ref(null);
 const selectedCorrDetail = ref(null);
 
-const newCorrForm = reactive({
-  letterNumber: '',
-  type: 'Surat Somasi',
-  direction: 'KELUAR',
-  subject: '',
-  sender: 'PT Nusantara Energi (Legal Dept)',
-  recipient: '',
-  date: new Date().toISOString().slice(0, 10),
-  deadline: '',
-  pic: 'Dimas Prasetyo, S.H.',
-  status: 'SENT',
-  summary: '',
-  fileName: '',
-  fileSize: '',
-  fileDataUrl: null
-});
+const isFormModalOpen = ref(false);
+const isEditMode = ref(false);
+const currentFormData = ref({});
 
-const editCorrForm = reactive({
-  id: '',
-  letterNumber: '',
-  type: 'Surat Somasi',
-  direction: 'KELUAR',
-  subject: '',
-  sender: '',
-  recipient: '',
-  date: '',
-  deadline: '',
-  pic: '',
-  status: 'SENT',
-  summary: '',
-  fileName: '',
-  fileSize: '',
-  fileRef: '',
-  fileDataUrl: null
-});
 
 const correspondence = computed(() => legalStore.state.correspondence || []);
 const allTemplates = computed(() => legalStore.state.templates || []);
@@ -1184,91 +590,32 @@ const filteredCorrespondence = computed(() => {
 });
 
 function openAddCorrespondence() {
-  const nextNum = Math.floor(100 + Math.random() * 900);
-  newCorrForm.letterNumber = `${nextNum}/NE-LEG/SOM/X/2026`;
-  newCorrForm.type = 'Surat Somasi';
-  newCorrForm.direction = 'KELUAR';
-  newCorrForm.subject = '';
-  newCorrForm.sender = 'PT Nusantara Energi (Legal Dept)';
-  newCorrForm.recipient = '';
-  newCorrForm.date = new Date().toISOString().slice(0, 10);
-  newCorrForm.deadline = '';
-  newCorrForm.pic = legalStore.state.currentUser ? legalStore.state.currentUser.name : 'Legal Counsel';
-  newCorrForm.status = 'SENT';
-  newCorrForm.summary = '';
-  newCorrForm.fileName = '';
-  newCorrForm.fileSize = '';
-  newCorrForm.fileDataUrl = null;
-  isAddCorrespondenceModalOpen.value = true;
-}
-
-function handleNewFileUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  newCorrForm.fileName = file.name;
-  newCorrForm.fileSize = formatFileSize(file.size);
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    newCorrForm.fileDataUrl = event.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeNewFile() {
-  newCorrForm.fileName = '';
-  newCorrForm.fileSize = '';
-  newCorrForm.fileDataUrl = null;
-}
-
-function submitNewCorrespondence() {
-  legalStore.addCorrespondence({ ...newCorrForm });
-  isAddCorrespondenceModalOpen.value = false;
+  isEditMode.value = false;
+  currentFormData.value = {};
+  isFormModalOpen.value = true;
 }
 
 function openEditCorrespondence(item) {
-  editCorrForm.id = item.id;
-  editCorrForm.letterNumber = item.letterNumber || item.id;
-  editCorrForm.type = item.type || 'Surat Somasi';
-  editCorrForm.direction = isIncoming(item) ? 'MASUK' : 'KELUAR';
-  editCorrForm.subject = item.subject || '';
-  editCorrForm.sender = item.sender || '';
-  editCorrForm.recipient = item.recipient || '';
-  editCorrForm.date = item.date || new Date().toISOString().slice(0, 10);
-  editCorrForm.deadline = item.deadline || '';
-  editCorrForm.pic = item.pic || 'Legal Counsel';
-  editCorrForm.status = item.status || 'SENT';
-  editCorrForm.summary = item.summary || item.remarks || '';
-  editCorrForm.fileName = item.fileName || '';
-  editCorrForm.fileRef = item.fileRef || '';
-  editCorrForm.fileSize = item.fileSize || '';
-  editCorrForm.fileDataUrl = item.fileDataUrl || null;
-  isEditModalOpen.value = true;
-}
-
-function handleEditFileUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  editCorrForm.fileName = file.name;
-  editCorrForm.fileRef = file.name;
-  editCorrForm.fileSize = formatFileSize(file.size);
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    editCorrForm.fileDataUrl = event.target.result;
+  isEditMode.value = true;
+  currentFormData.value = {
+    ...item,
+    direction: isIncoming(item) ? 'MASUK' : 'KELUAR',
+    type: item.type || 'Surat Somasi',
+    pic: item.pic || 'Legal Counsel',
+    status: item.status || 'SENT'
   };
-  reader.readAsDataURL(file);
+  isFormModalOpen.value = true;
 }
 
-function removeEditFile() {
-  editCorrForm.fileName = '';
-  editCorrForm.fileRef = '';
-  editCorrForm.fileSize = '';
-  editCorrForm.fileDataUrl = null;
+function handleFormSubmit(formData) {
+  if (isEditMode.value) {
+    legalStore.updateCorrespondence(formData.id, formData);
+  } else {
+    legalStore.addCorrespondence(formData);
+  }
+  isFormModalOpen.value = false;
 }
 
-function submitEditCorrespondence() {
-  legalStore.updateCorrespondence(editCorrForm.id, { ...editCorrForm });
-  isEditModalOpen.value = false;
-}
 
 function confirmDeleteCorrespondence(item) {
   const num = item.letterNumber || item.id;
@@ -1291,7 +638,20 @@ function downloadAttachment(item) {
     a.click();
     document.body.removeChild(a);
   } else {
-    const blob = new Blob([`[DOKUMEN KORESPONDENSI RESMI]\nNomor Surat: ${item.letterNumber || item.id}\nPerihal: ${item.subject}\nPengirim: ${item.sender}\nPenerima: ${item.recipient}\nTanggal: ${item.date}\nStatus: ${item.status}\n\nRingkasan:\n${item.summary || item.remarks || ''}`], { type: 'text/plain;charset=utf-8' });
+    const content = [
+      '[DOKUMEN KORESPONDENSI RESMI]',
+      `Nomor Surat: ${item.letterNumber || item.id}`,
+      `Perihal: ${item.subject}`,
+      `Pengirim: ${item.sender}`,
+      `Penerima: ${item.recipient}`,
+      `Tanggal: ${item.date}`,
+      `Status: ${item.status}`,
+      '',
+      'Ringkasan:',
+      item.summary || item.remarks || ''
+    ].join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -1305,7 +665,15 @@ function downloadAttachment(item) {
 }
 
 function copyLetterInfo(item) {
-  const info = `[REGISTER SURAT LEGAL]\nNomor: ${item.letterNumber || item.id}\nPerihal: ${item.subject}\nPengirim: ${item.sender}\nPenerima: ${item.recipient}\nTanggal: ${item.date}\nStatus: ${item.status}`;
+  const info = [
+    '[REGISTER SURAT LEGAL]',
+    `Nomor: ${item.letterNumber || item.id}`,
+    `Perihal: ${item.subject}`,
+    `Pengirim: ${item.sender}`,
+    `Penerima: ${item.recipient}`,
+    `Tanggal: ${item.date}`,
+    `Status: ${item.status}`
+  ].join('\n');
   navigator.clipboard.writeText(info);
   legalStore.triggerToast('Informasi surat disalin ke clipboard!', 'success');
 }

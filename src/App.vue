@@ -93,37 +93,41 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { CheckCircle2, AlertCircle, Info } from 'lucide-vue-next';
 import { legalStore } from './stores/legalStore';
 
-// Components
+// Shell Components
 import AppSidebar from './components/AppSidebar.vue';
 import AppHeader from './components/AppHeader.vue';
 import NotificationDrawer from './components/NotificationDrawer.vue';
 import SearchModal from './components/SearchModal.vue';
-import ContractDetailModal from './components/ContractDetailModal.vue';
-import AddContractModal from './components/AddContractModal.vue';
 
-// 16 Module Views
+// Modals (Code-split)
+const ContractDetailModal = defineAsyncComponent(() => import('./components/ContractDetailModal.vue'));
+const AddContractModal = defineAsyncComponent(() => import('./components/AddContractModal.vue'));
+
+// Instant Initial View (Eager)
 import DashboardView from './components/DashboardView.vue';
-import RequestsView from './components/RequestsView.vue';
-import ContractsView from './components/ContractsView.vue';
-import TendersView from './components/TendersView.vue';
-import CorporateView from './components/CorporateView.vue';
-import LicensingView from './components/LicensingView.vue';
-import ComplianceView from './components/ComplianceView.vue';
-import DisputesView from './components/DisputesView.vue';
-import LDDView from './components/LDDView.vue';
-import OpinionsView from './components/OpinionsView.vue';
-import DocumentsView from './components/DocumentsView.vue';
-import CorrespondenceView from './components/CorrespondenceView.vue';
-import KnowledgeView from './components/KnowledgeView.vue';
-import TemplatesView from './components/TemplatesView.vue';
-import ReportsView from './components/ReportsView.vue';
-import ActivityView from './components/ActivityView.vue';
-import MasterDataView from './components/MasterDataView.vue';
-import SettingsView from './components/SettingsView.vue';
+
+// Module Views (Lazy-Loaded On Demand)
+const RequestsView = defineAsyncComponent(() => import('./components/RequestsView.vue'));
+const ContractsView = defineAsyncComponent(() => import('./components/ContractsView.vue'));
+const TendersView = defineAsyncComponent(() => import('./components/TendersView.vue'));
+const CorporateView = defineAsyncComponent(() => import('./components/CorporateView.vue'));
+const LicensingView = defineAsyncComponent(() => import('./components/LicensingView.vue'));
+const ComplianceView = defineAsyncComponent(() => import('./components/ComplianceView.vue'));
+const DisputesView = defineAsyncComponent(() => import('./components/DisputesView.vue'));
+const LDDView = defineAsyncComponent(() => import('./components/LDDView.vue'));
+const OpinionsView = defineAsyncComponent(() => import('./components/OpinionsView.vue'));
+const DocumentsView = defineAsyncComponent(() => import('./components/DocumentsView.vue'));
+const CorrespondenceView = defineAsyncComponent(() => import('./components/CorrespondenceView.vue'));
+const KnowledgeView = defineAsyncComponent(() => import('./components/KnowledgeView.vue'));
+const TemplatesView = defineAsyncComponent(() => import('./components/TemplatesView.vue'));
+const ReportsView = defineAsyncComponent(() => import('./components/ReportsView.vue'));
+const ActivityView = defineAsyncComponent(() => import('./components/ActivityView.vue'));
+const MasterDataView = defineAsyncComponent(() => import('./components/MasterDataView.vue'));
+const SettingsView = defineAsyncComponent(() => import('./components/SettingsView.vue'));
 
 // Keyboard shortcut for Cmd+K / Ctrl+K
 function handleKeyDown(e) {
