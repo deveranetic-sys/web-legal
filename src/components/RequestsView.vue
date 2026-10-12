@@ -278,399 +278,31 @@
       </div>
     </div>
 
-    <!-- MODAL: Tambah Permohonan Baru -->
-    <div
-      v-if="isAddModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="isAddModalOpen = false"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#E2E8F0]">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <Plus class="w-5 h-5 text-indigo-400" />
-            <h3 class="font-extrabold text-white text-base">Pengajuan Permohonan Legal Baru</h3>
-          </div>
-          <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
+    <!-- MODALS (Extracted) -->
+    <AddRequestModal
+      :is-open="isAddModalOpen"
+      @close="isAddModalOpen = false"
+    />
 
-        <form @submit.prevent="submitNewRequest" class="p-6 space-y-4 text-xs sm:text-sm">
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Perihal / Judul Permohonan *</label>
-            <input
-              v-model="newForm.subject"
-              type="text"
-              required
-              placeholder="Contoh: Telaah Draf Perjanjian Jual Beli Batubara dengan PT Indo Mining"
-              class="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-[#0F172A]"
-            />
-          </div>
+    <RequestDetailModal
+      :request="selectedRequest"
+      :can-approve="canApprove"
+      :can-manage="canManage"
+      @close="selectedRequest = null"
+      @open-approval="openApprovalModal"
+      @update-status="updateStatus"
+    />
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Jenis Layanan Legal</label>
-              <select
-                v-model="newForm.requestType"
-                class="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white text-[#0F172A] outline-none"
-              >
-                <option value="Contract Review">Contract Review (Telaah)</option>
-                <option value="Drafting">Drafting (Pembuatan Naskah)</option>
-                <option value="Legal Opinion">Legal Opinion (Pendapat Hukum)</option>
-                <option value="Litigation Support">Dukungan Litigasi / Somasi</option>
-                <option value="Licensing Assistance">Konsultasi Izin OSS/IUP</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Tingkat Urgensi</label>
-              <select
-                v-model="newForm.urgency"
-                class="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white text-[#0F172A] outline-none"
-              >
-                <option value="HIGH">Tinggi (High) - ≤ 2 Hari Kerja</option>
-                <option value="MEDIUM">Sedang (Medium) - ≤ 5 Hari Kerja</option>
-                <option value="LOW">Rendah (Low) - Reguler</option>
-              </select>
-            </div>
-          </div>
+    <RequestApprovalModal
+      :approval-target="approvalTarget"
+      @close="approvalTarget = null"
+    />
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Entitas Perseroan</label>
-              <select
-                v-model="newForm.company"
-                class="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white text-[#0F172A] outline-none"
-              >
-                <option value="PT Nusantara Energi">PT Nusantara Energi</option>
-                <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
-                <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-[#0F172A] mb-1">Target Tenggat Waktu *</label>
-              <input
-                v-model="newForm.deadline"
-                type="date"
-                required
-                class="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-[#0F172A]"
-              />
-            </div>
-          </div>
+    <RequestAssignCounselModal
+      :request="assigningRequest"
+      @close="assigningRequest = null"
+    />
 
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Latar Belakang & Kebutuhan *</label>
-            <textarea
-              v-model="newForm.description"
-              required
-              rows="3"
-              placeholder="Jelaskan pokok kebutuhan telaah klausul, risiko yang perlu diwaspadai, atau latar belakang transaksi..."
-              class="w-full px-3 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-[#0F172A] resize-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
-            <button
-              type="button"
-              @click="isAddModalOpen = false"
-              class="px-4 py-2 rounded-lg text-[#475569] hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 rounded-lg bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold cursor-pointer shadow-md transition text-xs"
-            >
-              Kirim Permohonan
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- MODAL: Detail Tiket Permohonan & Riwayat Persetujuan -->
-    <div
-      v-if="selectedRequest"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="selectedRequest = null"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-[#E2E8F0] max-h-[90vh] flex flex-col">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
-          <div>
-            <span class="font-mono text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-700/50 px-2 py-0.5 rounded">
-              {{ selectedRequest.ticketNumber || selectedRequest.id }}
-            </span>
-            <h3 class="font-extrabold text-white text-base mt-1">{{ selectedRequest.subject }}</h3>
-          </div>
-          <button @click="selectedRequest = null" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
-
-        <div class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto flex-1">
-          
-          <!-- Stepper Workflow Persetujuan -->
-          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-              Alur Persetujuan Permohonan:
-            </span>
-            <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-bold">
-              <div class="p-2 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300">
-                1. Pengajuan ✓
-              </div>
-              <div
-                :class="selectedRequest.status !== 'SUBMITTED' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-blue-100 text-blue-800 border-blue-300'"
-                class="p-2 rounded-lg border"
-              >
-                2. Telaah Legal
-              </div>
-              <div
-                :class="selectedRequest.status === 'APPROVED' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : (selectedRequest.status === 'REJECTED' ? 'bg-rose-100 text-rose-800 border-rose-300' : (selectedRequest.status === 'REVISION_REQUIRED' ? 'bg-orange-100 text-orange-800 border-orange-300' : 'bg-slate-100 text-slate-500 border-slate-200'))"
-                class="p-2 rounded-lg border"
-              >
-                3. Otorisasi Approval
-              </div>
-              <div
-                :class="selectedRequest.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-slate-100 text-slate-500 border-slate-200'"
-                class="p-2 rounded-lg border"
-              >
-                4. Selesai
-              </div>
-            </div>
-          </div>
-
-          <!-- Rincian Data Tiket -->
-          <div class="grid grid-cols-2 gap-4 bg-[#F8FAFC] p-3.5 rounded-xl border border-[#E2E8F0]">
-            <div>
-              <span class="text-[11px] text-[#475569] block">Pemohon / Unit:</span>
-              <span class="font-bold text-[#0F172A]">{{ selectedRequest.requestor }}</span>
-              <span class="text-[#475569]"> ({{ selectedRequest.department }})</span>
-            </div>
-            <div>
-              <span class="text-[11px] text-[#475569] block">PIC Legal Counsel:</span>
-              <span class="font-bold text-[#0F172A]">{{ selectedRequest.assignedTo || 'Belum Ditugaskan' }}</span>
-            </div>
-            <div>
-              <span class="text-[11px] text-[#475569] block">Tenggat Waktu:</span>
-              <span class="font-bold text-[#0F172A]">{{ selectedRequest.deadline }}</span>
-            </div>
-            <div>
-              <span class="text-[11px] text-[#475569] block">Status Terkini:</span>
-              <span :class="getStatusClass(selectedRequest.status)" class="px-2.5 py-0.5 rounded-full text-xs font-bold inline-block border mt-0.5">
-                {{ getStatusLabel(selectedRequest.status) }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Deskripsi Kebutuhan -->
-          <div>
-            <span class="font-bold text-[#0F172A] block mb-1">Rincian Deskripsi Permohonan:</span>
-            <p class="text-[#0F172A] leading-relaxed bg-[#F8FAFC] border border-[#E2E8F0] p-3.5 rounded-xl whitespace-pre-line">
-              {{ selectedRequest.description }}
-            </p>
-          </div>
-
-          <!-- Riwayat Approval Notes (Jika Ada) -->
-          <div v-if="selectedRequest.approvalNotes || selectedRequest.rejectionReason || selectedRequest.revisionNotes" class="space-y-2">
-            <span class="font-bold text-[#0F172A] block">Catatan Keputusan Persetujuan:</span>
-            
-            <div v-if="selectedRequest.status === 'APPROVED'" class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 space-y-1">
-              <div class="flex items-center justify-between font-bold text-xs">
-                <span>✓ Disetujui oleh: {{ selectedRequest.approvedBy || 'Head of Legal' }}</span>
-                <span class="text-[11px] text-emerald-700 font-normal">{{ selectedRequest.approvedAt }}</span>
-              </div>
-              <p class="text-xs text-emerald-800 italic">"{{ selectedRequest.approvalNotes || 'Permohonan disetujui tanpa syarat tambahan.' }}"</p>
-            </div>
-
-            <div v-if="selectedRequest.status === 'REJECTED'" class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 space-y-1">
-              <div class="flex items-center justify-between font-bold text-xs">
-                <span>✕ Ditolak oleh: {{ selectedRequest.rejectedBy || 'Head of Legal' }}</span>
-                <span class="text-[11px] text-rose-700 font-normal">{{ selectedRequest.rejectedAt }}</span>
-              </div>
-              <p class="text-xs text-rose-800 italic">"{{ selectedRequest.rejectionReason }}"</p>
-            </div>
-
-            <div v-if="selectedRequest.status === 'REVISION_REQUIRED'" class="p-3.5 rounded-xl bg-orange-50 border border-orange-200 text-orange-900 space-y-1">
-              <div class="flex items-center justify-between font-bold text-xs">
-                <span>⚠ Catatan Revisi dari: {{ selectedRequest.revisionRequestedBy || 'Legal Counsel' }}</span>
-                <span class="text-[11px] text-orange-700 font-normal">{{ selectedRequest.revisionRequestedAt }}</span>
-              </div>
-              <p class="text-xs text-orange-800 italic">"{{ selectedRequest.revisionNotes }}"</p>
-            </div>
-          </div>
-
-          <!-- Action Workflow Controls -->
-          <div v-if="canApprove || canManage" class="pt-3 border-t border-[#E2E8F0] space-y-2.5">
-            <span class="font-bold text-[#0F172A] block">Tindakan Otorisasi & Persetujuan:</span>
-            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <button
-                v-if="canApprove"
-                @click="openApprovalModal(selectedRequest); selectedRequest = null"
-                class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-xs cursor-pointer shadow-xs transition flex items-center gap-1.5 whitespace-nowrap"
-              >
-                <ShieldCheck class="w-4 h-4" />
-                <span>Buka Approval</span>
-              </button>
-
-              <button
-                v-if="canManage"
-                @click="updateStatus(selectedRequest.id, 'IN_REVIEW')"
-                class="px-3 py-1.5 rounded-xl bg-[#EEF2FF] text-[#4338CA] hover:bg-blue-100 font-bold text-xs cursor-pointer border border-[#C7D2FE] transition whitespace-nowrap"
-              >
-                Set Ditelaah
-              </button>
-
-              <button
-                v-if="canManage"
-                @click="updateStatus(selectedRequest.id, 'COMPLETED')"
-                class="px-3 py-1.5 rounded-xl bg-[#DCFCE7] text-[#166534] hover:bg-emerald-100 font-bold text-xs cursor-pointer border border-[#BBF7D0] transition whitespace-nowrap"
-              >
-                Set Selesai
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL: Approval & Persetujuan Permintaan Legal (Dedicated Approval Dialog) -->
-    <div
-      v-if="approvalTarget"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="approvalTarget = null"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#E2E8F0]">
-        
-        <!-- Header -->
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 flex items-center justify-center">
-              <ShieldCheck class="w-5 h-5" />
-            </div>
-            <div>
-              <h3 class="font-extrabold text-white text-base">Otorisasi Persetujuan Permintaan Legal</h3>
-              <p class="text-[11px] text-slate-300">{{ approvalTarget.ticketNumber || approvalTarget.id }} • {{ approvalTarget.requestor }}</p>
-            </div>
-          </div>
-          <button @click="approvalTarget = null" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
-
-        <div class="p-6 space-y-4 text-xs sm:text-sm">
-          
-          <!-- Summary info -->
-          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-            <div class="font-bold text-slate-900 text-xs">{{ approvalTarget.subject }}</div>
-            <div class="text-[11px] text-slate-500">{{ approvalTarget.requestType }} • Unit: {{ approvalTarget.department }}</div>
-          </div>
-
-          <!-- Approval Mode Switcher Tabs -->
-          <div class="space-y-1.5">
-            <label class="block font-bold text-slate-800 text-xs">Pilih Keputusan Persetujuan:</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                @click="approvalMode = 'APPROVE'"
-                :class="approvalMode === 'APPROVE' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium'"
-                class="py-2 px-2.5 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1"
-              >
-                <CheckCircle2 class="w-3.5 h-3.5" />
-                <span>Setujui</span>
-              </button>
-
-              <button
-                type="button"
-                @click="approvalMode = 'REVISION'"
-                :class="approvalMode === 'REVISION' ? 'bg-orange-600 text-white font-bold shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium'"
-                class="py-2 px-2.5 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1"
-              >
-                <AlertCircle class="w-3.5 h-3.5" />
-                <span>Minta Revisi</span>
-              </button>
-
-              <button
-                type="button"
-                @click="approvalMode = 'REJECT'"
-                :class="approvalMode === 'REJECT' ? 'bg-rose-600 text-white font-bold shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium'"
-                class="py-2 px-2.5 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1"
-              >
-                <XCircle class="w-3.5 h-3.5" />
-                <span>Tolak</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Notes / Reason input -->
-          <div class="space-y-1.5">
-            <label class="block font-bold text-slate-800 text-xs">
-              <span v-if="approvalMode === 'APPROVE'">Catatan Persetujuan (Opsional):</span>
-              <span v-else-if="approvalMode === 'REVISION'">Poin Catatan Revisi yang Wajib Diperbaiki <span class="text-rose-500">*</span>:</span>
-              <span v-else>Alasan Yuridis Penolakan <span class="text-rose-500">*</span>:</span>
-            </label>
-            <textarea
-              v-model="approvalNotes"
-              rows="3"
-              :placeholder="approvalMode === 'APPROVE' ? 'Tuliskan catatan arahan pelaksanaan atau persetujuan bersyarat...' : (approvalMode === 'REVISION' ? 'Jelaskan klausul atau dokumen pendukung yang wajib dilengkapi pemohon...' : 'Jelaskan dasar pertimbangan hukum mengapa permohonan ini tidak dapat disetujui...')"
-              class="w-full p-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs text-slate-900 resize-none"
-            ></textarea>
-          </div>
-
-          <!-- Footer Actions -->
-          <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
-            <button
-              type="button"
-              @click="approvalTarget = null"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
-            >
-              Batal
-            </button>
-
-            <button
-              type="button"
-              @click="submitApprovalDecision"
-              :class="approvalMode === 'APPROVE' ? 'bg-emerald-600 hover:bg-emerald-700' : (approvalMode === 'REVISION' ? 'bg-orange-600 hover:bg-orange-700' : 'bg-rose-600 hover:bg-rose-700')"
-              class="px-5 py-2 rounded-xl text-white font-bold cursor-pointer shadow-md transition text-xs flex items-center gap-1.5"
-            >
-              <Check class="w-4 h-4 stroke-[2.5]" />
-              <span>
-                {{ approvalMode === 'APPROVE' ? 'Setujui Permohonan' : (approvalMode === 'REVISION' ? 'Minta Revisi' : 'Tolak Permohonan') }}
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL: Assign PIC Counsel -->
-    <div
-      v-if="assigningRequest"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="assigningRequest = null"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5 border border-[#E2E8F0] space-y-4">
-        <h3 class="font-bold text-[#0F172A] text-sm">Tugaskan PIC Legal Counsel</h3>
-        <p class="text-xs text-[#475569]">Pilih personil legal internal yang bertanggung jawab menelaah berkas ini:</p>
-        
-        <select
-          v-model="selectedCounsel"
-          class="w-full px-3 py-2 text-xs border border-[#E2E8F0] rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-[#0F172A] font-medium"
-        >
-          <option value="Budi Santoso, S.H., LL.M.">Budi Santoso, S.H., LL.M. (Head of Legal)</option>
-          <option value="Siti Rahmawati, S.H., M.H.">Siti Rahmawati, S.H., M.H. (Legal Operations)</option>
-          <option value="Dimas Prasetyo, S.H.">Dimas Prasetyo, S.H. (Senior Counsel)</option>
-          <option value="Anisa Maharani, S.H.">Anisa Maharani, S.H. (Legal Specialist)</option>
-        </select>
-
-        <div class="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
-          <button
-            @click="assigningRequest = null"
-            class="px-3 py-1.5 text-xs text-[#475569] hover:bg-slate-100 rounded-lg cursor-pointer transition"
-          >
-            Batal
-          </button>
-          <button
-            @click="confirmAssign"
-            class="px-4 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg cursor-pointer transition shadow-xs"
-          >
-            Simpan Penugasan
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -682,16 +314,22 @@ import {
   Eye,
   Trash2,
   Inbox,
-  ShieldCheck,
   ShieldAlert,
+  ShieldCheck,
   CheckCircle2,
   AlertCircle,
   XCircle,
-  Clock,
-  Check
+  Clock
 } from 'lucide-vue-next';
 import { legalStore, calculateDaysRemaining } from '../stores/legalStore';
 
+// Extracted Modals
+import AddRequestModal from './Requests/Modals/AddRequestModal.vue';
+import RequestDetailModal from './Requests/Modals/RequestDetailModal.vue';
+import RequestApprovalModal from './Requests/Modals/RequestApprovalModal.vue';
+import RequestAssignCounselModal from './Requests/Modals/RequestAssignCounselModal.vue';
+
+// Filters & State
 const searchQuery = ref('');
 const filterStatus = ref('ALL');
 const filterUrgency = ref('ALL');
@@ -700,21 +338,9 @@ const filterType = ref('ALL');
 const isAddModalOpen = ref(false);
 const selectedRequest = ref(null);
 const assigningRequest = ref(null);
-const selectedCounsel = ref('Dimas Prasetyo, S.H.');
-
 const approvalTarget = ref(null);
-const approvalMode = ref('APPROVE');
-const approvalNotes = ref('');
 
-const newForm = ref({
-  subject: '',
-  requestType: 'Contract Review',
-  urgency: 'MEDIUM',
-  company: 'PT Nusantara Energi',
-  deadline: new Date(Date.now() + 5 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-  description: ''
-});
-
+// Computed Datasets
 const requests = computed(() => legalStore.state.requests || []);
 
 const inReviewCount = computed(() => {
@@ -830,43 +456,10 @@ function openDetail(req) {
 
 function openApprovalModal(req) {
   approvalTarget.value = req;
-  approvalMode.value = 'APPROVE';
-  approvalNotes.value = '';
-}
-
-function submitApprovalDecision() {
-  if (!approvalTarget.value) return;
-  const id = approvalTarget.value.id;
-
-  if (approvalMode.value === 'APPROVE') {
-    legalStore.approveRequest(id, approvalNotes.value);
-  } else if (approvalMode.value === 'REVISION') {
-    if (!approvalNotes.value.trim()) {
-      legalStore.triggerToast('Catatan revisi wajib diisi agar pemohon mengetahui poin perbaikan.', 'error');
-      return;
-    }
-    legalStore.requestRevision(id, approvalNotes.value);
-  } else if (approvalMode.value === 'REJECT') {
-    if (!approvalNotes.value.trim()) {
-      legalStore.triggerToast('Alasan penolakan wajib diisi.', 'error');
-      return;
-    }
-    legalStore.rejectRequest(id, approvalNotes.value);
-  }
-
-  approvalTarget.value = null;
 }
 
 function openAssign(req) {
   assigningRequest.value = req;
-  selectedCounsel.value = req.assignedTo && req.assignedTo !== 'Unassigned' ? req.assignedTo : 'Dimas Prasetyo, S.H.';
-}
-
-function confirmAssign() {
-  if (assigningRequest.value) {
-    legalStore.assignRequestPIC(assigningRequest.value.id, selectedCounsel.value);
-    assigningRequest.value = null;
-  }
 }
 
 function updateStatus(id, newStatus) {
@@ -880,26 +473,5 @@ function deleteItem(req) {
   if (confirm(`Hapus tiket permohonan "${req.subject}"?`)) {
     legalStore.deleteRequest(req.id);
   }
-}
-
-function submitNewRequest() {
-  legalStore.addRequest({
-    subject: newForm.value.subject,
-    requestType: newForm.value.requestType,
-    urgency: newForm.value.urgency,
-    company: newForm.value.company,
-    deadline: newForm.value.deadline,
-    description: newForm.value.description
-  });
-
-  newForm.value = {
-    subject: '',
-    requestType: 'Contract Review',
-    urgency: 'MEDIUM',
-    company: 'PT Nusantara Energi',
-    deadline: new Date(Date.now() + 5 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-    description: ''
-  };
-  isAddModalOpen.value = false;
 }
 </script>
