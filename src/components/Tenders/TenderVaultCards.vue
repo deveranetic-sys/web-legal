@@ -153,8 +153,15 @@ function previewDoc(doc) {
   legalStore.triggerToast(`Membuka berkas: ${doc.fileRef || doc.name}`, 'info');
 }
 
-function confirmDelete(doc) {
-  if (window.confirm(`Hapus dokumen "${doc.name}" dari Bank Dokumen Kualifikasi?`)) {
+async function confirmDelete(doc) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Dokumen Master Kualifikasi?',
+    message: `Hapus dokumen "${doc.name}" (${doc.code}) dari Bank Dokumen Kualifikasi?`,
+    confirmText: 'Ya, Hapus Dokumen',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteTenderVaultDoc(doc.id);
   }
 }

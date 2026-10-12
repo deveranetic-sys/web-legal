@@ -159,11 +159,17 @@ function handleApproveGate(gateId) {
   legalStore.approveTenderGate(props.tender.id, gateId, 'Disetujui setelah verifikasi kriteria.');
 }
 
-function handleRejectGate(gateId) {
+async function handleRejectGate(gateId) {
   if (!props.tender) return;
-  const reason = window.prompt('Masukkan catatan revisi untuk gate ini:');
-  if (reason) {
-    legalStore.rejectTenderGate(props.tender.id, gateId, reason);
+  const reason = await legalStore.prompt({
+    title: 'Catatan Revisi Gate',
+    message: 'Masukkan alasan atau catatan revisi untuk gate ini:',
+    placeholder: 'Contoh: Dokumen jaminan belum lengkap...',
+    confirmText: 'Minta Revisi',
+    variant: 'warning'
+  });
+  if (reason && reason.trim()) {
+    legalStore.rejectTenderGate(props.tender.id, gateId, reason.trim());
   }
 }
 </script>

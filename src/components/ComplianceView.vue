@@ -415,8 +415,14 @@ function submitEditCompliance() {
   isEditModalOpen.value = false;
 }
 
-function confirmDeleteCompliance(item) {
-  if (confirm(`Hapus kewajiban kepatuhan "${item.requirement}"?`)) {
+async function confirmDeleteCompliance(item) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Kewajiban Kepatuhan',
+    message: `Apakah Anda yakin ingin menghapus kewajiban kepatuhan "${item.requirement}"?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteComplianceObligation(item.id);
   }
 }

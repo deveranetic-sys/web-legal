@@ -511,8 +511,14 @@ function submitEditRegulation() {
   editingRegId.value = null;
 }
 
-function confirmDelete(item) {
-  if (confirm(`Apakah Anda yakin ingin menghapus regulasi "${item.title}"?`)) {
+async function confirmDelete(item) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Regulasi',
+    message: `Apakah Anda yakin ingin menghapus regulasi "${item.title}"?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     if (selectedReg.value?.id === item.id) {
       selectedReg.value = null;
     }

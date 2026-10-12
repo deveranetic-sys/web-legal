@@ -93,8 +93,15 @@ const props = defineProps({
 
 const emit = defineEmits(['open-add-role-modal']);
 
-function confirmDeleteRole(roleKey) {
-  if (confirm(`Yakin ingin menghapus peran kustom "${roleKey}" dari matriks sistem?`)) {
+async function confirmDeleteRole(roleKey) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Peran Kustom?',
+    message: `Yakin ingin menghapus peran kustom "${roleKey}" dari matriks sistem?`,
+    confirmText: 'Ya, Hapus Peran',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteCustomRole(roleKey);
   }
 }

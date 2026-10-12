@@ -315,9 +315,16 @@ const filteredCorrespondence = computed(() => {
   return list;
 });
 
-function confirmDeleteCorrespondence(item) {
+async function confirmDeleteCorrespondence(item) {
   const num = item.letterNumber || item.id;
-  if (confirm(`Apakah Anda yakin ingin menghapus surat register "${num}"?`)) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Surat Register?',
+    message: `Apakah Anda yakin ingin menghapus surat register "${num}" (${item.subject})?`,
+    confirmText: 'Ya, Hapus Surat',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteCorrespondence(item.id);
   }
 }

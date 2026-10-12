@@ -104,8 +104,15 @@ function copyText(text) {
   legalStore.triggerToast('Teks klausul disalin ke clipboard!', 'success');
 }
 
-function confirmDeleteClause(clause) {
-  if (confirm(`Apakah Anda yakin ingin menghapus klausul "${clause.title}"?`)) {
+async function confirmDeleteClause(clause) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Klausul Baku?',
+    message: `Apakah Anda yakin ingin menghapus klausul "${clause.title}"?`,
+    confirmText: 'Ya, Hapus Klausul',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteClause(clause.id);
   }
 }

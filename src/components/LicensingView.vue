@@ -495,8 +495,14 @@ function submitEditLicense() {
   isEditModalOpen.value = false;
 }
 
-function confirmDeleteLicense(lic) {
-  if (confirm(`Apakah Anda yakin ingin menghapus izin "${lic.licenseName}" (${lic.licenseNumber})?`)) {
+async function confirmDeleteLicense(lic) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Izin Operasional',
+    message: `Apakah Anda yakin ingin menghapus izin "${lic.licenseName}" (${lic.licenseNumber})?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteLicense(lic.id);
   }
 }

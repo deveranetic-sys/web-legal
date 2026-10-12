@@ -452,8 +452,14 @@ function submitEditOpinion() {
   isEditModalOpen.value = false;
 }
 
-function confirmDeleteOpinion(op) {
-  if (confirm(`Hapus opini hukum "${op.title || op.issue}"?`)) {
+async function confirmDeleteOpinion(op) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Opini Hukum',
+    message: `Apakah Anda yakin ingin menghapus opini hukum "${op.title || op.issue}"?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteOpinion(op.id);
   }
 }

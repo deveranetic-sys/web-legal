@@ -184,9 +184,16 @@ const filteredTemplates = computed(() => {
   return list;
 });
 
-function confirmDeleteTemplate(tmpl) {
+async function confirmDeleteTemplate(tmpl) {
   const title = tmpl.title || tmpl.templateName;
-  if (confirm(`Apakah Anda yakin ingin menghapus template "${title}"?`)) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Template Dokumen?',
+    message: `Apakah Anda yakin ingin menghapus template "${title}"?`,
+    confirmText: 'Ya, Hapus Template',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteTemplate(tmpl.id);
   }
 }

@@ -108,8 +108,15 @@ const props = defineProps({
 
 const emit = defineEmits(['open-edit', 'open-timeline']);
 
-function confirmDeleteDispute(disp) {
-  if (confirm(`Hapus perkara sengketa "${disp.caseNumber}" (${disp.company} vs ${disp.opponent})?`)) {
+async function confirmDeleteDispute(disp) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Perkara Sengketa?',
+    message: `Hapus perkara sengketa "${disp.caseNumber}" (${disp.company} vs ${disp.opponent})?`,
+    confirmText: 'Ya, Hapus Perkara',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteDispute(disp.id);
   }
 }

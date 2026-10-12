@@ -535,8 +535,15 @@ function markDocFulfilled(item) {
   legalStore.toggleTenderDocStatus(item.tenderId, item.docId, 'TERPENUHI', 'Diverifikasi dan dinyatakan lengkap');
 }
 
-function promptEditNotes(item) {
-  const newNotes = window.prompt(`Perbarui catatan / kendala untuk "${item.docName}":`, item.notes || '');
+async function promptEditNotes(item) {
+  const newNotes = await legalStore.prompt({
+    title: 'Perbarui Catatan Kendala',
+    message: `Perbarui catatan / kendala untuk "${item.docName}":`,
+    defaultValue: item.notes || '',
+    placeholder: 'Tulis catatan kendala atau progres...',
+    confirmText: 'Simpan Catatan',
+    variant: 'info'
+  });
   if (newNotes !== null) {
     legalStore.toggleTenderDocStatus(item.tenderId, item.docId, item.status, newNotes);
   }

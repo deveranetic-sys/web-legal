@@ -86,15 +86,28 @@ import { legalStore } from '../../../stores/legalStore';
 
 const masterSectors = computed(() => legalStore.state.masterSectors || []);
 
-function openEditSector(sector) {
-  const newName = window.prompt(`Perbarui nama sektor industri "${sector.name}":`, sector.name);
-  if (newName) {
-    legalStore.updateMasterSector(sector.id, { name: newName });
+async function openEditSector(sector) {
+  const newName = await legalStore.prompt({
+    title: 'Perbarui Sektor Industri',
+    message: `Masukkan nama baru untuk sektor industri:`,
+    defaultValue: sector.name,
+    confirmText: 'Simpan Perubahan',
+    variant: 'info'
+  });
+  if (newName && newName.trim()) {
+    legalStore.updateMasterSector(sector.id, { name: newName.trim() });
   }
 }
 
-function confirmDeleteSector(sector) {
-  if (window.confirm(`Hapus sektor industri "${sector.name}" dari master data?`)) {
+async function confirmDeleteSector(sector) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Sektor Industri?',
+    message: `Hapus sektor industri "${sector.name}" dari master data?`,
+    confirmText: 'Ya, Hapus Sektor',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteMasterSector(sector.id);
   }
 }

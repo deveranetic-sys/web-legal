@@ -71,15 +71,28 @@ import { legalStore } from '../../../stores/legalStore';
 
 const masterDocTypes = computed(() => legalStore.state.masterDocTypes || []);
 
-function openEditDocType(item) {
-  const newName = window.prompt(`Perbarui nama kategori dokumen "${item.name}":`, item.name);
-  if (newName) {
-    legalStore.updateMasterDocType(item.id, { name: newName });
+async function openEditDocType(item) {
+  const newName = await legalStore.prompt({
+    title: 'Perbarui Kategori Dokumen',
+    message: `Masukkan nama baru untuk kategori dokumen:`,
+    defaultValue: item.name,
+    confirmText: 'Simpan Perubahan',
+    variant: 'info'
+  });
+  if (newName && newName.trim()) {
+    legalStore.updateMasterDocType(item.id, { name: newName.trim() });
   }
 }
 
-function confirmDeleteDocType(item) {
-  if (window.confirm(`Hapus tipe dokumen "${item.name}" dari master data?`)) {
+async function confirmDeleteDocType(item) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Tipe Dokumen?',
+    message: `Hapus tipe dokumen "${item.name}" dari master data?`,
+    confirmText: 'Ya, Hapus Tipe Dokumen',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteMasterDocType(item.id);
   }
 }

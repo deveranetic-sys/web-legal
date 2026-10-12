@@ -338,8 +338,14 @@ function submitAddChecklistItem() {
   newItemForm.notes = '';
 }
 
-function confirmDeleteProject(p) {
-  if (confirm(`Hapus proyek uji tuntas "${p.projectName}"?`)) {
+async function confirmDeleteProject(p) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Proyek LDD',
+    message: `Apakah Anda yakin ingin menghapus proyek uji tuntas "${p.projectName}"?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteLDDProject(p.id);
   }
 }

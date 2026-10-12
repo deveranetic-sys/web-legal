@@ -58,8 +58,15 @@ import { legalStore } from '../../../stores/legalStore';
 
 const masterContractTypes = computed(() => legalStore.state.masterContractTypes || []);
 
-function confirmDeleteContractType(ct) {
-  if (window.confirm(`Hapus tipe kontrak "${ct.name}" dari master data?`)) {
+async function confirmDeleteContractType(ct) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Tipe Kontrak?',
+    message: `Hapus tipe kontrak "${ct.name}" dari master data?`,
+    confirmText: 'Ya, Hapus Tipe Kontrak',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteMasterContractType(ct.id);
   }
 }

@@ -58,6 +58,8 @@
     <SearchModal />
     <ContractDetailModal />
     <AddContractModal />
+    <ConfirmDialog />
+    <GlobalLoading />
 
     <!-- Global Toast Alert (Pastel Floating Card) -->
     <div
@@ -106,6 +108,8 @@ import SearchModal from './components/SearchModal.vue';
 // Modals (Code-split)
 const ContractDetailModal = defineAsyncComponent(() => import('./components/ContractDetailModal.vue'));
 const AddContractModal = defineAsyncComponent(() => import('./components/AddContractModal.vue'));
+const ConfirmDialog = defineAsyncComponent(() => import('./components/Common/ConfirmDialog.vue'));
+const GlobalLoading = defineAsyncComponent(() => import('./components/Common/GlobalLoading.vue'));
 
 // Instant Initial View (Eager)
 import DashboardView from './components/DashboardView.vue';

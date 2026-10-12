@@ -469,8 +469,15 @@ function updateStatus(id, newStatus) {
   }
 }
 
-function deleteItem(req) {
-  if (confirm(`Hapus tiket permohonan "${req.subject}"?`)) {
+async function deleteItem(req) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Tiket Permohonan?',
+    message: `Apakah Anda yakin ingin menghapus tiket permohonan "${req.subject}" (${req.id})?`,
+    confirmText: 'Ya, Hapus Tiket',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteRequest(req.id);
   }
 }

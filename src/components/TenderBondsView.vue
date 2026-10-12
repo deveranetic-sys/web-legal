@@ -568,8 +568,14 @@ function submitAddBond() {
   };
 }
 
-function confirmDelete(bond) {
-  if (window.confirm(`Hapus pencatatan garansi bank "${bond.guaranteeNumber}"?`)) {
+async function confirmDelete(bond) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Garansi Bank',
+    message: `Apakah Anda yakin ingin menghapus pencatatan garansi bank "${bond.guaranteeNumber}"?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteTenderBond(bond.id);
   }
 }

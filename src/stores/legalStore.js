@@ -63,6 +63,26 @@ const state = reactive({
     show: false,
     message: '',
     type: 'success'
+  },
+
+  // Confirm & Prompt dialog feedback
+  confirmDialog: {
+    show: false,
+    title: '',
+    message: '',
+    confirmText: 'Lanjutkan',
+    cancelText: 'Batal',
+    variant: 'danger', // 'danger' | 'warning' | 'info'
+    isPrompt: false,
+    inputValue: '',
+    inputPlaceholder: '',
+    resolve: null
+  },
+
+  // Global loading overlay / micro-state
+  globalLoading: {
+    show: false,
+    message: 'Memproses data...'
   }
 });
 
@@ -206,18 +226,23 @@ export const legalStore = {
   canAccess: hasPermission,
 
   exportContractsCSV() {
-    let csv = 'ID,Perusahaan,Mitra Rekanan,Nomor Kontrak,Judul Kontrak,Jenis,Masa Berlaku,Nilai Kontrak,Status\n';
-    state.contracts.forEach(c => {
-      csv += `"${c.id}","${c.company}","${c.counterparty}","${c.contractNumber}","${c.contractTitle}","${c.contractType}","${c.effectiveDate} s/d ${c.expiryDate}","${c.contractValue}","${c.status}"\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `LMS_Register_Kontrak_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    this.addActivityLog('EXPORT_CSV', 'Manajemen Kontrak', 'ALL', 'Ekspor berkas CSV register kontrak');
-    this.triggerToast('Berkas CSV register kontrak berhasil diunduh.', 'success');
+    this.showLoading('Mengekspor register kontrak ke CSV...');
+    setTimeout(() => {
+      let csv = 'ID,Perusahaan,Mitra Rekanan,Nomor Kontrak,Judul Kontrak,Jenis,Masa Berlaku,Nilai Kontrak,Status\n';
+      state.contracts.forEach(c => {
+        csv += `"${c.id}","${c.company}","${c.counterparty}","${c.contractNumber}","${c.contractTitle}","${c.contractType}","${c.effectiveDate} s/d ${c.expiryDate}","${c.contractValue}","${c.status}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `LMS_Register_Kontrak_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      this.hideLoading();
+      this.addActivityLog('EXPORT_CSV', 'Manajemen Kontrak', 'ALL', 'Ekspor berkas CSV register kontrak');
+      this.triggerToast('Berkas CSV register kontrak berhasil diunduh.', 'success');
+    }, 450);
   },
 
   // Navigation
@@ -283,6 +308,74 @@ export const legalStore = {
     setTimeout(() => {
       state.toast.show = false;
     }, 3500);
+  },
+
+  // Interactive Confirm Dialog (Promise-based)
+  confirm({
+    title = 'Konfirmasi Tindakan',
+    message = 'Apakah Anda yakin ingin melanjutkan tindakan ini?',
+    confirmText = 'Lanjutkan',
+    cancelText = 'Batal',
+    variant = 'danger'
+  } = {}) {
+    return new Promise((resolve) => {
+      state.confirmDialog.title = title;
+      state.confirmDialog.message = message;
+      state.confirmDialog.confirmText = confirmText;
+      state.confirmDialog.cancelText = cancelText;
+      state.confirmDialog.variant = variant;
+      state.confirmDialog.isPrompt = false;
+      state.confirmDialog.inputValue = '';
+      state.confirmDialog.resolve = resolve;
+      state.confirmDialog.show = true;
+    });
+  },
+
+  // Interactive Prompt Dialog (Promise-based)
+  prompt({
+    title = 'Input Data',
+    message = '',
+    defaultValue = '',
+    placeholder = 'Ketik di sini...',
+    confirmText = 'Simpan',
+    cancelText = 'Batal',
+    variant = 'info'
+  } = {}) {
+    return new Promise((resolve) => {
+      state.confirmDialog.title = title;
+      state.confirmDialog.message = message;
+      state.confirmDialog.confirmText = confirmText;
+      state.confirmDialog.cancelText = cancelText;
+      state.confirmDialog.variant = variant;
+      state.confirmDialog.isPrompt = true;
+      state.confirmDialog.inputValue = defaultValue || '';
+      state.confirmDialog.inputPlaceholder = placeholder;
+      state.confirmDialog.resolve = resolve;
+      state.confirmDialog.show = true;
+    });
+  },
+
+  resolveConfirm(result) {
+    if (typeof state.confirmDialog.resolve === 'function') {
+      if (state.confirmDialog.isPrompt) {
+        state.confirmDialog.resolve(result ? state.confirmDialog.inputValue : null);
+      } else {
+        state.confirmDialog.resolve(result);
+      }
+    }
+    state.confirmDialog.show = false;
+    state.confirmDialog.resolve = null;
+    state.confirmDialog.isPrompt = false;
+  },
+
+  // Global Loading Helpers
+  showLoading(message = 'Memproses data...') {
+    state.globalLoading.message = message;
+    state.globalLoading.show = true;
+  },
+
+  hideLoading() {
+    state.globalLoading.show = false;
   },
 
   // Activity Log

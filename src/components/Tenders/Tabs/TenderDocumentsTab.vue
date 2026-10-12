@@ -284,9 +284,16 @@ function setDocStatus(docId, status) {
   legalStore.toggleTenderDocStatus(props.tender.id, docId, status);
 }
 
-function promptEditDocNotes(doc) {
+async function promptEditDocNotes(doc) {
   const currentNotes = doc.notes || '';
-  const newNotes = window.prompt('Perbarui catatan untuk dokumen "' + doc.name + '":', currentNotes);
+  const newNotes = await legalStore.prompt({
+    title: 'Perbarui Catatan Dokumen',
+    message: `Perbarui catatan untuk dokumen "${doc.name}":`,
+    defaultValue: currentNotes,
+    placeholder: 'Catatan status kelengkapan dokumen...',
+    confirmText: 'Simpan Catatan',
+    variant: 'info'
+  });
   if (newNotes !== null) {
     legalStore.updateTenderDocNotes(props.tender.id, doc.id, newNotes);
   }

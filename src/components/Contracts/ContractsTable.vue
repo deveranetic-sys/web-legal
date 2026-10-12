@@ -228,8 +228,15 @@ function formatDate(dateStr) {
   });
 }
 
-function confirmDelete(contract) {
-  if (confirm(`Apakah Anda yakin ingin menghapus kontrak "${contract.contractTitle}" (${contract.id})? Tindakan ini akan dicatat dalam Audit Trail.`)) {
+async function confirmDelete(contract) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Kontrak Perjanjian?',
+    message: `Apakah Anda yakin ingin menghapus kontrak "${contract.contractTitle}" (${contract.id})? Tindakan ini akan dicatat dalam Audit Trail.`,
+    confirmText: 'Ya, Hapus Kontrak',
+    cancelText: 'Batal',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteContract(contract.id);
   }
 }

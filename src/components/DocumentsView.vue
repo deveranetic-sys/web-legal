@@ -607,9 +607,15 @@ function openEditCorporateModal(doc) {
   isEditCorporateModalOpen.value = true;
 }
 
-function confirmDeleteCorporateDoc(doc) {
+async function confirmDeleteCorporateDoc(doc) {
   const name = doc.name || doc.documentName;
-  if (window.confirm(`Hapus arsip korporasi "${name}" dari Vault?`)) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Arsip Korporasi',
+    message: `Apakah Anda yakin ingin menghapus arsip korporasi "${name}" dari Vault?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteCorporateDocument(doc.id);
   }
 }
@@ -624,8 +630,14 @@ function openEditVaultModal(doc) {
   isEditVaultModalOpen.value = true;
 }
 
-function confirmDeleteVaultDoc(doc) {
-  if (window.confirm(`Hapus dokumen "${doc.name}" dari Dokumen Vault?`)) {
+async function confirmDeleteVaultDoc(doc) {
+  const confirmed = await legalStore.confirm({
+    title: 'Hapus Dokumen Vault',
+    message: `Apakah Anda yakin ingin menghapus dokumen "${doc.name}" dari Dokumen Vault?`,
+    confirmText: 'Ya, Hapus',
+    variant: 'danger'
+  });
+  if (confirmed) {
     legalStore.deleteTenderVaultDoc(doc.id);
   }
 }
