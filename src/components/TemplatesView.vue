@@ -40,7 +40,7 @@
         <button
           v-if="activeSubTab === 'clauses'"
           id="btn-add-clause-main"
-          @click="isAddClauseModalOpen = true"
+          @click="openAddClause"
           class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs shadow-md shadow-indigo-600/20 flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
         >
           <Plus class="w-4 h-4 stroke-[2.5]" />
@@ -86,449 +86,38 @@
     </div>
 
     <!-- VIEW 1: Klausul Standar -->
-    <div v-if="activeSubTab === 'clauses'" class="space-y-4">
-      <div v-if="filteredClauses.length === 0" class="text-center py-12 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
-        <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-          <FileText class="w-6 h-6" />
-        </div>
-        <h4 class="text-base font-bold text-slate-800">Tidak ada klausul yang cocok</h4>
-        <p class="text-xs text-slate-500 max-w-md mx-auto">
-          Tidak ditemukan klausul dengan kata kunci pencarian Anda. Anda dapat menambahkan klausul standar baru.
-        </p>
-        <button
-          @click="isAddClauseModalOpen = true"
-          class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition cursor-pointer"
-        >
-          <Plus class="w-4 h-4" />
-          <span>Tambah Klausul</span>
-        </button>
-      </div>
-
-      <div
-        v-for="clause in filteredClauses"
-        :key="clause.id"
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3"
-      >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">
-              {{ clause.category }}
-            </span>
-            <span v-if="clause.standardModel" class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-              {{ clause.standardModel }}
-            </span>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button
-              @click="copyText(clause.content)"
-              class="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 cursor-pointer"
-            >
-              <Copy class="w-3.5 h-3.5" />
-              <span>Salin</span>
-            </button>
-            <button
-              @click="openEditClauseModal(clause)"
-              class="p-1 rounded text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
-              title="Edit Klausul"
-            >
-              <Pencil class="w-3.5 h-3.5" />
-            </button>
-            <button
-              @click="confirmDeleteClause(clause)"
-              class="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-              title="Hapus Klausul"
-            >
-              <Trash2 class="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        <h3 class="text-base font-bold text-slate-900">{{ clause.title }}</h3>
-
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 font-mono text-xs text-slate-800 leading-relaxed whitespace-pre-line select-all">
-          {{ clause.content }}
-        </div>
-
-        <p class="text-xs text-slate-500 italic">
-          Catatan Legal: {{ clause.explanation || clause.description }}
-        </p>
-      </div>
-    </div>
+    <ClausesTab
+      v-if="activeSubTab === 'clauses'"
+      :search-query="searchQuery"
+      @open-add="openAddClause"
+      @open-edit="openEditClause"
+    />
 
     <!-- VIEW 2: Template Dokumen & Surat -->
-    <div v-else-if="activeSubTab === 'templates'" class="space-y-4">
-      <div v-if="filteredTemplates.length === 0" class="text-center py-12 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
-        <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-          <FileText class="w-6 h-6" />
-        </div>
-        <h4 class="text-base font-bold text-slate-800">Tidak ada template yang cocok</h4>
-        <p class="text-xs text-slate-500 max-w-md mx-auto">
-          Tidak ditemukan template dengan kata kunci atau filter yang Anda pilih. Anda dapat menambahkan template baru dengan tombol di bawah.
-        </p>
-        <button
-          @click="isAddModalOpen = true"
-          class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition cursor-pointer"
-        >
-          <Plus class="w-4 h-4" />
-          <span>Tambah Template</span>
-        </button>
-      </div>
-
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div
-          v-for="tmpl in filteredTemplates"
-          :key="tmpl.id"
-          class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3.5 flex flex-col justify-between hover:shadow-md transition-shadow group relative"
-        >
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <span
-                :class="isLetterTemplate(tmpl) ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-blue-50 text-[#4338CA] border border-blue-100'"
-                class="text-[10px] font-bold uppercase px-2 py-0.5 rounded"
-              >
-                {{ tmpl.category }}
-              </span>
-
-              <div class="flex items-center gap-1.5">
-                <span v-if="tmpl.language" class="text-[11px] font-medium text-slate-400">
-                  {{ tmpl.language }}
-                </span>
-                <button
-                  v-if="isUserAdded(tmpl)"
-                  @click="confirmDeleteTemplate(tmpl)"
-                  class="p-1 rounded-md text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                  title="Hapus template ini"
-                >
-                  <Trash2 class="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            <!-- Title & Description -->
-            <div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                {{ tmpl.title || tmpl.templateName }}
-              </h3>
-              <p class="text-xs text-slate-600 leading-relaxed mt-1 line-clamp-3">
-                {{ tmpl.description }}
-              </p>
-            </div>
-
-            <!-- Uploaded File Badge -->
-            <div
-              v-if="tmpl.fileName"
-              class="px-3 py-2 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-emerald-800 text-[11px] font-semibold flex items-center justify-between gap-2"
-            >
-              <div class="flex items-center gap-1.5 truncate">
-                <Paperclip class="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span class="truncate">Berkas: {{ tmpl.fileName }}</span>
-              </div>
-              <span class="text-emerald-700 font-mono text-[10px] shrink-0" v-if="tmpl.fileSize">
-                {{ tmpl.fileSize }}
-              </span>
-            </div>
-
-            <!-- Klausul yang Termasuk -->
-            <div v-if="tmpl.clausesIncluded && tmpl.clausesIncluded.length" class="space-y-1.5 pt-1">
-              <span class="text-[11px] font-semibold text-slate-700 block">Klausul Kunci Termasuk:</span>
-              <div class="flex flex-wrap gap-1">
-                <span
-                  v-for="clauseName in tmpl.clausesIncluded"
-                  :key="clauseName"
-                  class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px]"
-                >
-                  {{ clauseName }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Action Buttons -->
-          <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5">
-              <button
-                v-if="tmpl.contentSample"
-                @click="openPreview(tmpl)"
-                class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs cursor-pointer flex items-center gap-1 transition"
-              >
-                <Eye class="w-3.5 h-3.5 text-slate-500" />
-                <span>Lihat Draf</span>
-              </button>
-
-              <button
-                @click="openGenerator(tmpl)"
-                class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1 shadow-xs transition"
-              >
-                <Zap class="w-3.5 h-3.5" />
-                <span>Generate Naskah</span>
-              </button>
-            </div>
-
-            <button
-              @click="downloadTemplate(tmpl)"
-              class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1 transition"
-              :title="tmpl.fileName ? 'Unduh berkas asli template' : 'Unduh draf teks'"
-            >
-              <Download class="w-3.5 h-3.5 text-slate-500" />
-              <span>Unduh Berkas</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TemplatesListTab
+      v-else-if="activeSubTab === 'templates'"
+      :search-query="searchQuery"
+      :selected-category="selectedCategory"
+      @open-add="isAddModalOpen = true"
+      @preview="openPreview"
+      @generate="openGenerator"
+    />
 
     <!-- Modal Preview Template Draf -->
-    <div
+    <TemplatesPreviewModal
       v-if="previewTmpl"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150"
-    >
-      <div class="w-full max-w-3xl rounded-2xl bg-white shadow-2xl overflow-hidden border border-slate-200 flex flex-col max-h-[85vh]">
-        <!-- Header -->
-        <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-          <div>
-            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-100 text-[#4338CA]">
-              {{ previewTmpl.category }}
-            </span>
-            <h3 class="text-lg font-bold text-slate-900 mt-1">{{ previewTmpl.title || previewTmpl.templateName }}</h3>
-          </div>
-          <button
-            @click="previewTmpl = null"
-            class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200 cursor-pointer"
-          >
-            <X class="w-5 h-5" />
-          </button>
-        </div>
+      :template="previewTmpl"
+      @close="previewTmpl = null"
+      @generate="openGenerator"
+    />
 
-        <!-- Body Content -->
-        <div class="p-6 overflow-y-auto space-y-4">
-          <p class="text-xs text-slate-500">{{ previewTmpl.description }}</p>
-
-          <div v-if="previewTmpl.fileName" class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
-            <Paperclip class="w-4 h-4 text-emerald-600" />
-            <span>Berkas Lampiran: <strong>{{ previewTmpl.fileName }}</strong> ({{ previewTmpl.fileSize }})</span>
-          </div>
-
-          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs leading-relaxed whitespace-pre-line select-all overflow-x-auto border border-slate-800">
-            {{ previewTmpl.contentSample }}
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <span class="text-xs text-slate-500">{{ previewTmpl.language || 'Bahasa Indonesia' }}</span>
-          <div class="flex items-center gap-2">
-            <button
-              @click="copyText(previewTmpl.contentSample)"
-              class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5"
-            >
-              <Copy class="w-3.5 h-3.5" />
-              <span>Salin Draf</span>
-            </button>
-            <button
-              @click="openGenerator(previewTmpl); previewTmpl = null"
-              class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-sm"
-            >
-              <Zap class="w-3.5 h-3.5" />
-              <span>Generate Naskah</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL: Tambah Klausul Standar Baru -->
-    <div
-      v-if="isAddClauseModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="isAddClauseModalOpen = false"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <Plus class="w-5 h-5 text-indigo-400" />
-            <h3 class="font-extrabold text-white text-base">Tambah Klausul Standar Baru</h3>
-          </div>
-          <button @click="isAddClauseModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
-
-        <form @submit.prevent="submitNewClause" class="p-6 space-y-4 text-xs sm:text-sm">
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Judul Klausul *</label>
-            <input
-              v-model="newClauseForm.title"
-              type="text"
-              required
-              placeholder="Contoh: Klausul Arbitrase BANI & Batasan Tanggung Jawab"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-            />
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Kategori Klausul</label>
-              <select
-                v-model="newClauseForm.category"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
-              >
-                <option value="Proteksi Risiko & Liabilitas">Proteksi Risiko & Liabilitas</option>
-                <option value="Penyelesaian Sengketa & Arbitrase">Penyelesaian Sengketa & Arbitrase</option>
-                <option value="Standar Kompensasi & Penalti">Standar Kompensasi & Penalti</option>
-                <option value="Kerahasiaan & Non-Disclosure">Kerahasiaan & Non-Disclosure</option>
-                <option value="Keadaan Memaksa / Force Majeure">Keadaan Memaksa / Force Majeure</option>
-                <option value="Hukum Yang Berlaku & Yurisdiksi">Hukum Yang Berlaku & Yurisdiksi</option>
-                <option value="Pengakhiran & Terminasi Kontrak">Pengakhiran & Terminasi Kontrak</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Model Referensi / Standar</label>
-              <select
-                v-model="newClauseForm.standardModel"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
-              >
-                <option value="Standar Korporasi">Standar Korporasi PT Nusantara</option>
-                <option value="BANI Arbitrase">Model BANI Arbitrase</option>
-                <option value="FIDIC Silver/Yellow Book">FIDIC Silver/Yellow Book</option>
-                <option value="ICC Model Contract">ICC International Model</option>
-                <option value="Standard PPA PLN">Standard PPA PLN</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Teks / Rumusan Baku Klausul *</label>
-            <textarea
-              v-model="newClauseForm.content"
-              required
-              rows="4"
-              placeholder="Tuliskan rumusan lengkap pasal atau klausul baku..."
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-mono text-xs"
-            ></textarea>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Catatan / Panduan Penggunaan Legal</label>
-            <textarea
-              v-model="newClauseForm.explanation"
-              rows="2"
-              placeholder="Jelaskan kapan klausul ini wajib disisipkan dan batasan negosiasi..."
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 resize-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-            <button
-              type="button"
-              @click="isAddClauseModalOpen = false"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
-            >
-              Simpan Klausul
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- MODAL: Edit Klausul Standar -->
-    <div
-      v-if="isEditClauseModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
-      @click.self="isEditClauseModalOpen = false"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <Pencil class="w-5 h-5 text-indigo-400" />
-            <h3 class="font-extrabold text-white text-base">Edit Klausul Standar</h3>
-          </div>
-          <button @click="isEditClauseModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
-        </div>
-
-        <form @submit.prevent="submitEditClause" class="p-6 space-y-4 text-xs sm:text-sm">
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Judul Klausul *</label>
-            <input
-              v-model="editClauseForm.title"
-              type="text"
-              required
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
-            />
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Kategori Klausul</label>
-              <select
-                v-model="editClauseForm.category"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
-              >
-                <option value="Proteksi Risiko & Liabilitas">Proteksi Risiko & Liabilitas</option>
-                <option value="Penyelesaian Sengketa & Arbitrase">Penyelesaian Sengketa & Arbitrase</option>
-                <option value="Standar Kompensasi & Penalti">Standar Kompensasi & Penalti</option>
-                <option value="Kerahasiaan & Non-Disclosure">Kerahasiaan & Non-Disclosure</option>
-                <option value="Keadaan Memaksa / Force Majeure">Keadaan Memaksa / Force Majeure</option>
-                <option value="Hukum Yang Berlaku & Yurisdiksi">Hukum Yang Berlaku & Yurisdiksi</option>
-                <option value="Pengakhiran & Terminasi Kontrak">Pengakhiran & Terminasi Kontrak</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold text-slate-800 mb-1">Model Referensi / Standar</label>
-              <select
-                v-model="editClauseForm.standardModel"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
-              >
-                <option value="Standar Korporasi">Standar Korporasi PT Nusantara</option>
-                <option value="BANI Arbitrase">Model BANI Arbitrase</option>
-                <option value="FIDIC Silver/Yellow Book">FIDIC Silver/Yellow Book</option>
-                <option value="ICC Model Contract">ICC International Model</option>
-                <option value="Standard PPA PLN">Standard PPA PLN</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Teks / Rumusan Baku Klausul *</label>
-            <textarea
-              v-model="editClauseForm.content"
-              required
-              rows="4"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-mono text-xs"
-            ></textarea>
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">Catatan / Panduan Penggunaan Legal</label>
-            <textarea
-              v-model="editClauseForm.description"
-              rows="2"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 resize-none"
-            ></textarea>
-          </div>
-
-          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-            <button
-              type="button"
-              @click="isEditClauseModalOpen = false"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
-            >
-              Simpan Perubahan
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <!-- Modal Tambah / Edit Klausul Standar -->
+    <ClauseModal
+      v-if="isClauseModalOpen"
+      :is-edit="isEditClauseMode"
+      :initial-data="selectedClauseData"
+      @close="isClauseModalOpen = false"
+    />
 
     <!-- Modal Interactive Template Generator with Merge Fields -->
     <TemplateGeneratorModal
@@ -547,23 +136,15 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue';
-import {
-  Search,
-  Copy,
-  Download,
-  Eye,
-  X,
-  Zap,
-  Plus,
-  Pencil,
-  FileText,
-  Paperclip,
-  Trash2
-} from 'lucide-vue-next';
+import { ref, computed } from 'vue';
+import { Search, Plus } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 import TemplateGeneratorModal from './TemplateGeneratorModal.vue';
 import AddTemplateModal from './AddTemplateModal.vue';
+import ClausesTab from './Templates/Tabs/ClausesTab.vue';
+import TemplatesListTab from './Templates/Tabs/TemplatesListTab.vue';
+import TemplatesPreviewModal from './Templates/Modals/TemplatesPreviewModal.vue';
+import ClauseModal from './Templates/Modals/ClauseModal.vue';
 
 const activeSubTab = ref('templates');
 const searchQuery = ref('');
@@ -571,129 +152,32 @@ const selectedCategory = ref('ALL');
 const previewTmpl = ref(null);
 const selectedTemplateForGen = ref(null);
 const isAddModalOpen = ref(false);
-const isAddClauseModalOpen = ref(false);
-const isEditClauseModalOpen = ref(false);
-const editingClauseId = ref(null);
+
+const isClauseModalOpen = ref(false);
+const isEditClauseMode = ref(false);
+const selectedClauseData = ref({});
 
 const clauses = computed(() => legalStore.state.clauses || []);
 const templates = computed(() => legalStore.state.templates || []);
-
-const newClauseForm = reactive({
-  title: '',
-  category: 'Proteksi Risiko & Liabilitas',
-  standardModel: 'Standar Korporasi',
-  content: '',
-  explanation: ''
-});
-
-const editClauseForm = reactive({
-  title: '',
-  category: '',
-  standardModel: '',
-  content: '',
-  description: ''
-});
 
 const templateCategories = [
   { key: 'ALL', label: 'Semua Template' },
   { key: 'SURAT', label: 'Template Surat & Somasi' },
   { key: 'KONTRAK', label: 'Kontrak & Perjanjian' },
-  { key: 'OPINION', label: 'Legal Opinion & Lainnya' }
+  { key: 'CORPORATE', label: 'Korporasi & Legal' }
 ];
 
-function submitNewClause() {
-  legalStore.addClause({
-    title: newClauseForm.title,
-    category: newClauseForm.category,
-    standardModel: newClauseForm.standardModel,
-    content: newClauseForm.content,
-    description: newClauseForm.explanation
-  });
-  isAddClauseModalOpen.value = false;
-  newClauseForm.title = '';
-  newClauseForm.content = '';
-  newClauseForm.explanation = '';
+function openAddClause() {
+  isEditClauseMode.value = false;
+  selectedClauseData.value = {};
+  isClauseModalOpen.value = true;
 }
 
-function openEditClauseModal(clause) {
-  editingClauseId.value = clause.id;
-  editClauseForm.title = clause.title || '';
-  editClauseForm.category = clause.category || 'Proteksi Risiko & Liabilitas';
-  editClauseForm.standardModel = clause.standardModel || 'Standar Korporasi';
-  editClauseForm.content = clause.content || '';
-  editClauseForm.description = clause.description || clause.explanation || '';
-  isEditClauseModalOpen.value = true;
+function openEditClause(clause) {
+  isEditClauseMode.value = true;
+  selectedClauseData.value = { ...clause };
+  isClauseModalOpen.value = true;
 }
-
-function submitEditClause() {
-  if (!editingClauseId.value) return;
-  legalStore.updateClause(editingClauseId.value, {
-    title: editClauseForm.title,
-    category: editClauseForm.category,
-    standardModel: editClauseForm.standardModel,
-    content: editClauseForm.content,
-    description: editClauseForm.description
-  });
-  isEditClauseModalOpen.value = false;
-  editingClauseId.value = null;
-}
-
-function confirmDeleteClause(clause) {
-  if (confirm(`Apakah Anda yakin ingin menghapus klausul "${clause.title}"?`)) {
-    legalStore.deleteClause(clause.id);
-  }
-}
-
-function isLetterTemplate(tmpl) {
-  const cat = (tmpl.category || '').toLowerCase();
-  const title = (tmpl.title || tmpl.templateName || '').toLowerCase();
-  const tags = (tmpl.tags || []).join(' ').toLowerCase();
-  return (
-    cat.includes('surat') ||
-    cat.includes('somasi') ||
-    cat.includes('spk') ||
-    cat.includes('korespondensi') ||
-    cat.includes('dispute') ||
-    title.includes('surat') ||
-    title.includes('somasi') ||
-    title.includes('spk') ||
-    tags.includes('surat') ||
-    tags.includes('somasi')
-  );
-}
-
-function isUserAdded(tmpl) {
-  return tmpl.fileName || tmpl.uploadedAt || tmpl.id?.startsWith('TMPL-008') || Number(tmpl.id?.replace('TMPL-', '')) > 7;
-}
-
-const filteredClauses = computed(() => {
-  return clauses.value.filter(c => {
-    const q = searchQuery.value.toLowerCase().trim();
-    return !q || (c.title || '').toLowerCase().includes(q) || (c.content || '').toLowerCase().includes(q);
-  });
-});
-
-const filteredTemplates = computed(() => {
-  return templates.value.filter(t => {
-    const q = searchQuery.value.toLowerCase().trim();
-    const name = (t.title || t.templateName || '').toLowerCase();
-    const desc = (t.description || '').toLowerCase();
-    const cat = (t.category || '').toLowerCase();
-
-    const matchesQuery = !q || name.includes(q) || desc.includes(q) || cat.includes(q);
-    if (!matchesQuery) return false;
-
-    if (selectedCategory.value === 'ALL') return true;
-    if (selectedCategory.value === 'SURAT') return isLetterTemplate(t);
-    if (selectedCategory.value === 'KONTRAK') {
-      return cat.includes('contract') || cat.includes('agreement') || cat.includes('perjanjian') || cat.includes('mou') || cat.includes('nda') || cat.includes('epc');
-    }
-    if (selectedCategory.value === 'OPINION') {
-      return cat.includes('opinion') || cat.includes('kepatuhan') || cat.includes('nota');
-    }
-    return true;
-  });
-});
 
 function openPreview(tmpl) {
   previewTmpl.value = tmpl;
@@ -703,47 +187,7 @@ function openGenerator(tmpl) {
   selectedTemplateForGen.value = tmpl;
 }
 
-function copyText(text) {
-  if (!text) return;
-  navigator.clipboard.writeText(text);
-  legalStore.triggerToast('Teks berhasil disalin ke clipboard!', 'success');
-}
-
-function downloadTemplate(tmpl) {
-  const name = tmpl.title || tmpl.templateName || 'Template_Legal';
-  
-  if (tmpl.fileDataUrl && tmpl.fileName) {
-    const a = document.createElement('a');
-    a.href = tmpl.fileDataUrl;
-    a.download = tmpl.fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    legalStore.triggerToast(`Mengunduh berkas template: ${tmpl.fileName}`, 'success');
-  } else {
-    const content = tmpl.contentSample || `${name}\n\n${tmpl.description || ''}`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${name.replace(/\s+/g, '_')}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    legalStore.triggerToast(`Mengunduh draf template: ${name}`, 'success');
-  }
-}
-
-function confirmDeleteTemplate(tmpl) {
-  const title = tmpl.title || tmpl.templateName;
-  if (confirm(`Apakah Anda yakin ingin menghapus template "${title}"?`)) {
-    legalStore.deleteTemplate(tmpl.id);
-  }
-}
-
-function handleTemplateCreated(created) {
+function handleTemplateCreated() {
   activeSubTab.value = 'templates';
-  selectedCategory.value = 'ALL';
 }
 </script>
