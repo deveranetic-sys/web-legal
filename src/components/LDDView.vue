@@ -350,11 +350,11 @@ async function confirmDeleteProject(p) {
   }
 }
 
-watch(lddList, (newList) => {
-  if (!newList.some(p => p.id === selectedProjectId.value) && newList.length > 0) {
-    selectedProjectId.value = newList[0].id;
+watch(() => lddList.value.map(p => p.id).join(','), () => {
+  if (!lddList.value.some(p => p.id === selectedProjectId.value) && lddList.value.length > 0) {
+    selectedProjectId.value = lddList.value[0].id;
   }
-}, { deep: true });
+});
 
 const activeLDD = computed(() => {
   return lddList.value.find(p => p.id === selectedProjectId.value) || lddList.value[0];

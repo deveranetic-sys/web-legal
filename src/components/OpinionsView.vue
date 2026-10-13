@@ -402,11 +402,11 @@ const editOpForm = reactive({
   approval: 'PENDING_APPROVAL'
 });
 
-watch(opinions, (newList) => {
-  if (!newList.some(o => o.id === selectedOpinion.value?.id) && newList.length > 0) {
-    selectedOpinion.value = newList[0];
+watch(() => opinions.value.map(o => o.id).join(','), () => {
+  if (!opinions.value.some(o => o.id === selectedOpinion.value?.id) && opinions.value.length > 0) {
+    selectedOpinion.value = opinions.value[0];
   }
-}, { deep: true });
+});
 
 function getApprovalBadge(status) {
   switch (status) {

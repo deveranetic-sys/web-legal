@@ -64,10 +64,11 @@
     </div>
 
     <!-- Regulation Cards Grid -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div
-        v-for="item in filteredKnowledge"
-        :key="item.id"
+    <div v-else class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          v-for="item in paginatedKnowledge"
+          :key="item.id"
         class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition space-y-3 flex flex-col justify-between group"
       >
         <div class="space-y-2">
@@ -169,11 +170,20 @@
               <span>Hapus</span>
             </button>
           </div>
-          <button @click="selectedReg = null" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold cursor-pointer">
-            Tutup
-          </button>
+            <button @click="selectedReg = null" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold cursor-pointer">
+              Tutup
+            </button>
+          </div>
         </div>
       </div>
+
+      <!-- Pagination Controls -->
+      <PaginationControls
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :total-items="filteredKnowledge.length"
+        :page-size-options="[6, 8, 12, 20]"
+      />
     </div>
 
     <!-- MODAL: Tambah Regulasi Sektoral Baru -->
@@ -448,12 +458,17 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, computed, reactive, watch } from 'vue';
 import { Search, Plus, Pencil, Trash2, ExternalLink } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
+import { useDebouncedRef } from '../utils/debounce';
+import PaginationControls from './Common/PaginationControls.vue';
 
 const searchQuery = ref('');
+const debouncedSearch = useDebouncedRef(searchQuery, 250);
 const filterCategory = ref('ALL');
+const currentPage = ref(1);
+const pageSize = ref(8);
 const isAddModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 const selectedReg = ref(null);
@@ -526,11 +541,16 @@ async function confirmDelete(item) {
   }
 }
 
+// Auto-reset page on search or category filter change
+watch([debouncedSearch, filterCategory], () => {
+  currentPage.value = 1;
+});
+
 const knowledge = computed(() => legalStore.state.knowledge);
 
 const filteredKnowledge = computed(() => {
   return knowledge.value.filter(k => {
-    const q = searchQuery.value.toLowerCase().trim();
+    const q = debouncedSearch.value.toLowerCase().trim();
     const title = (k.title || '').toLowerCase();
     const summary = (k.summary || '').toLowerCase();
     const sector = (k.sector || k.legalTopic || '').toLowerCase();
@@ -541,5 +561,10 @@ const filteredKnowledge = computed(() => {
 
     return matchesSearch && matchesCategory;
   });
+});
+
+const paginatedKnowledge = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  return filteredKnowledge.value.slice(start, start + pageSize.value);
 });
 </script>

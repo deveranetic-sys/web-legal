@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import {
   FolderTree,
   Layers,
@@ -116,13 +116,15 @@ import {
   Download
 } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
-import MasterDocTypesTab from './MasterData/Tabs/MasterDocTypesTab.vue';
-import MasterSectorsTab from './MasterData/Tabs/MasterSectorsTab.vue';
-import MasterStagesTab from './MasterData/Tabs/MasterStagesTab.vue';
-import MasterContractTypesTab from './MasterData/Tabs/MasterContractTypesTab.vue';
-import AddDocTypeModal from './MasterData/Modals/AddDocTypeModal.vue';
-import AddSectorModal from './MasterData/Modals/AddSectorModal.vue';
-import AddContractTypeModal from './MasterData/Modals/AddContractTypeModal.vue';
+
+// Code-split tabs and modals
+const MasterDocTypesTab = defineAsyncComponent(() => import('./MasterData/Tabs/MasterDocTypesTab.vue'));
+const MasterSectorsTab = defineAsyncComponent(() => import('./MasterData/Tabs/MasterSectorsTab.vue'));
+const MasterStagesTab = defineAsyncComponent(() => import('./MasterData/Tabs/MasterStagesTab.vue'));
+const MasterContractTypesTab = defineAsyncComponent(() => import('./MasterData/Tabs/MasterContractTypesTab.vue'));
+const AddDocTypeModal = defineAsyncComponent(() => import('./MasterData/Modals/AddDocTypeModal.vue'));
+const AddSectorModal = defineAsyncComponent(() => import('./MasterData/Modals/AddSectorModal.vue'));
+const AddContractTypeModal = defineAsyncComponent(() => import('./MasterData/Modals/AddContractTypeModal.vue'));
 
 const activeTab = ref('doctypes'); // 'doctypes', 'sectors', 'stages', 'contracts'
 
@@ -162,13 +164,13 @@ function exportMasterDataJSON() {
     exportedAt: new Date().toISOString()
   };
 
-  const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.setAttribute('href', jsonStr);
-  link.setAttribute('download', `LMS_Master_Data_${new Date().toISOString().slice(0, 10)}.json`);
-  document.body.appendChild(link);
+  link.href = url;
+  link.download = `LMS_Master_Data_${new Date().toISOString().slice(0, 10)}.json`;
   link.click();
-  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
   legalStore.triggerToast('Master Data berhasil diekspor (JSON)', 'success');
 }
 </script>

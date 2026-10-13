@@ -442,8 +442,10 @@
 import { ref, computed, reactive } from 'vue';
 import { Plus, Search, Eye, Pencil, Trash2 } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
+import { useDebouncedRef } from '../utils/debounce';
 
 const searchQuery = ref('');
+const debouncedSearch = useDebouncedRef(searchQuery, 250);
 const filterStatus = ref('ALL');
 const isAddModalOpen = ref(false);
 const isEditModalOpen = ref(false);
@@ -521,7 +523,7 @@ const renewalCount = computed(() => licenses.value.filter(l => l.status === 'REN
 
 const filteredLicenses = computed(() => {
   return licenses.value.filter(l => {
-    const q = searchQuery.value.toLowerCase().trim();
+    const q = debouncedSearch.value.toLowerCase().trim();
     const matchSearch = !q || l.licenseName.toLowerCase().includes(q) || l.licenseNumber.toLowerCase().includes(q);
     const matchStatus = filterStatus.value === 'ALL' || l.status === filterStatus.value;
     return matchSearch && matchStatus;

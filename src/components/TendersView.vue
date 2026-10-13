@@ -808,13 +808,28 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
-import RegisterTenderModal from './Tenders/RegisterTenderModal.vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 
-import AddAanwijzingQuestionModal from './Tenders/AddAanwijzingQuestionModal.vue';
-import AddPokjaAnswerModal from './Tenders/AddPokjaAnswerModal.vue';
-import WinnerResultModal from './Tenders/WinnerResultModal.vue';
-import UnlockTenderModal from './Tenders/UnlockTenderModal.vue';
+// Async Sub-Views (Code-split on demand)
+const TenderGapAnalysisView = defineAsyncComponent(() => import('./TenderGapAnalysisView.vue'));
+const TenderBondsView = defineAsyncComponent(() => import('./TenderBondsView.vue'));
+
+// Async Detail Workflow Tabs
+const TenderStagesTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderStagesTab.vue'));
+const TenderDocumentsTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderDocumentsTab.vue'));
+const TenderGNGTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderGNGTab.vue'));
+const TenderPricingTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderPricingTab.vue'));
+const TenderGatesTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderGatesTab.vue'));
+const TenderClarificationsTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderClarificationsTab.vue'));
+const TenderResultTab = defineAsyncComponent(() => import('./Tenders/Tabs/TenderResultTab.vue'));
+
+// Async Modals
+const RegisterTenderModal = defineAsyncComponent(() => import('./Tenders/RegisterTenderModal.vue'));
+const AddAanwijzingQuestionModal = defineAsyncComponent(() => import('./Tenders/AddAanwijzingQuestionModal.vue'));
+const AddPokjaAnswerModal = defineAsyncComponent(() => import('./Tenders/AddPokjaAnswerModal.vue'));
+const WinnerResultModal = defineAsyncComponent(() => import('./Tenders/WinnerResultModal.vue'));
+const UnlockTenderModal = defineAsyncComponent(() => import('./Tenders/UnlockTenderModal.vue'));
+
 import {
   ArrowLeft,
   ArrowRight,
@@ -861,20 +876,13 @@ import {
   TrendingUp
 } from 'lucide-vue-next';
 import { legalStore, formatIDR, calculateDaysRemaining } from '../stores/legalStore';
-import TenderGapAnalysisView from './TenderGapAnalysisView.vue';
-import TenderBondsView from './TenderBondsView.vue';
-import TenderResultTab from './Tenders/Tabs/TenderResultTab.vue';
-import TenderClarificationsTab from './Tenders/Tabs/TenderClarificationsTab.vue';
-import TenderGatesTab from './Tenders/Tabs/TenderGatesTab.vue';
-import TenderStagesTab from './Tenders/Tabs/TenderStagesTab.vue';
-import TenderDocumentsTab from './Tenders/Tabs/TenderDocumentsTab.vue';
-import TenderGNGTab from './Tenders/Tabs/TenderGNGTab.vue';
-import TenderPricingTab from './Tenders/Tabs/TenderPricingTab.vue';
+import { useDebouncedRef } from '../utils/debounce';
 
 // State Navigation
 const activeProjectStep = ref('list'); // 'list' (Langkah 1) or 'detail' (Langkah 2)
 const activeDetailTab = ref('stages'); // 'stages', 'documents', 'gng', 'pricing', 'gates', 'clarifications', 'result'
 const searchQuery = ref('');
+const debouncedSearch = useDebouncedRef(searchQuery, 250);
 const filterStage = ref('ALL');
 const filterDocReadiness = ref('ALL');
 const filterSector = ref('ALL');
@@ -932,11 +940,6 @@ const selectedTenderId = computed({
 const currentSelectedTender = computed(() => {
   return tenders.value.find(t => t.id === selectedTenderId.value) || tenders.value[0] || null;
 });
-
-// Sync GNG & Pricing when tender changes
-watch(currentSelectedTender, (t) => {
-  if (!t) return;
-}, { immediate: true });
 
 // Metric Computations
 const activeTendersCount = computed(() => {
@@ -1005,8 +1008,8 @@ const hasActiveFilter = computed(() => {
 
 const filteredTenders = computed(() => {
   return tenders.value.filter(t => {
-    if (searchQuery.value) {
-      const q = searchQuery.value.toLowerCase().trim();
+    if (debouncedSearch.value) {
+      const q = debouncedSearch.value.toLowerCase().trim();
       const matchTitle = t.title?.toLowerCase().includes(q);
       const matchNumber = t.tenderNumber?.toLowerCase().includes(q);
       const matchOrganizer = t.organizer?.toLowerCase().includes(q);

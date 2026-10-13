@@ -3,20 +3,16 @@ import { storage } from '../services/storage';
 import {
   masterSectorChecklists,
   masterSectorStageGuidance,
-  initialRolesMatrix,
-  initialApprovalFlows,
-  initialErpIntegrations,
-  initialCapabilityList,
-  initialErpEmployees
+  initialCapabilityList
 } from '../data/seedData';
 
-// Initialize storage on load
-storage.initStorage();
+// Initialize storage and load hydrated dataset in a single pass
+const initialData = storage.initStorage();
 
 const state = reactive({
-  users: storage.get(storage.KEYS.USERS, []),
-  currentUser: storage.get(storage.KEYS.CURRENT_USER, null),
-  currentEntity: storage.get(storage.KEYS.CURRENT_ENTITY, 'PT Nusantara Energi'),
+  users: initialData.users,
+  currentUser: initialData.currentUser,
+  currentEntity: initialData.currentEntity,
   
   // Feature Flags
   ENABLE_TENDER_MODULE: false,
@@ -30,31 +26,31 @@ const state = reactive({
   isNotificationDrawerOpen: false,
 
   // Datasets
-  requests: storage.get(storage.KEYS.REQUESTS, []),
-  contracts: storage.get(storage.KEYS.CONTRACTS, []),
-  corporate: storage.get(storage.KEYS.CORPORATE, []),
-  licenses: storage.get(storage.KEYS.LICENSES, []),
-  compliance: storage.get(storage.KEYS.COMPLIANCE, []),
-  disputes: storage.get(storage.KEYS.DISPUTES, []),
-  ldd: storage.get(storage.KEYS.LDD, []),
-  opinions: storage.get(storage.KEYS.LEGAL_OPINIONS, []),
-  documents: storage.get(storage.KEYS.DOCUMENTS, []),
-  correspondence: storage.get(storage.KEYS.CORRESPONDENCE, []),
-  knowledge: storage.get(storage.KEYS.KNOWLEDGE, []),
-  templates: storage.get(storage.KEYS.TEMPLATES, []),
-  clauses: storage.get(storage.KEYS.CLAUSES, []),
-  activityLogs: storage.get(storage.KEYS.ACTIVITY_LOGS, []),
-  tenders: storage.get(storage.KEYS.TENDERS, []),
-  tenderVault: storage.get(storage.KEYS.TENDER_VAULT, []),
-  tenderBonds: storage.get(storage.KEYS.TENDER_BONDS, []),
-  masterDocTypes: storage.get(storage.KEYS.MASTER_DOC_TYPES, []),
-  masterSectors: storage.get(storage.KEYS.MASTER_SECTORS, []),
-  masterStages: storage.get(storage.KEYS.MASTER_STAGES, {}),
-  masterContractTypes: storage.get(storage.KEYS.MASTER_CONTRACT_TYPES, []),
-  rolesMatrix: storage.get(storage.KEYS.ROLES_MATRIX, initialRolesMatrix),
-  approvalFlows: storage.get(storage.KEYS.APPROVAL_FLOWS, initialApprovalFlows),
-  erpIntegrations: storage.get(storage.KEYS.ERP_INTEGRATIONS, initialErpIntegrations),
-  erpEmployees: storage.get(storage.KEYS.ERP_EMPLOYEES, initialErpEmployees),
+  requests: initialData.requests,
+  contracts: initialData.contracts,
+  corporate: initialData.corporate,
+  licenses: initialData.licenses,
+  compliance: initialData.compliance,
+  disputes: initialData.disputes,
+  ldd: initialData.ldd,
+  opinions: initialData.opinions,
+  documents: initialData.documents,
+  correspondence: initialData.correspondence,
+  knowledge: initialData.knowledge,
+  templates: initialData.templates,
+  clauses: initialData.clauses,
+  activityLogs: initialData.activityLogs,
+  tenders: initialData.tenders,
+  tenderVault: initialData.tenderVault,
+  tenderBonds: initialData.tenderBonds,
+  masterDocTypes: initialData.masterDocTypes,
+  masterSectors: initialData.masterSectors,
+  masterStages: initialData.masterStages,
+  masterContractTypes: initialData.masterContractTypes,
+  rolesMatrix: initialData.rolesMatrix,
+  approvalFlows: initialData.approvalFlows,
+  erpIntegrations: initialData.erpIntegrations,
+  erpEmployees: initialData.erpEmployees,
   capabilityList: initialCapabilityList,
   selectedTenderId: 'TND-2026-001',
 
@@ -95,15 +91,26 @@ export function formatIDR(amount) {
   }).format(amount || 0);
 }
 
-// Calculate days remaining from today
+// Calculate days remaining from today with cached midnight timestamp (zero GC overhead)
+const MS_PER_DAY = 86400000;
+let cachedTodayStartMs = new Date().setHours(0, 0, 0, 0);
+
 export function calculateDaysRemaining(targetDate) {
   if (!targetDate) return 999;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
   const target = new Date(targetDate);
   target.setHours(0, 0, 0, 0);
-  const diffTime = target - today;
-  return Math.round(diffTime / (1000 * 60 * 60 * 24));
+  return Math.round((target.getTime() - cachedTodayStartMs) / MS_PER_DAY);
+}
+
+// Sanitize CSV fields to prevent CSV Formula Injection (CWE-1236)
+export function sanitizeCSVField(val) {
+  if (val === null || val === undefined) return '""';
+  let str = String(val);
+  // If field starts with formula trigger characters (=, +, -, @, tab, newline), prepend a single quote
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  return `"${str.replace(/"/g, '""')}"`;
 }
 
 // Badges and counts
@@ -230,7 +237,7 @@ export const legalStore = {
     setTimeout(() => {
       let csv = 'ID,Perusahaan,Mitra Rekanan,Nomor Kontrak,Judul Kontrak,Jenis,Masa Berlaku,Nilai Kontrak,Status\n';
       state.contracts.forEach(c => {
-        csv += `"${c.id}","${c.company}","${c.counterparty}","${c.contractNumber}","${c.contractTitle}","${c.contractType}","${c.effectiveDate} s/d ${c.expiryDate}","${c.contractValue}","${c.status}"\n`;
+        csv += `${sanitizeCSVField(c.id)},${sanitizeCSVField(c.company)},${sanitizeCSVField(c.counterparty)},${sanitizeCSVField(c.contractNumber)},${sanitizeCSVField(c.contractTitle)},${sanitizeCSVField(c.contractType)},${sanitizeCSVField(`${c.effectiveDate} s/d ${c.expiryDate}`)},${sanitizeCSVField(c.contractValue)},${sanitizeCSVField(c.status)}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -390,6 +397,10 @@ export const legalStore = {
       description: description || ''
     };
     state.activityLogs.unshift(log);
+    // Auto-capping to 200 items to protect LocalStorage quota (~5MB limit)
+    if (state.activityLogs.length > 200) {
+      state.activityLogs.length = 200;
+    }
     storage.set(storage.KEYS.ACTIVITY_LOGS, state.activityLogs);
   },
 
@@ -1722,39 +1733,40 @@ export const legalStore = {
 
     const headers = ['ID Lelang', 'Nomor Tender', 'Judul Paket', 'Instansi Penyelenggara', 'Entitas', 'Kategori', 'Pagu HPS (IDR)', 'Nilai Penawaran (IDR)', 'Tahapan', 'Status', 'PIC', 'Batas Akhir', 'Total Dokumen', 'Dokumen Terpenuhi', 'Dokumen Kurang', 'Persentase Kesiapan'];
     const rows = state.tenders.map(t => {
-      const totalDocs = t.documents.length;
-      const fulfilledDocs = t.documents.filter(d => d.status === 'TERPENUHI').length;
-      const missingDocs = t.documents.filter(d => d.status === 'KURANG' || d.status === 'KEDALUWARSA').length;
+      const totalDocs = t.documents ? t.documents.length : 0;
+      const fulfilledDocs = t.documents ? t.documents.filter(d => d.status === 'TERPENUHI').length : 0;
+      const missingDocs = t.documents ? t.documents.filter(d => d.status === 'KURANG' || d.status === 'KEDALUWARSA').length : 0;
       const completeness = totalDocs > 0 ? Math.round((fulfilledDocs / totalDocs) * 100) : 0;
 
       return [
-        `"${t.id}"`,
-        `"${t.tenderNumber}"`,
-        `"${t.title.replace(/"/g, '""')}"`,
-        `"${t.organizer.replace(/"/g, '""')}"`,
-        `"${t.company}"`,
-        `"${t.category}"`,
-        t.hpsValue,
-        t.bidValue,
-        `"${t.stage}"`,
-        `"${t.status}"`,
-        `"${t.pic}"`,
-        `"${t.deadlineDate}"`,
+        sanitizeCSVField(t.id),
+        sanitizeCSVField(t.tenderNumber),
+        sanitizeCSVField(t.title),
+        sanitizeCSVField(t.organizer),
+        sanitizeCSVField(t.company),
+        sanitizeCSVField(t.category),
+        t.hpsValue || 0,
+        t.bidValue || 0,
+        sanitizeCSVField(t.stage),
+        sanitizeCSVField(t.status),
+        sanitizeCSVField(t.pic),
+        sanitizeCSVField(t.deadlineDate),
         totalDocs,
         fulfilledDocs,
         missingDocs,
-        `"${completeness}%"`
+        sanitizeCSVField(`${completeness}%`)
       ].join(',');
     });
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `LMS_Lelang_Tender_Progress_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
+    link.href = url;
+    link.download = `LMS_Lelang_Tender_Progress_${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
-    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    this.addActivityLog('EXPORT_CSV', 'Tender & Lelang', 'ALL', 'Ekspor berkas CSV progress tender lelang');
     this.triggerToast('Daftar rekapitulasi progress lelang berhasil diunduh (CSV)', 'success');
   },
 
@@ -1787,27 +1799,28 @@ export const legalStore = {
 
     const headers = ['ID Lelang', 'Nomor Tender', 'Judul Paket', 'Instansi Panitia', 'Entitas', 'Batas Akhir Penawaran', 'Nama Dokumen Persyaratan', 'Kategori Berkas', 'Status Gap', 'Sifat Berkas', 'Catatan / Tindakan'];
     const rows = missingItems.map(item => [
-      `"${item.tenderId}"`,
-      `"${item.tenderNumber}"`,
-      `"${item.tenderTitle.replace(/"/g, '""')}"`,
-      `"${item.organizer.replace(/"/g, '""')}"`,
-      `"${item.company}"`,
-      `"${item.deadline}"`,
-      `"${item.docName.replace(/"/g, '""')}"`,
-      `"${item.docCategory}"`,
-      `"${item.status}"`,
-      `"${item.isMandatory}"`,
-      `"${item.notes.replace(/"/g, '""')}"`
+      sanitizeCSVField(item.tenderId),
+      sanitizeCSVField(item.tenderNumber),
+      sanitizeCSVField(item.tenderTitle),
+      sanitizeCSVField(item.organizer),
+      sanitizeCSVField(item.company),
+      sanitizeCSVField(item.deadline),
+      sanitizeCSVField(item.docName),
+      sanitizeCSVField(item.docCategory),
+      sanitizeCSVField(item.status),
+      sanitizeCSVField(item.isMandatory),
+      sanitizeCSVField(item.notes)
     ].join(','));
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `LMS_Gap_Analysis_Dokumen_Lelang_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
+    link.href = url;
+    link.download = `LMS_Gap_Analysis_Dokumen_Lelang_${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
-    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    this.addActivityLog('EXPORT_CSV', 'Tender & Lelang', 'ALL', 'Ekspor berkas CSV gap analysis dokumen lelang');
     this.triggerToast('Laporan Gap Analysis Dokumen Kurang berhasil diunduh (CSV)', 'success');
   },
 
@@ -2276,35 +2289,8 @@ export const legalStore = {
 
   // Reset Data
   resetToDefault() {
-    storage.resetStorage();
-    state.users = storage.get(storage.KEYS.USERS, []);
-    state.currentUser = storage.get(storage.KEYS.CURRENT_USER, null);
-    state.currentEntity = 'PT Nusantara Energi';
-    state.requests = storage.get(storage.KEYS.REQUESTS, []);
-    state.contracts = storage.get(storage.KEYS.CONTRACTS, []);
-    state.corporate = storage.get(storage.KEYS.CORPORATE, []);
-    state.licenses = storage.get(storage.KEYS.LICENSES, []);
-    state.compliance = storage.get(storage.KEYS.COMPLIANCE, []);
-    state.disputes = storage.get(storage.KEYS.DISPUTES, []);
-    state.ldd = storage.get(storage.KEYS.LDD, []);
-    state.opinions = storage.get(storage.KEYS.LEGAL_OPINIONS, []);
-    state.documents = storage.get(storage.KEYS.DOCUMENTS, []);
-    state.correspondence = storage.get(storage.KEYS.CORRESPONDENCE, []);
-    state.knowledge = storage.get(storage.KEYS.KNOWLEDGE, []);
-    state.templates = storage.get(storage.KEYS.TEMPLATES, []);
-    state.clauses = storage.get(storage.KEYS.CLAUSES, []);
-    state.activityLogs = storage.get(storage.KEYS.ACTIVITY_LOGS, []);
-    state.tenders = storage.get(storage.KEYS.TENDERS, []);
-    state.tenderVault = storage.get(storage.KEYS.TENDER_VAULT, []);
-    state.tenderBonds = storage.get(storage.KEYS.TENDER_BONDS, []);
-    state.masterDocTypes = storage.get(storage.KEYS.MASTER_DOC_TYPES, []);
-    state.masterSectors = storage.get(storage.KEYS.MASTER_SECTORS, []);
-    state.masterStages = storage.get(storage.KEYS.MASTER_STAGES, {});
-    state.masterContractTypes = storage.get(storage.KEYS.MASTER_CONTRACT_TYPES, []);
-    state.rolesMatrix = storage.get(storage.KEYS.ROLES_MATRIX, initialRolesMatrix);
-    state.approvalFlows = storage.get(storage.KEYS.APPROVAL_FLOWS, initialApprovalFlows);
-    state.erpIntegrations = storage.get(storage.KEYS.ERP_INTEGRATIONS, initialErpIntegrations);
-    state.erpEmployees = storage.get(storage.KEYS.ERP_EMPLOYEES, initialErpEmployees);
+    const freshData = storage.resetStorage();
+    Object.assign(state, freshData);
     this.triggerToast('Seluruh data simulasi telah dikembalikan ke kondisi awal (default).', 'success');
   }
 };

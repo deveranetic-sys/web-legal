@@ -14,26 +14,29 @@
       <main class="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="max-w-7xl mx-auto">
           
-          <!-- Transition views -->
-          <DashboardView v-if="legalStore.state.activeModule === 'dashboard'" />
-          <RequestsView v-else-if="legalStore.state.activeModule === 'requests'" />
-          <ContractsView v-else-if="legalStore.state.activeModule === 'contracts'" />
-          <TendersView v-else-if="legalStore.state.activeModule === 'tenders'" />
-          <CorporateView v-else-if="legalStore.state.activeModule === 'corporate'" />
-          <LicensingView v-else-if="legalStore.state.activeModule === 'licensing'" />
-          <ComplianceView v-else-if="legalStore.state.activeModule === 'compliance'" />
-          <DisputesView v-else-if="legalStore.state.activeModule === 'disputes'" />
-          <LDDView v-else-if="legalStore.state.activeModule === 'ldd'" />
-          <OpinionsView v-else-if="legalStore.state.activeModule === 'opinions'" />
-          <DocumentsView v-else-if="legalStore.state.activeModule === 'documents'" />
-          <CorrespondenceView v-else-if="legalStore.state.activeModule === 'correspondence'" />
-          <KnowledgeView v-else-if="legalStore.state.activeModule === 'knowledge'" />
-          <TemplatesView v-else-if="legalStore.state.activeModule === 'templates'" />
-          <ReportsView v-else-if="legalStore.state.activeModule === 'reports'" />
-          <ActivityView v-else-if="legalStore.state.activeModule === 'activity'" />
-          <MasterDataView v-else-if="legalStore.state.activeModule === 'master-data'" />
-          <SettingsView v-else-if="legalStore.state.activeModule === 'settings'" />
-          <DashboardView v-else />
+          <!-- Error-Isolated Module Views -->
+          <AppErrorBoundary>
+            <!-- Transition views -->
+            <DashboardView v-if="legalStore.state.activeModule === 'dashboard'" />
+            <RequestsView v-else-if="legalStore.state.activeModule === 'requests'" />
+            <ContractsView v-else-if="legalStore.state.activeModule === 'contracts'" />
+            <TendersView v-else-if="legalStore.state.activeModule === 'tenders'" />
+            <CorporateView v-else-if="legalStore.state.activeModule === 'corporate'" />
+            <LicensingView v-else-if="legalStore.state.activeModule === 'licensing'" />
+            <ComplianceView v-else-if="legalStore.state.activeModule === 'compliance'" />
+            <DisputesView v-else-if="legalStore.state.activeModule === 'disputes'" />
+            <LDDView v-else-if="legalStore.state.activeModule === 'ldd'" />
+            <OpinionsView v-else-if="legalStore.state.activeModule === 'opinions'" />
+            <DocumentsView v-else-if="legalStore.state.activeModule === 'documents'" />
+            <CorrespondenceView v-else-if="legalStore.state.activeModule === 'correspondence'" />
+            <KnowledgeView v-else-if="legalStore.state.activeModule === 'knowledge'" />
+            <TemplatesView v-else-if="legalStore.state.activeModule === 'templates'" />
+            <ReportsView v-else-if="legalStore.state.activeModule === 'reports'" />
+            <ActivityView v-else-if="legalStore.state.activeModule === 'activity'" />
+            <MasterDataView v-else-if="legalStore.state.activeModule === 'master-data'" />
+            <SettingsView v-else-if="legalStore.state.activeModule === 'settings'" />
+            <DashboardView v-else />
+          </AppErrorBoundary>
 
         </div>
       </main>
@@ -104,6 +107,7 @@ import AppSidebar from './components/AppSidebar.vue';
 import AppHeader from './components/AppHeader.vue';
 import NotificationDrawer from './components/NotificationDrawer.vue';
 import SearchModal from './components/SearchModal.vue';
+import AppErrorBoundary from './components/Common/AppErrorBoundary.vue';
 
 // Modals (Code-split)
 const ContractDetailModal = defineAsyncComponent(() => import('./components/ContractDetailModal.vue'));

@@ -194,14 +194,21 @@
 
     <!-- Contract Register Table Component -->
     <ContractsTable
-      :contracts="filteredContracts"
-      :total-count="contracts.length"
+      :contracts="paginatedContracts"
+      :total-count="filteredContracts.length"
       @open-detail="openContractDetail"
       @open-edit="openEditModal"
       @reset-filters="resetFilters"
     />
 
-    <!-- Edit Contract Modal -->
+    <!-- Pagination Controls -->
+    <PaginationControls
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :total-items="filteredContracts.length"
+    />
+
+    <!-- Edit Contract Modal (Async Loaded) -->
     <EditContractModal
       v-if="isEditModalOpen"
       :contract="selectedEditContract"
@@ -211,7 +218,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, defineAsyncComponent } from 'vue';
 import {
   Download,
   Plus,
@@ -219,13 +226,20 @@ import {
   AlertTriangle
 } from 'lucide-vue-next';
 import { legalStore, formatIDR, calculateDaysRemaining } from '../stores/legalStore';
+import { useDebouncedRef } from '../utils/debounce';
 import ContractsTable from './Contracts/ContractsTable.vue';
-import EditContractModal from './Contracts/EditContractModal.vue';
+import PaginationControls from './Common/PaginationControls.vue';
+
+const EditContractModal = defineAsyncComponent(() => import('./Contracts/EditContractModal.vue'));
 
 const searchQuery = ref('');
+const debouncedSearch = useDebouncedRef(searchQuery, 250);
 const filterStatus = ref('ALL');
 const filterType = ref('ALL');
 const filterEntity = ref('ALL');
+
+const currentPage = ref(1);
+const pageSize = ref(10);
 
 const isEditModalOpen = ref(false);
 const selectedEditContract = ref(null);
@@ -266,7 +280,7 @@ const canCreateContract = computed(() => {
 
 const filteredContracts = computed(() => {
   return contracts.value.filter(c => {
-    const q = searchQuery.value.toLowerCase().trim();
+    const q = debouncedSearch.value.toLowerCase().trim();
     const matchesSearch = !q ||
       c.id.toLowerCase().includes(q) ||
       c.contractNumber.toLowerCase().includes(q) ||
@@ -288,6 +302,16 @@ const filteredContracts = computed(() => {
 
     return matchesSearch && matchesStatus && matchesType && matchesEntity;
   });
+});
+
+// Auto-reset page when search or filters change
+watch([debouncedSearch, filterStatus, filterType, filterEntity], () => {
+  currentPage.value = 1;
+});
+
+const paginatedContracts = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  return filteredContracts.value.slice(start, start + pageSize.value);
 });
 
 function formatCompactIDR(amount) {
@@ -313,6 +337,7 @@ function resetFilters() {
   filterStatus.value = 'ALL';
   filterType.value = 'ALL';
   filterEntity.value = 'ALL';
+  currentPage.value = 1;
 }
 
 function openContractDetail(contract) {

@@ -82,6 +82,24 @@ export const storage = {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (err) {
+      if (err.name === 'QuotaExceededError' || err.code === 22 || err.code === 1014) {
+        console.warn(`[LMS Storage] LocalStorage Quota Exceeded saat menyimpan key '${key}'. Menjalankan prosedur pemulihan kuota...`);
+        try {
+          // Pangkas activity logs ke 50 data terbaru untuk mengosongkan kuota
+          const rawLogs = localStorage.getItem(STORAGE_KEYS.ACTIVITY_LOGS);
+          if (rawLogs) {
+            const logs = JSON.parse(rawLogs);
+            if (Array.isArray(logs) && logs.length > 50) {
+              localStorage.setItem(STORAGE_KEYS.ACTIVITY_LOGS, JSON.stringify(logs.slice(0, 50)));
+              localStorage.setItem(key, JSON.stringify(value));
+              console.info(`[LMS Storage] Kuota berhasil dipulihkan, key '${key}' tersimpan.`);
+              return;
+            }
+          }
+        } catch (cleanupErr) {
+          console.error('[LMS Storage] Gagal memulihkan kuota storage:', cleanupErr);
+        }
+      }
       console.error(`[LMS Storage] Error saving key ${key}:`, err);
     }
   },
@@ -95,44 +113,47 @@ export const storage = {
   },
 
   initStorage() {
-    this.get(STORAGE_KEYS.USERS, initialUsers);
-    this.get(STORAGE_KEYS.CURRENT_USER, initialUsers[0]);
-    this.get(STORAGE_KEYS.CURRENT_ENTITY, 'PT Nusantara Energi');
-    this.get(STORAGE_KEYS.REQUESTS, initialRequests);
-    this.get(STORAGE_KEYS.CONTRACTS, initialContracts);
-    this.get(STORAGE_KEYS.CORPORATE, initialCorporate);
-    this.get(STORAGE_KEYS.LICENSES, initialLicenses);
-    this.get(STORAGE_KEYS.COMPLIANCE, initialCompliance);
-    this.get(STORAGE_KEYS.DISPUTES, initialDisputes);
-    this.get(STORAGE_KEYS.LDD, initialLDD);
-    this.get(STORAGE_KEYS.LEGAL_OPINIONS, initialLegalOpinions);
-    this.get(STORAGE_KEYS.DOCUMENTS, initialDocuments);
-    this.get(STORAGE_KEYS.CORRESPONDENCE, initialCorrespondence);
-    this.get(STORAGE_KEYS.KNOWLEDGE, initialKnowledge);
-    this.get(STORAGE_KEYS.TEMPLATES, initialTemplates);
-    this.get(STORAGE_KEYS.CLAUSES, initialClauses);
-    this.get(STORAGE_KEYS.ACTIVITY_LOGS, initialActivityLogs);
-    this.get(STORAGE_KEYS.TENDERS, initialTenders);
-    this.get(STORAGE_KEYS.TENDER_VAULT, initialTenderVaultDocs);
-    this.get(STORAGE_KEYS.TENDER_BONDS, initialTenderBonds);
-    this.get(STORAGE_KEYS.MASTER_DOC_TYPES, initialMasterDocTypes);
-    this.get(STORAGE_KEYS.MASTER_SECTORS, initialMasterSectors);
-    this.get(STORAGE_KEYS.MASTER_STAGES, initialMasterTenderStages);
-    this.get(STORAGE_KEYS.MASTER_CONTRACT_TYPES, initialMasterContractTypes);
-    this.get(STORAGE_KEYS.ROLES_MATRIX, initialRolesMatrix);
-    this.get(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows);
-    this.get(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations);
-    this.get(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees);
+    return {
+      users: this.get(STORAGE_KEYS.USERS, initialUsers),
+      currentUser: this.get(STORAGE_KEYS.CURRENT_USER, initialUsers[0]),
+      currentEntity: this.get(STORAGE_KEYS.CURRENT_ENTITY, 'PT Nusantara Energi'),
+      requests: this.get(STORAGE_KEYS.REQUESTS, initialRequests),
+      contracts: this.get(STORAGE_KEYS.CONTRACTS, initialContracts),
+      corporate: this.get(STORAGE_KEYS.CORPORATE, initialCorporate),
+      licenses: this.get(STORAGE_KEYS.LICENSES, initialLicenses),
+      compliance: this.get(STORAGE_KEYS.COMPLIANCE, initialCompliance),
+      disputes: this.get(STORAGE_KEYS.DISPUTES, initialDisputes),
+      ldd: this.get(STORAGE_KEYS.LDD, initialLDD),
+      opinions: this.get(STORAGE_KEYS.LEGAL_OPINIONS, initialLegalOpinions),
+      documents: this.get(STORAGE_KEYS.DOCUMENTS, initialDocuments),
+      correspondence: this.get(STORAGE_KEYS.CORRESPONDENCE, initialCorrespondence),
+      knowledge: this.get(STORAGE_KEYS.KNOWLEDGE, initialKnowledge),
+      templates: this.get(STORAGE_KEYS.TEMPLATES, initialTemplates),
+      clauses: this.get(STORAGE_KEYS.CLAUSES, initialClauses),
+      activityLogs: this.get(STORAGE_KEYS.ACTIVITY_LOGS, initialActivityLogs),
+      tenders: this.get(STORAGE_KEYS.TENDERS, initialTenders),
+      tenderVault: this.get(STORAGE_KEYS.TENDER_VAULT, initialTenderVaultDocs),
+      tenderBonds: this.get(STORAGE_KEYS.TENDER_BONDS, initialTenderBonds),
+      masterDocTypes: this.get(STORAGE_KEYS.MASTER_DOC_TYPES, initialMasterDocTypes),
+      masterSectors: this.get(STORAGE_KEYS.MASTER_SECTORS, initialMasterSectors),
+      masterStages: this.get(STORAGE_KEYS.MASTER_STAGES, initialMasterTenderStages),
+      masterContractTypes: this.get(STORAGE_KEYS.MASTER_CONTRACT_TYPES, initialMasterContractTypes),
+      rolesMatrix: this.get(STORAGE_KEYS.ROLES_MATRIX, initialRolesMatrix),
+      approvalFlows: this.get(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows),
+      erpIntegrations: this.get(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations),
+      erpEmployees: this.get(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees)
+    };
   },
 
   resetStorage() {
-    this.set(STORAGE_KEYS.USERS, initialUsers.map(u => ({
+    const freshUsers = initialUsers.map(u => ({
       ...u,
       nik: u.id.replace('USR-', 'EMP-010'),
       isErpSynced: true,
       erpSource: 'Workday HRIS',
       active: u.active !== undefined ? u.active : true
-    })));
+    }));
+    this.set(STORAGE_KEYS.USERS, freshUsers);
     this.set(STORAGE_KEYS.CURRENT_USER, initialUsers[0]);
     this.set(STORAGE_KEYS.CURRENT_ENTITY, 'PT Nusantara Energi');
     this.set(STORAGE_KEYS.REQUESTS, initialRequests);
@@ -160,5 +181,104 @@ export const storage = {
     this.set(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows);
     this.set(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations);
     this.set(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees);
+
+    return {
+      users: freshUsers,
+      currentUser: initialUsers[0],
+      currentEntity: 'PT Nusantara Energi',
+      requests: initialRequests,
+      contracts: initialContracts,
+      corporate: initialCorporate,
+      licenses: initialLicenses,
+      compliance: initialCompliance,
+      disputes: initialDisputes,
+      ldd: initialLDD,
+      opinions: initialLegalOpinions,
+      documents: initialDocuments,
+      correspondence: initialCorrespondence,
+      knowledge: initialKnowledge,
+      templates: initialTemplates,
+      clauses: initialClauses,
+      activityLogs: initialActivityLogs,
+      tenders: initialTenders,
+      tenderVault: initialTenderVaultDocs,
+      tenderBonds: initialTenderBonds,
+      masterDocTypes: initialMasterDocTypes,
+      masterSectors: initialMasterSectors,
+      masterStages: initialMasterTenderStages,
+      masterContractTypes: initialMasterContractTypes,
+      rolesMatrix: initialRolesMatrix,
+      approvalFlows: initialApprovalFlows,
+      erpIntegrations: initialErpIntegrations,
+      erpEmployees: initialErpEmployees
+    };
+  },
+
+  getStorageUsage() {
+    let totalBytes = 0;
+    let lmsBytes = 0;
+    let lmsKeyCount = 0;
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        const val = localStorage.getItem(key) || '';
+        const bytes = (key.length + val.length) * 2;
+        totalBytes += bytes;
+        if (key.startsWith('lms_')) {
+          lmsBytes += bytes;
+          lmsKeyCount++;
+        }
+      }
+    } catch (e) {
+      console.warn('[LMS Storage] Failed to compute storage stats:', e);
+    }
+    const maxBytes = 5 * 1024 * 1024;
+    const percent = Math.min(100, Math.round((totalBytes / maxBytes) * 100 * 10) / 10);
+    const formatKB = (b) => (b / 1024).toFixed(1) + ' KB';
+    return {
+      totalBytes,
+      lmsBytes,
+      totalFormatted: formatKB(totalBytes),
+      lmsFormatted: formatKB(lmsBytes),
+      maxBytes,
+      maxFormatted: '5.0 MB',
+      percent,
+      lmsKeyCount
+    };
+  },
+
+  exportAllJSON() {
+    const backup = {
+      app: 'LMS TOHA Enterprise Legal Suite',
+      version: '2026.1',
+      exportedAt: new Date().toISOString(),
+      keys: {}
+    };
+    for (const key of Object.values(STORAGE_KEYS)) {
+      const raw = localStorage.getItem(key);
+      if (raw !== null) {
+        try {
+          backup.keys[key] = JSON.parse(raw);
+        } catch {
+          backup.keys[key] = raw;
+        }
+      }
+    }
+    return backup;
+  },
+
+  importAllJSON(jsonObj) {
+    if (!jsonObj || !jsonObj.keys || typeof jsonObj.keys !== 'object') {
+      throw new Error('Format berkas cadangan tidak valid (kunci "keys" tidak ditemukan).');
+    }
+    let restoredCount = 0;
+    for (const [storageKey, val] of Object.entries(jsonObj.keys)) {
+      if (storageKey.startsWith('lms_')) {
+        localStorage.setItem(storageKey, JSON.stringify(val));
+        restoredCount++;
+      }
+    }
+    return restoredCount;
   }
 };
