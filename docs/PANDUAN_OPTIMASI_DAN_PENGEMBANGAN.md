@@ -256,19 +256,50 @@ graph TD
 
 ---
 
-## 5. Kriteria Keberhasilan (Acceptance Criteria)
+## 6. Engine Persetujuan Berjenjang (Chain Approval Engine) & Konfigurasi Alur
+
+### 6.1. Gambaran Umum & Konsep Dasar
+Sistem kini dilengkapi dengan **Engine Persetujuan Berjenjang (Multi-Tier Chain Approval Engine)** yang menghubungkan otorisasi peran (*Role-Based Access Control / RBAC*) dengan siklus hidup permohonan dan dokumen hukum:
+- **Prinsip Tiga Mata (Maker ➔ Checker ➔ Approver)**: Setiap pengajuan tidak lagi disetujui dalam 1 langkah statis, melainkan melalui urutan hierarki berjenjang (misal: *Level 1 Legal Counsel* untuk kelayakan dokumen, *Level 2 Legal Manager* untuk kepatuhan klausul, hingga *Level 3 Management / Direksi* untuk pengesahan final).
+- **Validasi Otorisasi Peran Berdasarkan Sesi Aktif**: Approver hanya dapat mengambil keputusan (*Approve*, *Request Revision*, atau *Reject*) jika peran (*role*) akun yang sedang login cocok dengan `roleRequired` pada tahap aktif tersebut (atau menggunakan peran `ADMIN` dengan izin *override*).
+- **Pengalihan Peran Interaktif**: Pengguna dapat berganti peran melalui *Role Switcher* di bilah navigasi atas (`AppHeader.vue`) untuk mensimulasikan perpindahan tongkat estafet approval antar-pejabat korporasi.
+
+### 6.2. Fitur Menu Konfigurasi Alur Persetujuan (`SettingsView.vue`)
+Menu konfigurasi alur persetujuan berada di **Pengaturan Sistem & Kontrol Akses ➔ Alur Persetujuan**:
+1. **CRUD Alur Persetujuan Lengkap**:
+   - **Tambah Alur Baru (`+ Tambah Alur Baru`)**: Membuat alur persetujuan kustom untuk modul mana pun (`requests`, `contracts`, `tenders`, `opinions`, `disputes`, atau `general`).
+   - **Editor Tahapan Dinamis (*Dynamic Steps Builder*)**: Menambah tahap baru, menghapus tahap, mengatur urutan hierarki (*Move Up / Down*), memilih peran yang berwenang dari matriks RBAC, serta menentukan target SLA hari per tahap.
+   - **Pengaturan Ambang Batas Nilai (*Threshold*) & SLA Global**: Menetapkan batas nilai rupiah (misal `> Rp 5 Miliar`) dan target SLA keseluruhan.
+   - **Aktivasi & Nonaktivasi Cepat**: Mengaktifkan atau menonaktifkan alur tanpa menghapus data riwayat.
+   - **Pencarian & Filter Multi-Kategori**: Menyaring alur berdasarkan modul operasional dan status aktif/nonaktif.
+2. **Penyimpanan Terpusat & Normalisasi Otomatis**:
+   - Seluruh data alur persetujuan disimpan di `storage.KEYS.APPROVAL_FLOWS` dan ternormalisasi saat inisialisasi awal.
+
+### 6.3. Integrasi Operasional (`RequestsView.vue`)
+1. **Stepper Visual Real-Time**:
+   - `RequestDetailModal.vue` menampilkan timeline dinamis dari `request.approvalChain`, mencakup nama tahap, peran berwenang, approver penandatangan, tanggal keputusan, catatan pertimbangan hukum, dan status per tahap (*Disetujui*, *Menunggu Approval*, *Perlu Revisi*, *Ditolak*, atau *Antrean*).
+2. **Modal Keputusan Otorisasi Terpandu**:
+   - `RequestApprovalModal.vue` secara otomatis mendeteksi tahap aktif dan memvalidasi apakah peran pengguna saat ini memiliki wewenang untuk mengeksekusi keputusan pada tahap tersebut.
+   - Mendukung 3 jenis keputusan: **Setujui** (*advance ke tahap berikutnya atau final complete*), **Minta Revisi** (*mengembalikan ke pemohon dengan catatan wajib*), dan **Tolak** (*menghentikan permohonan dengan alasan yuridis*).
+3. **Indikator Progres di Tabel & Ringkasan**:
+   - Kolom status di `RequestsView.vue` menampilkan progres rantai (misal: `Tahap 2/3: LEGAL MANAGER` atau `✓ 3/3 Tahap Selesai`).
+
+---
+
+## 7. Kriteria Keberhasilan (Acceptance Criteria)
 
 1. **Build Valid**: `npm run build` menghasilkan *exit code 0* tanpa peringatan error atau referensi berkas hilang.
 2. **Ukuran Bundle Optimal**:
    - `TendersView.js` < 40 kB (saat ini 35.28 kB).
    - `MasterDataView.js` < 10 kB (saat ini 5.57 kB).
-   - `SettingsView.js` < 15 kB (saat ini 12.57 kB).
+   - `SettingsView.js` < 15 kB (saat ini 12.63 kB).
    - `ContractsView.js` < 20 kB (saat ini 18.05 kB).
-   - `index.js` < 130 kB (saat ini 126.95 kB).
+   - `index.js` < 135 kB (saat ini 133.71 kB).
 3. **Keamanan Data**: Seluruh berkas ekspor tabel aman dari ancaman eksekusi formula di spreadsheet (CWE-1236).
 4. **Ketahanan Quota**: Penyimpanan data di browser terlindungi dari potensi kebocoran kuota 5MB melalui auto-capping dan quota recovery.
 5. **Resiliensi Tinggi**: Crash lokal pada salah satu modul diisolasi oleh `AppErrorBoundary` sehingga aplikasi tidak blank putih.
 6. **Zero Dead Code**: Tidak ada berkas atau dependensi mati yang tersisa di *source tree*.
+7. **Chain Approval**: Alur persetujuan berjenjang berjalan secara transaksional dengan role validation dan konfigurasi CRUD di menu Settings.
 
 ---
 *Dokumen ini diperbarui secara berkala sebagai panduan resmi arsitektur teknis dan pengembangan sistem LMS TOHA Legal Suite.*

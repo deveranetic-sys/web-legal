@@ -2005,69 +2005,141 @@ export const initialRolesMatrix = {
 export const initialApprovalFlows = [
   {
     id: 'AF-01',
+    name: 'Alur Go/No-Go Lelang & Penawaran Tender',
     doc: 'Evaluasi Go/No-Go Lelang',
     category: 'Tender & Pengadaan',
+    module: 'tenders',
+    icon: '🎯',
     maker: 'Bid Specialist / Tender Lead',
     checker: 'Legal & Risk Committee',
     approver: 'Direktur Operasional',
     threshold: 0,
     status: 'AKTIF',
-    help: 'Evaluasi 6 kriteria tertimbang kelayakan korporasi sebelum tender diikuti'
+    active: true,
+    slaDays: 3,
+    description: 'Evaluasi 6 kriteria tertimbang kelayakan korporasi sebelum tender resmi diikuti perseroan.',
+    help: 'Evaluasi 6 kriteria tertimbang kelayakan korporasi sebelum tender diikuti',
+    steps: [
+      { level: 1, name: 'Penyusunan Kriteria Skor (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+      { level: 2, name: 'Review Komite Risiko (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+      { level: 3, name: 'Otorisasi Direktur Operasional (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+    ],
+    lastUpdated: '2026-10-15 09:00'
   },
   {
     id: 'AF-02',
-    doc: 'Paket Penawaran Lelang & Jaminan Bank',
-    category: 'Tender & Pengadaan',
-    maker: 'Legal Counsel',
+    name: 'Alur Persetujuan Permintaan Legal (Legal Request)',
+    doc: 'Permintaan Telaah & Dokumen Legal',
+    category: 'Permintaan Legal',
+    module: 'requests',
+    icon: '⚖️',
+    maker: 'Senior Legal Counsel',
     checker: 'Legal Operations Manager',
-    approver: 'Direktur Utama',
-    threshold: 10000000000,
+    approver: 'Head of Legal & Director',
+    threshold: 0,
     status: 'AKTIF',
-    help: 'Penawaran di atas Rp 10 Miliar wajib mendapatkan otorisasi Direktur Utama'
+    active: true,
+    slaDays: 4,
+    description: 'Proses penelaahan dan otorisasi berjenjang untuk seluruh permohonan legalitas unit bisnis.',
+    help: 'Penelaahan berjenjang 3 level dari Legal Counsel, Legal Manager, hingga Otorisasi Direksi',
+    steps: [
+      { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+      { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+      { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+    ],
+    lastUpdated: '2026-10-15 09:00'
   },
   {
     id: 'AF-03',
+    name: 'Alur Persetujuan Draf Kontrak Korporasi Baru',
     doc: 'Persetujuan Draf Kontrak Korporasi Baru',
     category: 'Manajemen Kontrak',
+    module: 'contracts',
+    icon: '📝',
     maker: 'Commercial Legal Counsel',
     checker: 'Head of Legal & Compliance',
     approver: 'Direksi Terkait',
     threshold: 5000000000,
     status: 'AKTIF',
-    help: 'Review legalitas bertingkat sebelum penandatanganan kontrak kerja sama'
+    active: true,
+    slaDays: 5,
+    description: 'Review legalitas bertingkat sebelum penandatanganan kontrak kerja sama bernilai di atas Rp 5 Miliar.',
+    help: 'Review legalitas bertingkat sebelum penandatanganan kontrak kerja sama',
+    steps: [
+      { level: 1, name: 'Penyusunan Draf & Negosiasi Klausul (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 2 },
+      { level: 2, name: 'Pemeriksaan Legal Manager & Compliance (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+      { level: 3, name: 'Persetujuan Direksi / BOD (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+    ],
+    lastUpdated: '2026-10-15 09:00'
   },
   {
     id: 'AF-04',
+    name: 'Alur Variation Order (VO) & Adendum Kontrak',
     doc: 'Variation Order (VO) & Adendum Kontrak',
     category: 'Manajemen Kontrak',
+    module: 'contracts',
+    icon: '📑',
     maker: 'Contract Specialist',
     checker: 'Contract Manager',
     approver: 'Project Director',
     threshold: 500000000,
     status: 'AKTIF',
-    help: 'Adendum atau perubahan nilai proyek di atas Rp 500 Juta wajib ke Project Director'
+    active: true,
+    slaDays: 3,
+    description: 'Adendum atau perubahan nilai proyek di atas Rp 500 Juta wajib ke Project Director.',
+    help: 'Adendum atau perubahan nilai proyek di atas Rp 500 Juta wajib ke Project Director',
+    steps: [
+      { level: 1, name: 'Kalkulasi Deviasi Nilai Kontrak (Maker)', roleRequired: 'LEGAL STAFF', slaDays: 1 },
+      { level: 2, name: 'Review Managerial Kontrak (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+      { level: 3, name: 'Pengesahan Project Director (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+    ],
+    lastUpdated: '2026-10-15 09:00'
   },
   {
     id: 'AF-05',
+    name: 'Alur Kesepakatan Damai (Settlement) Sengketa',
     doc: 'Kesepakatan Damai / Settlement Sengketa',
     category: 'Dispute & Litigasi',
+    module: 'disputes',
+    icon: '🤝',
     maker: 'Litigation Counsel',
     checker: 'General Counsel',
     approver: 'Direktur Utama',
     threshold: 0,
     status: 'AKTIF',
-    help: 'Perdamaian di luar/dalam pengadilan mengikat hak perseroan'
+    active: true,
+    slaDays: 7,
+    description: 'Perdamaian di luar/dalam pengadilan mengikat hak perseroan.',
+    help: 'Perdamaian di luar/dalam pengadilan mengikat hak perseroan',
+    steps: [
+      { level: 1, name: 'Penyusunan Klausul Akta Perdamaian (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 2 },
+      { level: 2, name: 'Review Risiko Litigasi & Finansial (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 2 },
+      { level: 3, name: 'Penandatanganan Direktur Utama (Approver)', roleRequired: 'MANAGEMENT', slaDays: 3 }
+    ],
+    lastUpdated: '2026-10-15 09:00'
   },
   {
     id: 'AF-06',
-    doc: 'Termin Pembayaran & Penagihan (Billing)',
-    category: 'Keuangan & Finansial',
-    maker: 'Billing Specialist',
-    checker: 'Finance Manager',
-    approver: 'Chief Financial Officer (CFO)',
-    threshold: 1000000000,
+    name: 'Alur Opini Hukum & Advice Korporasi',
+    doc: 'Opini Hukum (Legal Opinion)',
+    category: 'Legal Opinion',
+    module: 'opinions',
+    icon: '🎓',
+    maker: 'Legal Counsel',
+    checker: 'Senior Legal Specialist',
+    approver: 'Head of Legal & Compliance',
+    threshold: 0,
     status: 'AKTIF',
-    help: 'Verifikasi BAST fisik dan persetujuan termin sebelum dana dicairkan'
+    active: true,
+    slaDays: 3,
+    description: 'Review bertingkat keabsahan rujukan undang-undang dan ratio decidendi opini hukum.',
+    help: 'Verifikasi bertingkat opini hukum sebelum diterbitkan ke pemohon',
+    steps: [
+      { level: 1, name: 'Riset Regulasi & Preseden (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+      { level: 2, name: 'Peer-Review Legal Manager (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+      { level: 3, name: 'Pengesahan Opini Hukum (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+    ],
+    lastUpdated: '2026-10-15 09:00'
   }
 ];
 

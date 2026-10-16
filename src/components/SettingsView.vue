@@ -109,6 +109,7 @@
     <SettingsFlowsTab
       v-else-if="activeTab === 'flows'"
       @open-edit-flow-modal="openEditFlowModal"
+      @open-add-flow-modal="openAddFlowModal"
     />
 
     <SettingsIntegrasiTab
@@ -334,6 +335,11 @@ function openEditUserModal(u) {
   isEditingUser.value = true;
   editingUserObj.value = u;
   isUserModalOpen.value = true;
+}
+
+function openAddFlowModal() {
+  editingFlowObj.value = null;
+  isFlowModalOpen.value = true;
 }
 
 function openEditFlowModal(flow) {

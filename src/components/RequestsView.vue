@@ -230,6 +230,20 @@
                   <component :is="getStatusIcon(req.status)" class="w-3 h-3" />
                   <span>{{ getStatusLabel(req.status) }}</span>
                 </span>
+                <div v-if="req.approvalChain && req.approvalChain.length" class="text-[10px] font-semibold mt-1">
+                  <span v-if="req.status === 'APPROVED' || req.status === 'COMPLETED'" class="text-emerald-700">
+                    ✓ {{ req.approvalChain.length }}/{{ req.approvalChain.length }} Tahap Selesai
+                  </span>
+                  <span v-else-if="req.status === 'REJECTED'" class="text-rose-600">
+                    ✕ Ditolak Tahap {{ req.currentApprovalLevel || 1 }}
+                  </span>
+                  <span v-else-if="req.status === 'REVISION_REQUIRED'" class="text-orange-600">
+                    ⚠ Revisi Tahap {{ req.currentApprovalLevel || 1 }}
+                  </span>
+                  <span v-else class="text-indigo-600 font-bold">
+                    Tahap {{ req.currentApprovalLevel || 1 }}/{{ req.approvalChain.length }}: {{ getChainCurrentRole(req) }}
+                  </span>
+                </div>
               </td>
 
               <!-- Aksi -->
@@ -448,6 +462,13 @@ function getStatusIcon(status) {
     case 'COMPLETED': return CheckCircle2;
     default: return Clock;
   }
+}
+
+function getChainCurrentRole(req) {
+  if (!req || !req.approvalChain || !req.approvalChain.length) return 'Legal Counsel';
+  const level = req.currentApprovalLevel || 1;
+  const step = req.approvalChain.find(s => s.level === level);
+  return step ? step.roleRequired : 'Legal Counsel';
 }
 
 function openDetail(req) {

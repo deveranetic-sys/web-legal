@@ -28,6 +28,51 @@
           <div class="text-[11px] text-slate-500">{{ approvalTarget.requestType }} • Unit: {{ approvalTarget.department }}</div>
         </div>
 
+        <!-- Active Chain Step Banner -->
+        <div class="p-3.5 rounded-xl border" :class="isAuthorized ? 'bg-indigo-50/70 border-indigo-200' : 'bg-amber-50/80 border-amber-300'">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              Tahap Otorisasi Aktif (Chain Stepper):
+            </span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold" :class="isAuthorized ? 'bg-indigo-100 text-[#4338CA]' : 'bg-amber-200/60 text-amber-900'">
+              Tahap {{ activeStep?.level || 1 }} dari {{ (approvalTarget.approvalChain || []).length || 3 }}
+            </span>
+          </div>
+
+          <div class="mt-1.5 flex items-center justify-between gap-2">
+            <div>
+              <div class="font-bold text-slate-900 text-xs sm:text-sm">
+                {{ activeStep?.name || 'Verifikasi Persetujuan' }}
+              </div>
+              <div class="text-[11px] text-slate-600 mt-0.5">
+                Dibutuhkan Peran: <span class="font-bold text-[#4338CA]">{{ activeStep?.roleRequired || 'LEGAL COUNSEL' }}</span>
+              </div>
+            </div>
+
+            <!-- Role Matching Badge -->
+            <div class="shrink-0 text-right">
+              <span v-if="isAuthorized" class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-[10px] border border-emerald-300 inline-flex items-center gap-1">
+                ✓ Otorisasi Sah
+              </span>
+              <span v-else class="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-800 font-bold text-[10px] border border-rose-300 inline-flex items-center gap-1">
+                ✕ Peran Tidak Cocok
+              </span>
+            </div>
+          </div>
+
+          <!-- Non-authorized Explanation / Role switcher tip -->
+          <div v-if="!isAuthorized" class="mt-2.5 pt-2 border-t border-amber-200/60 text-[11px] text-amber-900 leading-relaxed flex items-start gap-1.5">
+            <AlertCircle class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <span>
+              Peran Anda saat ini adalah <strong>{{ currentUserRole }}</strong>. Untuk melanjutkan tahap ini, gunakan akun dengan peran <strong>{{ activeStep?.roleRequired }}</strong> atau <strong>ADMIN</strong> (dapat diganti di panel profil kanan atas).
+            </span>
+          </div>
+          <div v-else class="mt-2 pt-2 border-t border-indigo-200/50 text-[10px] text-indigo-700 flex items-center justify-between">
+            <span>Login sebagai: <strong>{{ currentUserName }}</strong></span>
+            <span class="font-mono font-bold">{{ currentUserRole === 'ADMIN' ? 'SUPERADMIN OVERRIDE' : currentUserRole }}</span>
+          </div>
+        </div>
+
         <!-- Approval Mode Switcher Tabs -->
         <div class="space-y-1.5">
           <label class="block font-bold text-slate-800 text-xs">Pilih Keputusan Persetujuan:</label>
@@ -74,7 +119,7 @@
           <textarea
             v-model="approvalNotes"
             rows="3"
-            :placeholder="approvalMode === 'APPROVE' ? 'Tuliskan catatan arahan pelaksanaan atau persetujuan bersyarat...' : (approvalMode === 'REVISION' ? 'Jelaskan klausul atau dokumen pendukung yang wajib dilengkapi pemohon...' : 'Jelaskan dasar pertimbangan hukum mengapa permohonan ini tidak dapat disetujui...')"
+            :placeholder="approvalMode === 'APPROVE' ? 'Tuliskan catatan arahan pelaksanaan atau rekomendasi klausul...' : (approvalMode === 'REVISION' ? 'Jelaskan klausul atau dokumen pendukung yang wajib dilengkapi pemohon...' : 'Jelaskan dasar pertimbangan hukum mengapa permohonan ini tidak dapat disetujui...')"
             class="w-full p-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs text-slate-900 resize-none"
           ></textarea>
         </div>
@@ -92,12 +137,13 @@
           <button
             type="button"
             @click="submitDecision"
-            :class="approvalMode === 'APPROVE' ? 'bg-emerald-600 hover:bg-emerald-700' : (approvalMode === 'REVISION' ? 'bg-orange-600 hover:bg-orange-700' : 'bg-rose-600 hover:bg-rose-700')"
-            class="px-5 py-2 rounded-xl text-white font-bold cursor-pointer shadow-md transition text-xs flex items-center gap-1.5"
+            :disabled="!isAuthorized"
+            :class="!isAuthorized ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : (approvalMode === 'APPROVE' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : (approvalMode === 'REVISION' ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'))"
+            class="px-5 py-2 rounded-xl font-bold transition text-xs flex items-center gap-1.5 shadow-xs"
           >
             <Check class="w-4 h-4 stroke-[2.5]" />
             <span>
-              {{ approvalMode === 'APPROVE' ? 'Setujui Permohonan' : (approvalMode === 'REVISION' ? 'Minta Revisi' : 'Tolak Permohonan') }}
+              {{ approvalMode === 'APPROVE' ? `Setujui Tahap ${activeStep?.level || 1}` : (approvalMode === 'REVISION' ? `Kembalikan Revisi Tahap ${activeStep?.level || 1}` : `Tolak Permohonan`) }}
             </span>
           </button>
         </div>
@@ -107,7 +153,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { ShieldCheck, CheckCircle2, AlertCircle, XCircle, Check } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
@@ -123,27 +169,62 @@ const emit = defineEmits(['close']);
 const approvalMode = ref('APPROVE');
 const approvalNotes = ref('');
 
+const currentUserRole = computed(() => {
+  return legalStore.state.currentUser ? legalStore.state.currentUser.role : 'ADMIN';
+});
+
+const currentUserName = computed(() => {
+  return legalStore.state.currentUser ? legalStore.state.currentUser.name : 'Administrator';
+});
+
+const activeStep = computed(() => {
+  if (!props.approvalTarget) return null;
+  const chain = props.approvalTarget.approvalChain;
+  if (!chain || !chain.length) return null;
+
+  const currentLevel = props.approvalTarget.currentApprovalLevel || 1;
+  const step = chain.find(s => s.level === currentLevel);
+  if (step) return step;
+
+  // Fallback to first non-approved step
+  const pending = chain.find(s => s.status === 'PENDING' || s.status === 'REVISION_REQUIRED');
+  return pending || chain[chain.length - 1];
+});
+
+const isAuthorized = computed(() => {
+  const role = currentUserRole.value;
+  if (role === 'ADMIN') return true;
+  if (!activeStep.value) return false;
+  return role === activeStep.value.roleRequired;
+});
+
 function submitDecision() {
   if (!props.approvalTarget) return;
-  const id = props.approvalTarget.id;
 
-  if (approvalMode.value === 'APPROVE') {
-    legalStore.approveRequest(id, approvalNotes.value);
-  } else if (approvalMode.value === 'REVISION') {
-    if (!approvalNotes.value.trim()) {
-      legalStore.triggerToast('Catatan revisi wajib diisi agar pemohon mengetahui poin perbaikan.', 'error');
-      return;
-    }
-    legalStore.requestRevision(id, approvalNotes.value);
-  } else if (approvalMode.value === 'REJECT') {
-    if (!approvalNotes.value.trim()) {
-      legalStore.triggerToast('Alasan penolakan wajib diisi.', 'error');
-      return;
-    }
-    legalStore.rejectRequest(id, approvalNotes.value);
+  if (!isAuthorized.value) {
+    legalStore.triggerToast(
+      `Peran Anda (${currentUserRole.value}) tidak memiliki otorisasi untuk tahap ini (${activeStep.value?.roleRequired}).`,
+      'error'
+    );
+    return;
   }
 
-  approvalNotes.value = '';
-  emit('close');
+  const id = props.approvalTarget.id;
+
+  if (approvalMode.value === 'REVISION' && !approvalNotes.value.trim()) {
+    legalStore.triggerToast('Catatan revisi wajib diisi agar pemohon mengetahui poin perbaikan.', 'error');
+    return;
+  }
+
+  if (approvalMode.value === 'REJECT' && !approvalNotes.value.trim()) {
+    legalStore.triggerToast('Alasan penolakan wajib diisi.', 'error');
+    return;
+  }
+
+  const success = legalStore.advanceApprovalChain(id, approvalMode.value, approvalNotes.value);
+  if (success) {
+    approvalNotes.value = '';
+    emit('close');
+  }
 }
 </script>

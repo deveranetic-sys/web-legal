@@ -3,11 +3,112 @@ import { storage } from '../services/storage';
 import {
   masterSectorChecklists,
   masterSectorStageGuidance,
-  initialCapabilityList
+  initialCapabilityList,
+  initialApprovalFlows
 } from '../data/seedData';
 
 // Initialize storage and load hydrated dataset in a single pass
 const initialData = storage.initStorage();
+
+// Normalize approvalFlows: ensure every flow has steps, icon, module, slaDays, etc.
+if (Array.isArray(initialData.approvalFlows)) {
+  initialData.approvalFlows = initialData.approvalFlows.map(flow => {
+    const seed = initialApprovalFlows.find(s => s.id === flow.id);
+    if (seed && (!flow.steps || !flow.steps.length)) {
+      return { ...seed, ...flow, steps: JSON.parse(JSON.stringify(seed.steps)) };
+    }
+    return flow;
+  });
+}
+
+// Normalize requests: ensure every request has approvalChain and currentApprovalLevel
+if (Array.isArray(initialData.requests)) {
+  const defaultFlow = initialApprovalFlows.find(f => f.module === 'requests') || initialApprovalFlows[1];
+  initialData.requests.forEach(req => {
+    if (!req.approvalChain || !req.approvalChain.length) {
+      const flowSteps = defaultFlow && defaultFlow.steps ? defaultFlow.steps : [
+        { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+        { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+        { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+      ];
+
+      if (req.status === 'APPROVED' || req.status === 'COMPLETED') {
+        req.currentApprovalLevel = flowSteps.length;
+        req.approvalChain = flowSteps.map((s, idx) => ({
+          ...s,
+          status: 'APPROVED',
+          approverName: req.approvedBy || (idx === 0 ? 'Dimas Prasetyo, S.H.' : (idx === 1 ? 'Siti Rahmawati, S.H., M.H.' : 'Budi Santoso, S.H., LL.M.')),
+          approverRole: s.roleRequired,
+          actionDate: req.approvedAt || req.updatedAt || req.requestDate || '2026-08-15 14:00',
+          notes: req.approvalNotes || 'Disetujui sesuai prosedur legalitas korporasi.'
+        }));
+      } else if (req.status === 'REJECTED') {
+        req.currentApprovalLevel = 1;
+        req.approvalChain = flowSteps.map((s, idx) => ({
+          ...s,
+          status: idx === 0 ? 'REJECTED' : 'WAITING',
+          approverName: idx === 0 ? (req.rejectedBy || 'Dimas Prasetyo, S.H.') : null,
+          approverRole: idx === 0 ? s.roleRequired : null,
+          actionDate: idx === 0 ? (req.rejectedAt || '2026-08-18 10:30') : null,
+          notes: idx === 0 ? (req.rejectionReason || 'Dokumen belum memenuhi persyaratan formal.') : ''
+        }));
+      } else if (req.status === 'REVISION_REQUIRED') {
+        req.currentApprovalLevel = 1;
+        req.approvalChain = flowSteps.map((s, idx) => ({
+          ...s,
+          status: idx === 0 ? 'REVISION_REQUIRED' : 'WAITING',
+          approverName: idx === 0 ? (req.revisionRequestedBy || 'Dimas Prasetyo, S.H.') : null,
+          approverRole: idx === 0 ? s.roleRequired : null,
+          actionDate: idx === 0 ? (req.revisionRequestedAt || '2026-08-18 11:15') : null,
+          notes: idx === 0 ? (req.revisionNotes || 'Harap melengkapi dokumen lampiran term sheet.') : ''
+        }));
+      } else if (req.status === 'IN_REVIEW') {
+        req.currentApprovalLevel = 2;
+        req.approvalChain = flowSteps.map((s, idx) => {
+          if (idx === 0) {
+            return {
+              ...s,
+              status: 'APPROVED',
+              approverName: 'Dimas Prasetyo, S.H.',
+              approverRole: 'LEGAL COUNSEL',
+              actionDate: req.requestDate || '2026-08-11 10:00',
+              notes: 'Pemeriksaan awal valid. Diteruskan ke Legal Manager.'
+            };
+          } else if (idx === 1) {
+            return {
+              ...s,
+              status: 'PENDING',
+              approverName: null,
+              approverRole: null,
+              actionDate: null,
+              notes: ''
+            };
+          } else {
+            return {
+              ...s,
+              status: 'WAITING',
+              approverName: null,
+              approverRole: null,
+              actionDate: null,
+              notes: ''
+            };
+          }
+        });
+      } else {
+        // SUBMITTED or PENDING_APPROVAL
+        req.currentApprovalLevel = 1;
+        req.approvalChain = flowSteps.map((s, idx) => ({
+          ...s,
+          status: idx === 0 ? 'PENDING' : 'WAITING',
+          approverName: null,
+          approverRole: null,
+          actionDate: null,
+          notes: ''
+        }));
+      }
+    }
+  });
+}
 
 const state = reactive({
   users: initialData.users,
@@ -407,12 +508,33 @@ export const legalStore = {
   // Requests CRUD
   addRequest(payload) {
     const newId = `LR-2026-00${state.requests.length + 1}`;
+    
+    // Cari flow approval yang relevan atau gunakan default
+    const reqFlow = state.approvalFlows.find(f => f.module === 'requests' && f.active) || state.approvalFlows[1] || initialApprovalFlows[1];
+    const flowSteps = reqFlow && reqFlow.steps && reqFlow.steps.length ? reqFlow.steps : [
+      { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+      { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+      { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+    ];
+
+    const chain = flowSteps.map((s, idx) => ({
+      level: s.level,
+      name: s.name,
+      roleRequired: s.roleRequired,
+      slaDays: s.slaDays || 1,
+      status: idx === 0 ? 'PENDING' : 'WAITING',
+      approverName: null,
+      approverRole: null,
+      actionDate: null,
+      notes: ''
+    }));
+
     const req = {
       id: newId,
       ticketNumber: `LR/2026/${String(state.requests.length + 1).padStart(3, '0')}`,
       requestDate: new Date().toISOString().slice(0, 10),
-      requestor: payload.requestor || state.currentUser.name,
-      department: payload.department || state.currentUser.department,
+      requestor: payload.requestor || state.currentUser?.name || 'User Requestor',
+      department: payload.department || state.currentUser?.department || 'Operasional',
       company: payload.company || state.currentEntity,
       requestType: payload.requestType || 'Contract Review',
       urgency: payload.urgency || 'MEDIUM',
@@ -421,12 +543,16 @@ export const legalStore = {
       status: 'SUBMITTED',
       assignedTo: payload.assignedTo || 'Unassigned',
       deadline: payload.deadline || new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-      attachments: payload.attachments || []
+      attachments: payload.attachments || [],
+      approvalFlowId: reqFlow ? reqFlow.id : 'AF-02',
+      currentApprovalLevel: 1,
+      approvalChain: chain
     };
+
     state.requests.unshift(req);
     storage.set(storage.KEYS.REQUESTS, state.requests);
     this.addActivityLog('CREATE', 'Permintaan Legal', req.id, `Pengajuan request baru: ${req.subject}`);
-    this.triggerToast(`Permintaan legal ${req.id} berhasil diajukan!`, 'success');
+    this.triggerToast(`Permintaan legal ${req.id} berhasil diajukan dengan 3 tahap chain approval!`, 'success');
     return req;
   },
 
@@ -457,41 +583,123 @@ export const legalStore = {
     this.triggerToast(`Permohonan ${id} berhasil dihapus`, 'info');
   },
 
-  // Request Approvals Workflow
-  approveRequest(id, notes = '') {
+  // Multi-tier Transactional Chain Approval Engine
+  advanceApprovalChain(id, decision, notes = '') {
     const req = state.requests.find(r => r.id === id);
-    if (!req) return;
-    req.status = 'APPROVED';
-    req.approvalNotes = notes;
-    req.approvedBy = state.currentUser ? state.currentUser.name : 'Head of Legal';
-    req.approvedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    if (!req) {
+      this.triggerToast('Permohonan tidak ditemukan.', 'error');
+      return false;
+    }
+
+    // Pastikan approvalChain ada
+    if (!req.approvalChain || !req.approvalChain.length) {
+      const defaultFlow = state.approvalFlows.find(f => f.module === 'requests' && f.active) || initialApprovalFlows[1];
+      const flowSteps = defaultFlow && defaultFlow.steps ? defaultFlow.steps : [
+        { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+        { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+        { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+      ];
+      req.currentApprovalLevel = 1;
+      req.approvalChain = flowSteps.map((s, idx) => ({
+        ...s,
+        status: idx === 0 ? 'PENDING' : 'WAITING',
+        approverName: null,
+        approverRole: null,
+        actionDate: null,
+        notes: ''
+      }));
+    }
+
+    const currentLevel = req.currentApprovalLevel || 1;
+    let currentStep = req.approvalChain.find(s => s.level === currentLevel);
+    if (!currentStep) {
+      currentStep = req.approvalChain.find(s => s.status === 'PENDING' || s.status === 'REVISION_REQUIRED');
+    }
+    if (!currentStep) {
+      currentStep = req.approvalChain[req.approvalChain.length - 1];
+    }
+
+    const userRole = state.currentUser ? state.currentUser.role : 'ADMIN';
+    const isAuthorized = userRole === 'ADMIN' || userRole === currentStep.roleRequired;
+
+    if (!isAuthorized) {
+      this.triggerToast(
+        `Peran Anda saat ini (${userRole}) tidak memiliki wewenang untuk Tahap ${currentStep.level} (${currentStep.name}). Dibutuhkan peran: ${currentStep.roleRequired}. (Ganti peran di header navigasi).`,
+        'error'
+      );
+      return false;
+    }
+
+    const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    const approverName = state.currentUser ? state.currentUser.name : 'Legal Authority';
+
+    if (decision === 'APPROVE') {
+      currentStep.status = 'APPROVED';
+      currentStep.approverName = approverName;
+      currentStep.approverRole = userRole;
+      currentStep.actionDate = now;
+      currentStep.notes = notes || 'Disetujui tanpa catatan khusus';
+
+      const nextStep = req.approvalChain.find(s => s.level === currentStep.level + 1);
+      if (nextStep) {
+        nextStep.status = 'PENDING';
+        req.currentApprovalLevel = nextStep.level;
+        req.status = 'IN_REVIEW';
+        this.addActivityLog('CHAIN_APPROVAL_STEP', 'Permintaan Legal', req.id, `Tahap ${currentStep.level} disetujui oleh ${approverName} (${userRole}). Menunggu Tahap ${nextStep.level}: ${nextStep.name} (${nextStep.roleRequired}).`);
+        this.triggerToast(`Tahap ${currentStep.level} (${currentStep.name}) DISETUJUI! Berkas diteruskan ke Tahap ${nextStep.level}: ${nextStep.name} [${nextStep.roleRequired}].`, 'success');
+      } else {
+        // Rantai selesai sepenuhnya
+        req.status = 'APPROVED';
+        req.approvedBy = approverName;
+        req.approvedAt = now;
+        req.approvalNotes = notes || 'Seluruh jenjang approval tuntas disetujui';
+        this.addActivityLog('CHAIN_APPROVAL_COMPLETE', 'Permintaan Legal', req.id, `Seluruh rantai persetujuan (${req.approvalChain.length} tahap) selesai disetujui.`);
+        this.triggerToast(`Selamat! Seluruh rantai persetujuan (${req.approvalChain.length} tahap) untuk ${req.id} telah TUNTAS & DISETUJUI.`, 'success');
+      }
+    } else if (decision === 'REVISION') {
+      currentStep.status = 'REVISION_REQUIRED';
+      currentStep.approverName = approverName;
+      currentStep.approverRole = userRole;
+      currentStep.actionDate = now;
+      currentStep.notes = notes;
+
+      req.status = 'REVISION_REQUIRED';
+      req.revisionRequestedBy = `${approverName} (${userRole})`;
+      req.revisionRequestedAt = now;
+      req.revisionNotes = notes;
+
+      this.addActivityLog('CHAIN_APPROVAL_REVISION', 'Permintaan Legal', req.id, `Revisi diminta pada Tahap ${currentStep.level} oleh ${approverName}: ${notes}`);
+      this.triggerToast(`Catatan revisi untuk Tahap ${currentStep.level} (${currentStep.name}) berhasil dikirim ke pemohon.`, 'warning');
+    } else if (decision === 'REJECT') {
+      currentStep.status = 'REJECTED';
+      currentStep.approverName = approverName;
+      currentStep.approverRole = userRole;
+      currentStep.actionDate = now;
+      currentStep.notes = notes;
+
+      req.status = 'REJECTED';
+      req.rejectedBy = `${approverName} (${userRole})`;
+      req.rejectedAt = now;
+      req.rejectionReason = notes;
+
+      this.addActivityLog('CHAIN_APPROVAL_REJECT', 'Permintaan Legal', req.id, `Permohonan DITOLAK pada Tahap ${currentStep.level} oleh ${approverName}: ${notes}`);
+      this.triggerToast(`Permohonan ${req.id} DITOLAK pada Tahap ${currentStep.level} (${currentStep.name}).`, 'error');
+    }
+
     storage.set(storage.KEYS.REQUESTS, state.requests);
-    this.addActivityLog('APPROVE', 'Permintaan Legal', id, `Menyetujui permohonan legal: ${notes || 'Tanpa catatan'}`);
-    this.triggerToast(`Permohonan ${id} berhasil DISETUJUI!`, 'success');
+    return true;
+  },
+
+  approveRequest(id, notes = '') {
+    return this.advanceApprovalChain(id, 'APPROVE', notes);
   },
 
   rejectRequest(id, reason = '') {
-    const req = state.requests.find(r => r.id === id);
-    if (!req) return;
-    req.status = 'REJECTED';
-    req.rejectionReason = reason;
-    req.rejectedBy = state.currentUser ? state.currentUser.name : 'Head of Legal';
-    req.rejectedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    storage.set(storage.KEYS.REQUESTS, state.requests);
-    this.addActivityLog('REJECT', 'Permintaan Legal', id, `Menolak permohonan legal: ${reason || 'Tidak memenuhi syarat'}`);
-    this.triggerToast(`Permohonan ${id} DITOLAK.`, 'error');
+    return this.advanceApprovalChain(id, 'REJECT', reason);
   },
 
   requestRevision(id, notes = '') {
-    const req = state.requests.find(r => r.id === id);
-    if (!req) return;
-    req.status = 'REVISION_REQUIRED';
-    req.revisionNotes = notes;
-    req.revisionRequestedBy = state.currentUser ? state.currentUser.name : 'Legal Counsel';
-    req.revisionRequestedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    storage.set(storage.KEYS.REQUESTS, state.requests);
-    this.addActivityLog('REQUEST_REVISION', 'Permintaan Legal', id, `Meminta revisi/klarifikasi permohonan: ${notes}`);
-    this.triggerToast(`Catatan revisi untuk permohonan ${id} berhasil dikirim ke pemohon.`, 'warning');
+    return this.advanceApprovalChain(id, 'REVISION', notes);
   },
 
   // Contracts CRUD
@@ -2252,24 +2460,64 @@ export const legalStore = {
     this.triggerToast(`Peran kustom "${roleKey}" berhasil dihapus`, 'info');
   },
 
-  // Approval Flows
+  // Approval Flows CRUD
+  addApprovalFlow(payload) {
+    const newId = `AF-${String(state.approvalFlows.length + 1).padStart(2, '0')}`;
+    const newFlow = {
+      id: newId,
+      name: payload.name || 'Alur Persetujuan Baru',
+      category: payload.category || 'Permintaan Legal',
+      module: payload.module || 'requests',
+      icon: payload.icon || '⚖️',
+      description: payload.description || '',
+      threshold: Number(payload.threshold) || 0,
+      active: payload.active !== undefined ? payload.active : true,
+      slaDays: Number(payload.slaDays) || 3,
+      steps: Array.isArray(payload.steps) && payload.steps.length ? payload.steps : [
+        { level: 1, name: 'Review Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
+        { level: 2, name: 'Verifikasi Manajerial (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
+        { level: 3, name: 'Pengesahan Direksi (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+      ],
+      lastUpdated: new Date().toISOString().replace('T', ' ').slice(0, 16)
+    };
+    state.approvalFlows.push(newFlow);
+    storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
+    this.addActivityLog('CREATE_FLOW', 'Alur Persetujuan', newId, `Menambahkan alur persetujuan baru: ${newFlow.name}`);
+    this.triggerToast(`Alur persetujuan "${newFlow.name}" berhasil dibuat!`, 'success');
+    return newFlow;
+  },
+
   updateApprovalFlow(id, payload) {
     const flow = state.approvalFlows.find(f => f.id === id);
     if (!flow) return;
-    Object.assign(flow, payload);
+    Object.assign(flow, payload, {
+      lastUpdated: new Date().toISOString().replace('T', ' ').slice(0, 16)
+    });
     storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
-    this.addActivityLog('UPDATE_FLOW', 'Alur Persetujuan', id, `Memperbarui alur persetujuan: ${flow.title}`);
-    this.triggerToast(`Alur persetujuan "${flow.title}" berhasil diperbarui`, 'success');
+    const title = flow.name || flow.title || id;
+    this.addActivityLog('UPDATE_FLOW', 'Alur Persetujuan', id, `Memperbarui alur persetujuan: ${title}`);
+    this.triggerToast(`Alur persetujuan "${title}" berhasil diperbarui`, 'success');
+  },
+
+  deleteApprovalFlow(id) {
+    const flow = state.approvalFlows.find(f => f.id === id);
+    const title = flow ? (flow.name || flow.title) : id;
+    state.approvalFlows = state.approvalFlows.filter(f => f.id !== id);
+    storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
+    this.addActivityLog('DELETE_FLOW', 'Alur Persetujuan', id, `Menghapus alur persetujuan: ${title}`);
+    this.triggerToast(`Alur persetujuan "${title}" berhasil dihapus`, 'info');
   },
 
   toggleApprovalFlowStatus(id) {
     const flow = state.approvalFlows.find(f => f.id === id);
     if (!flow) return;
     flow.active = !flow.active;
+    flow.lastUpdated = new Date().toISOString().replace('T', ' ').slice(0, 16);
     storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
     const st = flow.active ? 'diaktifkan' : 'dinonaktifkan';
-    this.addActivityLog('STATUS_CHANGE', 'Alur Persetujuan', id, `Alur "${flow.title}" ${st}`);
-    this.triggerToast(`Alur persetujuan "${flow.title}" ${st}`, 'info');
+    const title = flow.name || flow.title || id;
+    this.addActivityLog('STATUS_CHANGE', 'Alur Persetujuan', id, `Alur "${title}" ${st}`);
+    this.triggerToast(`Alur persetujuan "${title}" ${st}`, 'info');
   },
 
   // ERP Integrations
