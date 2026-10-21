@@ -365,7 +365,87 @@ func (h *TemplateHandler) CreateTemplate(c echo.Context) error {
 
 ---
 
-### 4.3 Webhook & Event Integration (RabbitMQ)
+### 4.4 Integrasi Kontrak Pengadaan & PO Gate (Procurement PRC-07)
+
+Sesuai ADR Single Contract Master, Legal menyediakan endpoint dan gRPC method untuk memvalidasi *Contract Gate* saat modul Procurement hendak menerbitkan Purchase Order (PO):
+
+* **REST Endpoint**: `GET /api/v1/legal/contracts/:id/gate-status`
+* **gRPC Method**: `rpc ValidateContractGate (ContractGateRequest) returns (ContractGateResponse)`
+* **Response 200 OK**:
+```json
+{
+  "success": true,
+  "data": {
+    "contract_id": "CTR-2026-001",
+    "contract_number": "PKS/2026/088-PLTS",
+    "vendor_id": "VND-PLN-019",
+    "status": "ACTIVE",
+    "is_valid_for_po": true,
+    "effective_date": "2026-01-15",
+    "expiry_date": "2026-12-31",
+    "remaining_days": 72,
+    "total_value": 145000000000,
+    "committed_value": 82000000000,
+    "remaining_commitment": 63000000000,
+    "currency": "IDR",
+    "message": "Kontrak aktif dan sah untuk penerbitan PO."
+  }
+}
+```
+
+---
+
+### 4.5 Integrasi Penomoran Surat Otomatis dengan e-Office (EOF-01/02)
+
+Agar tidak terjadi *dual numbering sequence*, modul korespondensi hukum meminta nomor surat resmi dari generator e-Office:
+
+* **Internal Service Call**: `POST /api/v1/eoffice/numbering/generate`
+* **Payload dari Legal**:
+```json
+{
+  "department": "LEGAL",
+  "doc_type": "SOMASI",
+  "company_entity_id": "PT_NUSANTARA_ENERGI",
+  "target_recipient": "PT Rekayasa Utama Mandiri",
+  "year": 2026
+}
+```
+* **Response e-Office**:
+```json
+{
+  "success": true,
+  "data": {
+    "letter_number": "042/LEG-SOM/NE/X/2026",
+    "sequence_no": 42,
+    "reserved_at": "2026-10-20T10:15:00Z"
+  }
+}
+```
+Backend Legal kemudian mencatat `letter_number` ini ke tabel `legal_correspondences` bersama tenggat respons somasi (7 atau 14 hari) dan warkat lampirannya.
+
+---
+
+### 4.6 Matriks Otorisasi Casbin RBAC
+
+Hak akses 13 modul legal dipetakan ke dalam model RBAC Casbin standar ERP:
+
+```csv
+# Casbin Policy: p, role, domain, object, action
+p, role:legal_counsel, tenant_*, legal:contract, view
+p, role:legal_counsel, tenant_*, legal:contract, edit
+p, role:legal_counsel, tenant_*, legal:request, approve
+p, role:legal_manager, tenant_*, legal:contract, approve
+p, role:legal_manager, tenant_*, legal:opinion, approve
+p, role:management,    tenant_*, legal:contract, sign
+p, role:management,    tenant_*, legal:dispute, view_exposure
+p, role:requestor,     tenant_*, legal:request, create
+p, role:requestor,     tenant_*, legal:template, view
+p, role:admin,         tenant_*, legal:*, *
+```
+
+---
+
+### 4.7 Webhook & Event Integration (RabbitMQ)
 
 Ketika sebuah peristiwa penting terjadi di modul Legal, backend Go mempublikasikan pesan ke RabbitMQ agar modul ERP lain dapat merespons:
 
