@@ -33,8 +33,8 @@
         </div>
       </div>
 
-      <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-2">
+      <div class="p-4 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shrink-0">
+        <div class="flex flex-wrap items-center gap-2">
           <span class="text-xs text-slate-500 font-medium">Sidang: {{ dispute.nextHearingDate || dispute.nextHearing || '-' }}</span>
           <button
             @click="syncGoogle"
@@ -52,7 +52,7 @@
           </button>
         </div>
 
-        <button @click="$emit('close')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs cursor-pointer whitespace-nowrap">
+        <button @click="$emit('close')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs cursor-pointer whitespace-nowrap self-end sm:self-auto">
           Tutup
         </button>
       </div>

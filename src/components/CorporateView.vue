@@ -54,25 +54,25 @@
     </div>
 
     <!-- Sub-tabs: Profil, Pemegang Saham, Pengurus -->
-    <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+    <div class="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto scrollbar-none">
       <button
         @click="activeSubTab = 'profile'"
-        :class="activeSubTab === 'profile' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 font-medium'"
-        class="px-4 py-2 rounded-xl text-xs sm:text-sm transition cursor-pointer"
+        :class="activeSubTab === 'profile' ? 'bg-indigo-600 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100 font-medium'"
+        class="px-4 py-2 rounded-xl text-xs sm:text-sm transition cursor-pointer whitespace-nowrap"
       >
         Profil Korporat & Akta
       </button>
       <button
         @click="activeSubTab = 'shareholders'"
-        :class="activeSubTab === 'shareholders' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 font-medium'"
-        class="px-4 py-2 rounded-xl text-xs sm:text-sm transition cursor-pointer"
+        :class="activeSubTab === 'shareholders' ? 'bg-indigo-600 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100 font-medium'"
+        class="px-4 py-2 rounded-xl text-xs sm:text-sm transition cursor-pointer whitespace-nowrap"
       >
         Pemegang Saham & Beneficial Ownership ({{ activeCorp?.shareholders?.length || 0 }})
       </button>
       <button
         @click="activeSubTab = 'management'"
-        :class="activeSubTab === 'management' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 font-medium'"
-        class="px-4 py-2 rounded-xl text-xs sm:text-sm transition cursor-pointer"
+        :class="activeSubTab === 'management' ? 'bg-indigo-600 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100 font-medium'"
+        class="px-4 py-2 rounded-xl text-xs sm:text-sm transition cursor-pointer whitespace-nowrap"
       >
         Direksi & Dewan Komisaris ({{ (activeCorp?.directors?.length || 0) + (activeCorp?.commissioners?.length || 0) }})
       </button>
@@ -137,43 +137,45 @@
 
     <!-- TAB 2: Pemegang Saham (Shareholders) -->
     <div v-if="activeSubTab === 'shareholders' && activeCorp" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-      <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 class="font-bold text-slate-900 text-sm">Daftar Pemegang Saham (Buku Register)</h3>
           <p class="text-xs text-slate-500">Struktur permodalan disetor dan pemilik manfaat akhir (Beneficial Owner)</p>
         </div>
         <button
           @click="exportShareholdersCSV"
-          class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg cursor-pointer"
+          class="self-start sm:self-auto px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg cursor-pointer whitespace-nowrap"
         >
           Unduh Daftar Saham
         </button>
       </div>
 
-      <table class="w-full text-left text-xs sm:text-sm">
-        <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
-          <tr>
-            <th class="py-3 px-4">Nama Pemegang Saham</th>
-            <th class="py-3 px-4">Tipe Entitas</th>
-            <th class="py-3 px-4 text-right">Jumlah Lembar</th>
-            <th class="py-3 px-4 text-right">Persentase (%)</th>
-            <th class="py-3 px-4 text-right">Nilai Nominal (IDR)</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr v-for="sh in (activeCorp.shareholders || [])" :key="sh.id" class="hover:bg-slate-50">
-            <td class="py-3 px-4 font-bold text-slate-900">{{ sh.name }}</td>
-            <td class="py-3 px-4">
-              <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">
-                {{ sh.type }}
-              </span>
-            </td>
-            <td class="py-3 px-4 text-right font-mono">{{ sh.shares?.toLocaleString('id-ID') }}</td>
-            <td class="py-3 px-4 text-right font-bold text-indigo-700">{{ sh.percentage }}%</td>
-            <td class="py-3 px-4 text-right font-mono font-bold">{{ formatIDR(sh.nominalValue) }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+            <tr>
+              <th class="py-3 px-4">Nama Pemegang Saham</th>
+              <th class="py-3 px-4">Tipe Entitas</th>
+              <th class="py-3 px-4 text-right">Jumlah Lembar</th>
+              <th class="py-3 px-4 text-right">Persentase (%)</th>
+              <th class="py-3 px-4 text-right">Nilai Nominal (IDR)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr v-for="sh in (activeCorp.shareholders || [])" :key="sh.id" class="hover:bg-slate-50">
+              <td class="py-3 px-4 font-bold text-slate-900">{{ sh.name }}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">
+                  {{ sh.type }}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right font-mono">{{ sh.shares?.toLocaleString('id-ID') }}</td>
+              <td class="py-3 px-4 text-right font-bold text-indigo-700">{{ sh.percentage }}%</td>
+              <td class="py-3 px-4 text-right font-mono font-bold">{{ formatIDR(sh.nominalValue) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- TAB 3: Direksi & Dewan Komisaris (Management) -->
@@ -183,24 +185,26 @@
         <div class="p-4 bg-slate-50 border-b border-slate-200">
           <h3 class="font-bold text-slate-900 text-sm">Susunan Direksi (Board of Directors)</h3>
         </div>
-        <table class="w-full text-left text-xs sm:text-sm">
-          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
-            <tr>
-              <th class="py-3 px-4">Nama Direktur</th>
-              <th class="py-3 px-4">Jabatan</th>
-              <th class="py-3 px-4">Kewarganegaraan</th>
-              <th class="py-3 px-4">Periode Menjabat</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr v-for="dir in (activeCorp.directors || [])" :key="dir.id" class="hover:bg-slate-50">
-              <td class="py-3 px-4 font-bold text-slate-900">{{ dir.name }}</td>
-              <td class="py-3 px-4 font-semibold text-[#4338CA]">{{ dir.title || dir.position }}</td>
-              <td class="py-3 px-4 text-slate-600">{{ dir.nationality || 'Indonesia' }}</td>
-              <td class="py-3 px-4 text-slate-500">{{ dir.period || (dir.periodStart ? `${dir.periodStart} s/d ${dir.periodEnd}` : '2024 - 2029') }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Nama Direktur</th>
+                <th class="py-3 px-4">Jabatan</th>
+                <th class="py-3 px-4">Kewarganegaraan</th>
+                <th class="py-3 px-4">Periode Menjabat</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr v-for="dir in (activeCorp.directors || [])" :key="dir.id" class="hover:bg-slate-50">
+                <td class="py-3 px-4 font-bold text-slate-900">{{ dir.name }}</td>
+                <td class="py-3 px-4 font-semibold text-[#4338CA]">{{ dir.title || dir.position }}</td>
+                <td class="py-3 px-4 text-slate-600">{{ dir.nationality || 'Indonesia' }}</td>
+                <td class="py-3 px-4 text-slate-500">{{ dir.period || (dir.periodStart ? `${dir.periodStart} s/d ${dir.periodEnd}` : '2024 - 2029') }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Dewan Komisaris -->
@@ -208,24 +212,26 @@
         <div class="p-4 bg-slate-50 border-b border-slate-200">
           <h3 class="font-bold text-slate-900 text-sm">Susunan Dewan Komisaris (Board of Commissioners)</h3>
         </div>
-        <table class="w-full text-left text-xs sm:text-sm">
-          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
-            <tr>
-              <th class="py-3 px-4">Nama Komisaris</th>
-              <th class="py-3 px-4">Jabatan</th>
-              <th class="py-3 px-4">Kewarganegaraan</th>
-              <th class="py-3 px-4">Periode Menjabat</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr v-for="com in (activeCorp.commissioners || [])" :key="com.id" class="hover:bg-slate-50">
-              <td class="py-3 px-4 font-bold text-slate-900">{{ com.name }}</td>
-              <td class="py-3 px-4 font-semibold text-indigo-700">{{ com.title || com.position }}</td>
-              <td class="py-3 px-4 text-slate-600">{{ com.nationality || 'Indonesia' }}</td>
-              <td class="py-3 px-4 text-slate-500">{{ com.period || (com.periodStart ? `${com.periodStart} s/d ${com.periodEnd}` : '2024 - 2029') }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Nama Komisaris</th>
+                <th class="py-3 px-4">Jabatan</th>
+                <th class="py-3 px-4">Kewarganegaraan</th>
+                <th class="py-3 px-4">Periode Menjabat</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr v-for="com in (activeCorp.commissioners || [])" :key="com.id" class="hover:bg-slate-50">
+                <td class="py-3 px-4 font-bold text-slate-900">{{ com.name }}</td>
+                <td class="py-3 px-4 font-semibold text-indigo-700">{{ com.title || com.position }}</td>
+                <td class="py-3 px-4 text-slate-600">{{ com.nationality || 'Indonesia' }}</td>
+                <td class="py-3 px-4 text-slate-500">{{ com.period || (com.periodStart ? `${com.periodStart} s/d ${com.periodEnd}` : '2024 - 2029') }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

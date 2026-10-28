@@ -17,7 +17,7 @@
         </p>
       </div>
 
-      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-wrap sm:flex-nowrap">
         <!-- Sub-tabs: Klausul vs Template Dokumen -->
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
           <button

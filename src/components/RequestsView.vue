@@ -18,7 +18,7 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-wrap sm:flex-nowrap">
         <button
           v-if="pendingApprovalCount > 0 && canApprove"
           @click="filterStatus = 'PENDING_APPROVAL'"

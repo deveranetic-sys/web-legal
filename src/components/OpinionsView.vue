@@ -65,13 +65,13 @@
       <!-- Right Column: Formal Legal Opinion Document View -->
       <div v-if="selectedOpinion" class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
         <!-- Letterhead Simulation -->
-        <div class="border-b-2 border-slate-900 pb-4 flex items-start justify-between">
+        <div class="border-b-2 border-slate-900 pb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
             <div class="text-xs font-mono font-bold text-slate-500 tracking-wider">MEMORANDUM PENDAPAT HUKUM (LEGAL OPINION)</div>
             <h2 class="text-lg sm:text-xl font-black text-slate-900 mt-1">{{ selectedOpinion.title || selectedOpinion.issue }}</h2>
             <div class="text-xs text-slate-500 mt-1">Ref: {{ selectedOpinion.opinionNumber || selectedOpinion.id }} • Tanggal: {{ selectedOpinion.date }} • Entitas: {{ selectedOpinion.company }}</div>
           </div>
-          <div class="text-right flex items-center gap-2">
+          <div class="flex items-center gap-2 self-start sm:self-auto flex-wrap">
             <button
               @click="openEditOpinion(selectedOpinion)"
               class="p-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs border border-amber-200 flex items-center gap-1 cursor-pointer"

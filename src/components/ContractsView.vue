@@ -18,7 +18,7 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3 shrink-0 flex-nowrap">
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0 flex-wrap sm:flex-nowrap">
         <button
           @click="legalStore.exportContractsCSV()"
           class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] text-sm font-semibold shadow-xs transition-colors cursor-pointer whitespace-nowrap"

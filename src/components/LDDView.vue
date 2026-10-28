@@ -18,7 +18,7 @@
       </div>
 
       <!-- Project Switcher & Actions -->
-      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-wrap sm:flex-nowrap">
         <div class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-1.5 shadow-2xs">
           <FolderKanban class="w-4 h-4 text-emerald-600" />
           <span class="text-xs text-slate-500 font-medium">Proyek:</span>
@@ -129,8 +129,8 @@
       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
       @click.self="isAddModalOpen = false"
     >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
           <div class="flex items-center gap-2">
             <Plus class="w-5 h-5 text-emerald-400" />
             <h3 class="font-extrabold text-white text-base">Inisiasi Proyek Uji Tuntas (LDD)</h3>
@@ -138,7 +138,7 @@
           <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
         </div>
 
-        <form @submit.prevent="submitNewLDD" class="p-6 space-y-4 text-xs sm:text-sm">
+        <form @submit.prevent="submitNewLDD" class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Nama Proyek LDD / Transaksi *</label>
             <input
@@ -150,7 +150,7 @@
             />
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block font-bold text-slate-800 mb-1">Target Korporasi *</label>
               <input
@@ -172,7 +172,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
               <input
@@ -218,13 +218,13 @@
       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
       @click.self="isAddItemModalOpen = false"
     >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
           <h3 class="font-extrabold text-white text-base">Tambah Butir Audit LDD</h3>
           <button @click="isAddItemModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
         </div>
 
-        <form @submit.prevent="submitAddChecklistItem" class="p-6 space-y-4 text-xs sm:text-sm">
+        <form @submit.prevent="submitAddChecklistItem" class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Kategori Aspek Audit *</label>
             <select

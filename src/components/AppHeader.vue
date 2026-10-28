@@ -1,26 +1,26 @@
 <template>
-  <header class="h-16 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+  <header class="h-16 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] px-3 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
     <!-- Left: Mobile Trigger & Active Module Breadcrumb -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
       <button
         @click="legalStore.state.isMobileSidebarOpen = true"
-        class="lg:hidden p-2 rounded-xl text-[#1E293B] hover:bg-slate-100 transition-colors"
+        class="lg:hidden p-2 rounded-xl text-[#1E293B] hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
       >
         <Menu class="w-5 h-5" />
       </button>
 
-      <div>
-        <div class="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">
+      <div class="min-w-0">
+        <div class="text-[9px] sm:text-[10px] font-bold text-[#64748B] uppercase tracking-widest truncate">
           Surya Era Enterprise Legal Suite
         </div>
-        <h2 class="text-base sm:text-lg font-extrabold text-[#0B1325] leading-tight">
+        <h2 class="text-sm sm:text-lg font-extrabold text-[#0B1325] leading-tight truncate">
           {{ moduleTitle }}
         </h2>
       </div>
     </div>
 
     <!-- Right Header Controls -->
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
       
       <!-- Entity Switcher Dropdown -->
       <div class="hidden md:flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-2.5 py-1">
@@ -63,17 +63,17 @@
       </button>
 
       <!-- Role Switcher Dropdown (Soft Indigo Pastel Accent) -->
-      <div class="flex items-center gap-2 pl-2 border-l border-[#E2E8F0]">
+      <div class="flex items-center gap-2 pl-1.5 sm:pl-2 border-l border-[#E2E8F0]">
         <select
           :value="legalStore.state.currentUser?.role"
           @change="legalStore.switchRole($event.target.value)"
-          class="bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold rounded-xl py-1.5 px-2.5 focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] cursor-pointer shadow-xs hover:bg-[#E0E7FF] transition"
+          class="bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold rounded-xl py-1.5 px-2 sm:px-2.5 focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] cursor-pointer shadow-xs hover:bg-[#E0E7FF] transition max-w-[140px] sm:max-w-none truncate"
         >
-          <option value="SUPER ADMIN">Role: Super Admin</option>
-          <option value="KEPALA LEGAL">Role: Kepala Legal</option>
-          <option value="STAFF LEGAL">Role: Staff Legal</option>
-          <option value="REQUESTOR">Role: Requestor</option>
-          <option value="DIREKTUR (DASHBOARD)">Role: Direktur (dashboard)</option>
+          <option value="SUPER ADMIN">Super Admin</option>
+          <option value="KEPALA LEGAL">Kepala Legal</option>
+          <option value="STAFF LEGAL">Staff Legal</option>
+          <option value="REQUESTOR">Requestor</option>
+          <option value="DIREKTUR (DASHBOARD)">Direktur (dashboard)</option>
         </select>
       </div>
 

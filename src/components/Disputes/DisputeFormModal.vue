@@ -3,8 +3,8 @@
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
     @click.self="$emit('close')"
   >
-    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
-      <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+      <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <component :is="isEdit ? Pencil : Plus" class="w-5 h-5 text-purple-400" />
           <h3 class="font-extrabold text-white text-base">
@@ -14,8 +14,8 @@
         <button @click="$emit('close')" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
       </div>
 
-      <form @submit.prevent="submitForm" class="p-6 space-y-4 text-xs sm:text-sm">
-        <div class="grid grid-cols-2 gap-3">
+      <form @submit.prevent="submitForm" class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Nomor Perkara / Register *</label>
             <input
@@ -38,7 +38,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Klasifikasi Sengketa</label>
             <select
@@ -64,7 +64,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Nilai Tuntutan / Gugatan (IDR) *</label>
             <input
@@ -88,7 +88,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Entitas Perseroan</label>
             <select
