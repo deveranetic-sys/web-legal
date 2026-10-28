@@ -192,17 +192,17 @@
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <!-- Search Input -->
             <div class="md:col-span-4 relative">
-              <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari judul tender, nomor lelang, panitia..."
-                class="w-full pl-9 pr-4 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#C7D2FE] bg-white text-[#0F172A]"
+                class="form-input form-input-search"
               />
               <button
                 v-if="searchQuery"
                 @click="searchQuery = ''"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#0F172A] text-xs"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#0F172A] text-xs cursor-pointer"
               >
                 ✕
               </button>
@@ -212,14 +212,14 @@
             <div class="md:col-span-3">
               <select
                 v-model="filterSector"
-                class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+                class="form-select"
               >
-                <option value="ALL">🏢 Semua Sektor Industri</option>
-                <option value="KONSTRUKSI">🏗️ Konstruksi & Infrastruktur</option>
-                <option value="PERTAMBANGAN">⛏️ Pertambangan & Mineral</option>
-                <option value="MIGAS">🛢️ Minyak & Gas Bumi</option>
-                <option value="ENERGI">⚡ Energi & Ketenagalistrikan</option>
-                <option value="UMUM">📦 Pengadaan Barang & Jasa Umum</option>
+                <option value="ALL">Semua Sektor Industri</option>
+                <option value="KONSTRUKSI">Konstruksi & Infrastruktur</option>
+                <option value="PERTAMBANGAN">Pertambangan & Mineral</option>
+                <option value="MIGAS">Minyak & Gas Bumi</option>
+                <option value="ENERGI">Energi & Ketenagalistrikan</option>
+                <option value="UMUM">Pengadaan Barang & Jasa Umum</option>
               </select>
             </div>
 
@@ -227,7 +227,7 @@
             <div class="md:col-span-3">
               <select
                 v-model="filterStage"
-                class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+                class="form-select"
               >
                 <option value="ALL">Semua Tahapan Lelang</option>
                 <option value="PERSIAPAN_PENGADAAN">1. Tahap Persiapan Pengadaan</option>
@@ -245,7 +245,7 @@
             <div class="md:col-span-2">
               <select
                 v-model="filterDocReadiness"
-                class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+                class="form-select"
               >
                 <option value="ALL">Semua Kesiapan</option>
                 <option value="HAS_MISSING">Ada Dokumen Kurang</option>
@@ -260,7 +260,7 @@
               <span class="text-[#475569]">Filter Cepat:</span>
               <button
                 @click="setQuickFilter('ALL')"
-                :class="filterStage === 'ALL' && filterDocReadiness === 'ALL' && filterSector === 'ALL' ? 'bg-[#1E293B] text-white font-medium shadow-xs' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
+                :class="filterStage === 'ALL' && filterDocReadiness === 'ALL' && filterSector === 'ALL' ? 'bg-[#2563EB] text-white font-medium shadow-xs' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
                 class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
               >
                 Semua ({{ tenders.length }})
@@ -268,30 +268,34 @@
               <button
                 @click="filterSector = 'KONSTRUKSI'"
                 :class="filterSector === 'KONSTRUKSI' ? 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5] font-bold' : 'bg-slate-100 text-[#475569] hover:bg-slate-200'"
-                class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
               >
-                🏗️ Konstruksi
+                <HardHat class="w-3.5 h-3.5" />
+                <span>Konstruksi</span>
               </button>
               <button
                 @click="filterSector = 'PERTAMBANGAN'"
                 :class="filterSector === 'PERTAMBANGAN' ? 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] font-bold' : 'bg-slate-100 text-[#475569] hover:bg-slate-200'"
-                class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
               >
-                ⛏️ Tambang
+                <Pickaxe class="w-3.5 h-3.5" />
+                <span>Tambang</span>
               </button>
               <button
                 @click="filterSector = 'MIGAS'"
                 :class="filterSector === 'MIGAS' ? 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3] font-bold' : 'bg-slate-100 text-[#475569] hover:bg-slate-200'"
-                class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
               >
-                🛢️ Migas
+                <Flame class="w-3.5 h-3.5" />
+                <span>Migas</span>
               </button>
               <button
                 @click="filterSector = 'ENERGI'"
                 :class="filterSector === 'ENERGI' ? 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5] font-bold' : 'bg-slate-100 text-[#475569] hover:bg-slate-200'"
-                class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
               >
-                ⚡ Energi
+                <Zap class="w-3.5 h-3.5" />
+                <span>Energi</span>
               </button>
               <button
                 @click="setQuickFilter('ACTIVE')"
@@ -377,9 +381,9 @@
                 <!-- Sektor Badge -->
                 <span
                   :class="getSectorBadge(tender.sector).badgeClass"
-                  class="text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1"
+                  class="text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5"
                 >
-                  <span>{{ getSectorBadge(tender.sector).icon }}</span>
+                  <component :is="getSectorBadge(tender.sector).icon" class="w-3 h-3" />
                   <span>{{ getSectorBadge(tender.sector).label }}</span>
                 </span>
 
@@ -471,7 +475,7 @@
                     :class="getSectorBadge(currentSelectedTender.sector).badgeClass"
                     class="text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5"
                   >
-                    <span>{{ getSectorBadge(currentSelectedTender.sector).icon }}</span>
+                    <component :is="getSectorBadge(currentSelectedTender.sector).icon" class="w-3.5 h-3.5" />
                     <span>Sektor: {{ getSectorBadge(currentSelectedTender.sector).label }}</span>
                   </span>
 
@@ -533,7 +537,7 @@
                 <div class="text-left lg:text-right">
                   <div
                     v-if="calculateDaysRemaining(currentSelectedTender.deadlineDate) < 0"
-                    class="inline-flex items-center gap-1 text-xs font-bold text-slate-400 bg-black/40 px-2.5 py-1 rounded-lg border border-white/20"
+                    class="inline-flex items-center gap-1 text-xs font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20"
                   >
                     <Clock class="w-3.5 h-3.5" />
                     <span>Lelang Telah Berakhir</span>
@@ -873,7 +877,12 @@ import {
   HelpCircle,
   Award,
   FileSignature,
-  TrendingUp
+  TrendingUp,
+  HardHat,
+  Pickaxe,
+  Flame,
+  Zap,
+  Package
 } from 'lucide-vue-next';
 import { legalStore, formatIDR, calculateDaysRemaining } from '../stores/legalStore';
 import { useDebouncedRef } from '../utils/debounce';
@@ -902,25 +911,25 @@ const selectedClarToAnswer = ref(null);
 
 // Sektor Definitions
 const sectorOptions = [
-  { value: 'KONSTRUKSI', label: 'Konstruksi & Infrastruktur', icon: '🏗️' },
-  { value: 'PERTAMBANGAN', label: 'Pertambangan & Mineral', icon: '⛏️' },
-  { value: 'MIGAS', label: 'Minyak & Gas Bumi', icon: '🛢️' },
-  { value: 'ENERGI', label: 'Energi & Ketenagalistrikan', icon: '⚡' },
-  { value: 'UMUM', label: 'Pengadaan Barang & Jasa Umum', icon: '📦' }
+  { value: 'KONSTRUKSI', label: 'Konstruksi & Infrastruktur', icon: HardHat },
+  { value: 'PERTAMBANGAN', label: 'Pertambangan & Mineral', icon: Pickaxe },
+  { value: 'MIGAS', label: 'Minyak & Gas Bumi', icon: Flame },
+  { value: 'ENERGI', label: 'Energi & Ketenagalistrikan', icon: Zap },
+  { value: 'UMUM', label: 'Pengadaan Barang & Jasa Umum', icon: Package }
 ];
 
 function getSectorBadge(sectorKey) {
   switch (sectorKey) {
     case 'KONSTRUKSI':
-      return { label: 'Konstruksi', icon: '🏗️', badgeClass: 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5]' };
+      return { label: 'Konstruksi', icon: HardHat, badgeClass: 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5]' };
     case 'PERTAMBANGAN':
-      return { label: 'Pertambangan', icon: '⛏️', badgeClass: 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]' };
+      return { label: 'Pertambangan', icon: Pickaxe, badgeClass: 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]' };
     case 'MIGAS':
-      return { label: 'Minyak & Gas', icon: '🛢️', badgeClass: 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3]' };
+      return { label: 'Minyak & Gas', icon: Flame, badgeClass: 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3]' };
     case 'ENERGI':
-      return { label: 'Energi Listrik', icon: '⚡', badgeClass: 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5]' };
+      return { label: 'Energi Listrik', icon: Zap, badgeClass: 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5]' };
     default:
-      return { label: 'Pengadaan Umum', icon: '📦', badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]' };
+      return { label: 'Pengadaan Umum', icon: Package, badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]' };
   }
 }
 

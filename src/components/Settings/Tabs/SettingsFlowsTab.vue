@@ -1,62 +1,60 @@
 <template>
-  <div class="space-y-6">
-    <!-- Info banner -->
-    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-      <div class="flex items-start gap-3.5">
-        <div class="w-11 h-11 rounded-xl bg-amber-100 text-[#92400E] flex items-center justify-center shrink-0 mt-0.5 border border-amber-200">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-          </svg>
+  <div class="space-y-4">
+    <!-- Info banner (Tactile Precision UI: border-first, shadow-none) -->
+    <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-md bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 border border-[#BFDBFE]">
+          <GitCommit class="w-4.5 h-4.5 text-[#2563EB]" />
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h3 class="text-sm font-bold text-slate-900">Konfigurasi Alur Persetujuan Bertingkat (Chain Approval Engine)</h3>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-200/60 text-amber-900 border border-amber-300">
+            <h3 class="text-xs sm:text-sm font-semibold text-[#0F172A]">Konfigurasi Alur Persetujuan Bertingkat (Chain Approval Engine)</h3>
+            <span class="erp-badge erp-badge-primary">
               Multi-Tier Routing
             </span>
           </div>
-          <p class="text-xs text-slate-600 mt-1 max-w-3xl leading-relaxed">
-            Konfigurasi alur otorisasi berjenjang (Maker ➔ Checker ➔ Approver) untuk seluruh modul operasional hukum: Permintaan Legal, Kontrak, Tender, Opini Hukum, dan Sengketa. Dokumen akan diteruskan otomatis berdasarkan hierarki peran yang ditentukan.
+          <p class="text-[11px] text-[#64748B] mt-0.5 max-w-3xl leading-relaxed">
+            Konfigurasi alur otorisasi berjenjang (Maker ➔ Checker ➔ Approver) untuk seluruh modul operasional hukum: Permintaan Legal, Kontrak, Tender, Opini Hukum, dan Sengketa.
           </p>
         </div>
       </div>
       <button
         @click="$emit('open-add-flow-modal')"
-        class="px-4 py-2.5 rounded-xl bg-[#4338CA] hover:bg-indigo-700 text-white font-bold text-xs transition cursor-pointer flex items-center gap-2 shadow-xs shrink-0 self-start md:self-center"
+        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-xs transition cursor-pointer shadow-2xs shrink-0 self-start md:self-center whitespace-nowrap"
       >
-        <Plus class="w-4 h-4 stroke-[2.5]" />
-        <span>+ Tambah Alur Baru</span>
+        <Plus class="w-3.5 h-3.5" />
+        <span>Tambah Alur Baru</span>
       </button>
     </div>
 
-    <!-- Filters & Search Bar -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+    <!-- Filters & Search Bar (Tactile Control Bar) -->
+    <div class="bg-white p-3 rounded-lg border border-[#E2E8F0] shadow-none flex flex-col sm:flex-row items-center justify-between gap-2.5">
       <div class="relative w-full sm:w-80">
-        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search class="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Cari alur, modul, atau peran..."
-          class="w-full pl-9 pr-4 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          class="form-input form-input-search"
         />
       </div>
 
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <select
           v-model="filterModule"
-          class="flex-1 sm:flex-none py-2 px-3 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer font-medium text-slate-800"
+          class="form-select sm:w-44"
         >
           <option value="ALL">Semua Modul</option>
           <option value="requests">Permintaan Legal</option>
           <option value="contracts">Manajemen Kontrak</option>
-          <option value="tenders">Tender & Pengadaan</option>
+          <option value="tenders">Tender &amp; Pengadaan</option>
           <option value="opinions">Opini Hukum</option>
-          <option value="disputes">Dispute & Litigasi</option>
+          <option value="disputes">Dispute &amp; Litigasi</option>
         </select>
 
         <select
           v-model="filterStatus"
-          class="flex-1 sm:flex-none py-2 px-3 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer font-medium text-slate-800"
+          class="form-select sm:w-36"
         >
           <option value="ALL">Semua Status</option>
           <option value="ACTIVE">Hanya Aktif</option>
@@ -65,38 +63,41 @@
       </div>
     </div>
 
-    <!-- Approval Flows Grid -->
-    <div v-if="filteredFlows.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    <!-- Approval Flows Grid (Tactile Cards) -->
+    <div v-if="filteredFlows.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-3">
       <div
         v-for="flow in filteredFlows"
         :key="flow.id"
-        class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between hover:border-indigo-200 transition-all"
+        class="bg-white border border-[#E2E8F0] rounded-lg p-4 shadow-none flex flex-col justify-between hover:border-[#CBD5E1] transition-colors"
       >
-        <div class="space-y-4">
+        <div class="space-y-3">
           <!-- Flow Card Header -->
-          <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
-            <div class="flex items-start gap-3">
-              <span class="text-2xl p-2 rounded-xl bg-slate-50 border border-slate-100 shrink-0">{{ flow.icon || '⚖️' }}</span>
-              <div>
+          <div class="flex items-start justify-between gap-3 border-b border-[#F1F5F9] pb-3">
+            <div class="flex items-start gap-3 min-w-0">
+              <!-- Uniform SVG Lucide Icon Node (No Emoji) -->
+              <div class="w-9 h-9 rounded-md bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+                <component :is="getFlowIcon(flow.icon || flow.module)" class="w-4.5 h-4.5 text-[#2563EB]" />
+              </div>
+              <div class="min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <h4 class="text-sm font-bold text-slate-900">{{ flow.name }}</h4>
-                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                  <h4 class="text-xs sm:text-sm font-semibold text-[#0F172A] truncate">{{ flow.name }}</h4>
+                  <span class="erp-badge erp-badge-neutral text-[10px]">
                     {{ flow.category || flow.module || 'Umum' }}
                   </span>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                <p class="text-[11px] text-[#64748B] mt-0.5 line-clamp-2 leading-relaxed">
                   {{ flow.description }}
                 </p>
                 <!-- Metadata Badges -->
-                <div class="flex items-center gap-2 mt-2 flex-wrap text-[10px]">
-                  <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold border border-slate-200 flex items-center gap-1">
-                    <Clock class="w-3 h-3 text-slate-500" />
-                    SLA Global: {{ flow.slaDays || 3 }} Hari
+                <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px]">
+                  <span class="erp-badge erp-badge-neutral font-mono-tabular">
+                    <Clock class="w-3 h-3 text-[#64748B]" />
+                    SLA: {{ flow.slaDays || 3 }} Hari
                   </span>
-                  <span v-if="flow.threshold && flow.threshold > 0" class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-semibold border border-amber-200">
-                    Threshold: &gt; {{ formatThreshold(flow.threshold) }}
+                  <span v-if="flow.threshold && flow.threshold > 0" class="erp-badge erp-badge-warning font-mono-tabular">
+                    Ambang Batas: &gt; {{ formatThreshold(flow.threshold) }}
                   </span>
-                  <span v-else class="px-2 py-0.5 rounded-full bg-slate-50 text-slate-500 font-medium border border-slate-200">
+                  <span v-else class="erp-badge erp-badge-neutral font-mono-tabular">
                     Tanpa Ambang Batas
                   </span>
                 </div>
@@ -104,16 +105,15 @@
             </div>
 
             <!-- Status Switch -->
-            <div class="shrink-0 flex flex-col items-end gap-1.5">
+            <div class="shrink-0 flex flex-col items-end gap-1">
               <span
-                :class="flow.active ? 'bg-[#DCFCE7] text-[#166534] border border-[#BBF7D0]' : 'bg-slate-100 text-slate-500 border border-slate-200'"
-                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
+                :class="flow.active ? 'erp-badge erp-badge-success' : 'erp-badge erp-badge-neutral'"
               >
                 {{ flow.active ? 'AKTIF' : 'NONAKTIF' }}
               </span>
               <button
                 @click="legalStore.toggleApprovalFlowStatus(flow.id)"
-                class="text-[10px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer"
+                class="text-[11px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline cursor-pointer"
               >
                 {{ flow.active ? 'Nonaktifkan' : 'Aktifkan' }}
               </button>
@@ -121,28 +121,24 @@
           </div>
 
           <!-- Flow Stepper Visualization -->
-          <div class="space-y-2">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-              <span>Urutan Persetujuan Bertingkat ({{ (flow.steps || []).length }} Tahap):</span>
-              <span class="text-slate-500 font-medium">Maker ➔ Checker ➔ Approver</span>
+          <div class="space-y-1.5">
+            <div class="text-[10px] font-semibold text-[#64748B] uppercase tracking-wider flex items-center justify-between">
+              <span>Rantai Persetujuan ({{ (flow.steps || []).length }} Tahap):</span>
+              <span class="text-[#64748B] font-mono-tabular">Maker ➔ Checker ➔ Approver</span>
             </div>
 
-            <div class="flex items-center flex-wrap gap-2 pt-1">
+            <div class="flex items-center flex-wrap gap-1.5 pt-0.5">
               <template v-for="(step, sIdx) in (flow.steps || [])" :key="step.level">
-                <div class="flex items-center gap-2">
-                  <div
-                    class="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 px-3 py-2 rounded-xl flex flex-col min-w-[130px] transition"
-                  >
-                    <div class="flex items-center justify-between gap-1">
-                      <span class="text-[9px] text-slate-500 font-bold">Tahap {{ step.level }}</span>
-                      <span class="text-[9px] text-slate-400">{{ step.slaDays || 1 }}d SLA</span>
+                <div class="flex items-center gap-1.5">
+                  <div class="bg-[#F8FAFC] border border-[#E2E8F0] px-2.5 py-1.5 rounded-md flex flex-col min-w-[120px]">
+                    <div class="flex items-center justify-between gap-1 text-[10px] text-[#64748B] font-mono-tabular">
+                      <span>Tahap {{ step.level }}</span>
+                      <span>{{ step.slaDays || 1 }}d SLA</span>
                     </div>
-                    <span class="text-[11px] font-bold text-slate-900 truncate" :title="step.name">{{ step.name }}</span>
-                    <span class="text-[10px] font-extrabold text-[#4338CA] mt-0.5">{{ step.roleRequired }}</span>
+                    <span class="text-xs font-semibold text-[#0F172A] truncate mt-0.5" :title="step.name">{{ step.name }}</span>
+                    <span class="text-[10px] font-bold font-mono-tabular text-[#2563EB] mt-0.5">{{ step.roleRequired }}</span>
                   </div>
-                  <svg v-if="sIdx < (flow.steps || []).length - 1" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
+                  <ChevronRight v-if="sIdx < (flow.steps || []).length - 1" class="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
                 </div>
               </template>
             </div>
@@ -150,15 +146,15 @@
         </div>
 
         <!-- Flow Card Footer -->
-        <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-          <div class="text-[10px] text-slate-400">
-            Terakhir diubah: <span class="font-medium text-slate-600">{{ flow.lastUpdated || '2026-10-15' }}</span>
+        <div class="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between">
+          <div class="text-[10px] text-[#64748B] font-mono-tabular">
+            Terakhir diubah: <span class="font-medium text-[#0F172A]">{{ flow.lastUpdated || '2026-10-15' }}</span>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
             <button
               @click="confirmDeleteFlow(flow)"
-              class="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 text-xs font-semibold rounded-lg transition cursor-pointer flex items-center gap-1"
+              class="px-2 py-1 text-[#B91C1C] hover:bg-[#FEE2E2] text-xs font-semibold rounded-md border border-transparent hover:border-[#FCA5A5] transition cursor-pointer flex items-center gap-1"
               title="Hapus Alur Persetujuan"
             >
               <Trash2 class="w-3.5 h-3.5" />
@@ -167,7 +163,7 @@
 
             <button
               @click="$emit('open-edit-flow-modal', flow)"
-              class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg transition cursor-pointer flex items-center gap-1.5 shadow-2xs"
+              class="px-2.5 py-1 bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#2563EB] border border-[#BFDBFE] text-xs font-semibold rounded-md transition cursor-pointer flex items-center gap-1"
             >
               <Edit3 class="w-3.5 h-3.5" />
               <span>Edit Alur</span>
@@ -178,19 +174,19 @@
     </div>
 
     <!-- Empty State -->
-    <div v-else class="bg-white border border-slate-200 rounded-2xl p-12 text-center space-y-3">
-      <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-        <Search class="w-6 h-6" />
+    <div v-else class="bg-white border border-[#E2E8F0] rounded-lg p-10 text-center space-y-2.5">
+      <div class="w-10 h-10 rounded-md bg-[#F1F5F9] text-[#64748B] flex items-center justify-center mx-auto border border-[#E2E8F0]">
+        <Search class="w-5 h-5" />
       </div>
-      <h4 class="text-sm font-bold text-slate-900">Tidak ada alur persetujuan yang cocok</h4>
-      <p class="text-xs text-slate-500 max-w-sm mx-auto">
-        Silakan ubah filter kata kunci pencarian atau buat alur persetujuan baru untuk modul hukum yang diinginkan.
+      <h4 class="text-xs sm:text-sm font-semibold text-[#0F172A]">Tidak ada alur persetujuan yang cocok</h4>
+      <p class="text-xs text-[#64748B] max-w-sm mx-auto">
+        Silakan ubah kata kunci pencarian atau buat konfigurasi alur persetujuan baru.
       </p>
       <button
         @click="$emit('open-add-flow-modal')"
-        class="px-4 py-2 bg-[#4338CA] text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition cursor-pointer shadow-xs inline-flex items-center gap-1.5"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] text-white text-xs font-semibold rounded-md hover:bg-[#1D4ED8] transition cursor-pointer"
       >
-        <Plus class="w-4 h-4 stroke-[2.5]" />
+        <Plus class="w-3.5 h-3.5" />
         <span>Buat Alur Baru</span>
       </button>
     </div>
@@ -199,7 +195,26 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Plus, Search, Clock, Edit3, Trash2 } from 'lucide-vue-next';
+import {
+  Plus,
+  Search,
+  Clock,
+  Edit3,
+  Trash2,
+  ChevronRight,
+  ChevronDown,
+  GitCommit,
+  Scale,
+  FileText,
+  ClipboardList,
+  Target,
+  MessageSquareQuote,
+  Handshake,
+  Gavel,
+  ShieldCheck,
+  FileSpreadsheet,
+  Workflow
+} from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const emit = defineEmits(['open-edit-flow-modal', 'open-add-flow-modal']);
@@ -234,6 +249,36 @@ const filteredFlows = computed(() => {
     return matchQuery && matchModule && matchStatus;
   });
 });
+
+// Helper to resolve icon from emoji, key, or module to clean Lucide SVG Icon
+function getFlowIcon(iconOrModule) {
+  if (!iconOrModule) return Scale;
+  
+  // Emoji mappings
+  if (iconOrModule === '⚖️') return Scale;
+  if (iconOrModule === '📝') return FileText;
+  if (iconOrModule === '🎯') return Target;
+  if (iconOrModule === '📑') return FileText;
+  if (iconOrModule === '🤝') return Handshake;
+  if (iconOrModule === '🎓') return MessageSquareQuote;
+  if (iconOrModule === '🛡️') return ShieldCheck;
+  if (iconOrModule === '🔍') return Search;
+
+  // Key / Module mappings
+  const key = String(iconOrModule).toLowerCase();
+  if (key === 'scale' || key === 'requests') return Scale;
+  if (key === 'filetext' || key === 'contracts') return FileText;
+  if (key === 'target' || key === 'tenders') return Target;
+  if (key === 'messagesquarequote' || key === 'opinions') return MessageSquareQuote;
+  if (key === 'handshake' || key === 'disputes') return Handshake;
+  if (key === 'gavel') return Gavel;
+  if (key === 'clipboardlist') return ClipboardList;
+  if (key === 'shieldcheck') return ShieldCheck;
+  if (key === 'filespreadsheet') return FileSpreadsheet;
+  if (key === 'gitcommit') return GitCommit;
+
+  return Workflow || Scale;
+}
 
 function formatThreshold(val) {
   if (!val) return 'Rp 0';

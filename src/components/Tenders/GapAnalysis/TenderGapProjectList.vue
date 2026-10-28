@@ -77,9 +77,9 @@
           <span
             v-if="tender.sector"
             :class="getSectorBadge(tender.sector).badgeClass"
-            class="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1"
+            class="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1.5"
           >
-            <span>{{ getSectorBadge(tender.sector).icon }}</span>
+            <component :is="getSectorBadge(tender.sector).icon" class="w-3 h-3" />
             <span>{{ getSectorBadge(tender.sector).label }}</span>
           </span>
 
@@ -110,7 +110,16 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Milestone, Search, ChevronRight } from 'lucide-vue-next';
+import {
+  Milestone,
+  Search,
+  ChevronRight,
+  HardHat,
+  Pickaxe,
+  Flame,
+  Zap,
+  Package
+} from 'lucide-vue-next';
 
 const props = defineProps({
   tenders: {
@@ -145,15 +154,15 @@ function getTenderMissingDocs(t) {
 function getSectorBadge(sectorKey) {
   switch (sectorKey) {
     case 'KONSTRUKSI':
-      return { label: 'Konstruksi', icon: '🏗️', badgeClass: 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5]' };
+      return { label: 'Konstruksi', icon: HardHat, badgeClass: 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5]' };
     case 'PERTAMBANGAN':
-      return { label: 'Pertambangan', icon: '⛏️', badgeClass: 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]' };
+      return { label: 'Pertambangan', icon: Pickaxe, badgeClass: 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]' };
     case 'MIGAS':
-      return { label: 'Minyak & Gas', icon: '🛢️', badgeClass: 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3]' };
+      return { label: 'Minyak & Gas', icon: Flame, badgeClass: 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3]' };
     case 'ENERGI':
-      return { label: 'Energi Listrik', icon: '⚡', badgeClass: 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5]' };
+      return { label: 'Energi Listrik', icon: Zap, badgeClass: 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5]' };
     default:
-      return { label: 'Pengadaan Umum', icon: '📦', badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]' };
+      return { label: 'Pengadaan Umum', icon: Package, badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]' };
   }
 }
 </script>

@@ -258,18 +258,20 @@
             <span class="text-[#475569]">Tampilkan:</span>
             <button
               @click="activeViewSection = 'action-list'"
-              :class="activeViewSection === 'action-list' ? 'bg-[#1E293B] text-white font-bold' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
+              :class="activeViewSection === 'action-list' ? 'bg-[#2563EB] text-white font-bold' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
               class="px-3 py-1 rounded-md transition cursor-pointer flex items-center gap-1.5"
             >
-              <FileWarning class="w-3.5 h-3.5 text-rose-400" />
+              <FileWarning class="w-3.5 h-3.5 text-rose-300" v-if="activeViewSection === 'action-list'" />
+              <FileWarning class="w-3.5 h-3.5 text-rose-500" v-else />
               <span>Daftar Dokumen Kurang ({{ filteredMissingList.length }})</span>
             </button>
             <button
               @click="activeViewSection = 'matrix'"
-              :class="activeViewSection === 'matrix' ? 'bg-[#1E293B] text-white font-bold' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
+              :class="activeViewSection === 'matrix' ? 'bg-[#2563EB] text-white font-bold' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
               class="px-3 py-1 rounded-md transition cursor-pointer flex items-center gap-1.5"
             >
-              <LayoutGrid class="w-3.5 h-3.5 text-[#6366F1]" />
+              <LayoutGrid class="w-3.5 h-3.5 text-white" v-if="activeViewSection === 'matrix'" />
+              <LayoutGrid class="w-3.5 h-3.5 text-[#2563EB]" v-else />
               <span>Matriks Pemetaan Lintas Tender</span>
             </button>
             <button

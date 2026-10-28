@@ -54,20 +54,20 @@
     </div>
 
     <!-- Filter and Search -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row gap-3">
-      <div class="flex-1 relative">
-        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row gap-3 items-center">
+      <div class="flex-1 relative w-full">
+        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Cari nama izin, nomor izin, atau instansi penerbit..."
-          class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500"
+          class="form-input form-input-search"
         />
       </div>
-      <div class="w-full md:w-48">
+      <div class="w-full md:w-52">
         <select
           v-model="filterStatus"
-          class="w-full py-2 px-3 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none bg-white"
+          class="form-select"
         >
           <option value="ALL">Semua Status</option>
           <option value="ACTIVE">Aktif (Valid)</option>

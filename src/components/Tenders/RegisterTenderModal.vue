@@ -202,11 +202,11 @@ const props = defineProps({
 const emit = defineEmits(['close', 'submit']);
 
 const sectorOptions = [
-  { value: 'KONSTRUKSI', label: 'Konstruksi & Infrastruktur', icon: '🏗️' },
-  { value: 'PERTAMBANGAN', label: 'Pertambangan & Mineral', icon: '⛏️' },
-  { value: 'MIGAS', label: 'Minyak & Gas Bumi', icon: '🛢️' },
-  { value: 'ENERGI', label: 'Energi & Ketenagalistrikan', icon: '⚡' },
-  { value: 'UMUM', label: 'Pengadaan Barang & Jasa Umum', icon: '📦' }
+  { value: 'KONSTRUKSI', label: 'Konstruksi & Infrastruktur' },
+  { value: 'PERTAMBANGAN', label: 'Pertambangan & Mineral' },
+  { value: 'MIGAS', label: 'Minyak & Gas Bumi' },
+  { value: 'ENERGI', label: 'Energi & Ketenagalistrikan' },
+  { value: 'UMUM', label: 'Pengadaan Barang & Jasa Umum' }
 ];
 
 const defaultForm = () => ({

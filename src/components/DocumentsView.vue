@@ -89,13 +89,14 @@
       <button
         @click="activeVaultTab = 'ALL'"
         :class="activeVaultTab === 'ALL'
-          ? 'bg-[#1E293B] text-white shadow-sm border border-[#C7D2FE]'
-          : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60'"
+          ? 'bg-[#2563EB] text-white shadow-sm border border-[#2563EB]'
+          : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60 border border-transparent'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer"
       >
-        <Archive class="w-4 h-4 text-[#6366F1]" />
+        <Archive class="w-4 h-4 text-white" v-if="activeVaultTab === 'ALL'" />
+        <Archive class="w-4 h-4 text-[#2563EB]" v-else />
         <span>Semua Dokumen Vault</span>
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#4338CA] text-[#6366F1]">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" :class="activeVaultTab === 'ALL' ? 'bg-white/20 text-white' : 'bg-blue-50 text-[#2563EB]'">
           {{ totalAllVaultCount }}
         </span>
       </button>
@@ -103,13 +104,14 @@
       <button
         @click="activeVaultTab = 'KUALIFIKASI'"
         :class="activeVaultTab === 'KUALIFIKASI'
-          ? 'bg-[#1E293B] text-white shadow-sm border border-[#C7D2FE]'
-          : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60'"
+          ? 'bg-[#2563EB] text-white shadow-sm border border-[#2563EB]'
+          : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60 border border-transparent'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer"
       >
-        <FileCheck2 class="w-4 h-4 text-[#6366F1]" />
+        <FileCheck2 class="w-4 h-4 text-white" v-if="activeVaultTab === 'KUALIFIKASI'" />
+        <FileCheck2 class="w-4 h-4 text-[#2563EB]" v-else />
         <span>Bank Dokumen Kualifikasi Lelang</span>
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#4338CA] text-[#6366F1]">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" :class="activeVaultTab === 'KUALIFIKASI' ? 'bg-white/20 text-white' : 'bg-blue-50 text-[#2563EB]'">
           {{ vaultDocs.length }}
         </span>
       </button>
@@ -117,13 +119,14 @@
       <button
         @click="activeVaultTab = 'KORPORASI'"
         :class="activeVaultTab === 'KORPORASI'
-          ? 'bg-[#1E293B] text-white shadow-sm border border-[#C7D2FE]'
-          : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60'"
+          ? 'bg-[#2563EB] text-white shadow-sm border border-[#2563EB]'
+          : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60 border border-transparent'"
         class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer"
       >
-        <Building2 class="w-4 h-4 text-[#6366F1]" />
+        <Building2 class="w-4 h-4 text-white" v-if="activeVaultTab === 'KORPORASI'" />
+        <Building2 class="w-4 h-4 text-[#2563EB]" v-else />
         <span>Arsip Dokumen Legal Korporasi</span>
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-[#0F172A]">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" :class="activeVaultTab === 'KORPORASI' ? 'bg-white/20 text-white' : 'bg-slate-200 text-[#0F172A]'">
           {{ corporateDocs.length }}
         </span>
       </button>
@@ -134,12 +137,12 @@
       <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
         <!-- Search Input -->
         <div class="md:col-span-5 relative">
-          <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Cari nama dokumen, kode, nomor izin, instansi, atau lokasi..."
-            class="w-full pl-9 pr-4 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-input form-input-search"
           />
           <button
             v-if="searchQuery"
@@ -154,7 +157,7 @@
         <div class="md:col-span-4">
           <select
             v-model="filterCategory"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Kategori Dokumen</option>
             <option value="Legal Administrasi">Legal Administrasi (NIB, Akta, AHU)</option>
@@ -171,7 +174,7 @@
         <div class="md:col-span-3">
           <select
             v-model="filterStatus"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Status Validitas</option>
             <option value="VALID">Valid / Berlaku</option>
@@ -460,6 +463,7 @@ import {
   Clock,
   Plus,
   Pencil,
+  ChevronDown,
   Link2,
   Trash2,
   FolderSearch

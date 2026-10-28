@@ -71,15 +71,15 @@
 
     <!-- Filters & Search Toolbar -->
     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
         <!-- Search Input -->
         <div class="md:col-span-5 relative">
-          <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Cari perihal, nomor tiket, atau nama pemohon..."
-            class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="form-input form-input-search"
           />
         </div>
 
@@ -87,9 +87,9 @@
         <div class="md:col-span-3">
           <select
             v-model="filterStatus"
-            class="w-full py-2 px-3 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer font-medium text-slate-800"
+            class="form-select"
           >
-            <option value="ALL">Semua Status Permohonan</option>
+            <option value="ALL">Semua Status ({{ requests.length }})</option>
             <option value="PENDING_APPROVAL">Menunggu Approval (Pending)</option>
             <option value="SUBMITTED">Baru Diajukan (Submitted)</option>
             <option value="IN_REVIEW">Sedang Ditelaah (In Review)</option>
@@ -105,7 +105,7 @@
         <div class="md:col-span-2">
           <select
             v-model="filterUrgency"
-            class="w-full py-2 px-3 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer"
+            class="form-select"
           >
             <option value="ALL">Semua Urgensi</option>
             <option value="HIGH">Tinggi (High)</option>
@@ -118,7 +118,7 @@
         <div class="md:col-span-2">
           <select
             v-model="filterType"
-            class="w-full py-2 px-3 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white cursor-pointer"
+            class="form-select"
           >
             <option value="ALL">Semua Jenis</option>
             <option value="Contract Review">Contract Review</option>
@@ -333,7 +333,8 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
-  Clock
+  Clock,
+  ChevronDown
 } from 'lucide-vue-next';
 import { legalStore, calculateDaysRemaining } from '../stores/legalStore';
 

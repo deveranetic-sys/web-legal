@@ -18,16 +18,19 @@
       <!-- Page Size Selector -->
       <div class="flex items-center gap-1.5 ml-2 pl-2 border-l border-[#E2E8F0]">
         <label for="page-size-select" class="text-slate-400 text-[11px]">Baris:</label>
-        <select
-          id="page-size-select"
-          :value="pageSize"
-          @change="changePageSize($event.target.value)"
-          class="bg-slate-50 border border-[#E2E8F0] rounded-lg px-2 py-1 text-xs font-semibold text-[#0F172A] outline-none focus:ring-1 focus:ring-[#6366F1] cursor-pointer"
-        >
-          <option v-for="size in pageSizeOptions" :key="size" :value="size">
-            {{ size }}
-          </option>
-        </select>
+        <div class="relative">
+          <select
+            id="page-size-select"
+            :value="pageSize"
+            @change="changePageSize($event.target.value)"
+            class="bg-slate-50 border border-[#E2E8F0] rounded-lg pl-2 pr-6 py-1 text-xs font-semibold text-[#0F172A] outline-none focus:ring-1 focus:ring-[#6366F1] cursor-pointer appearance-none"
+          >
+            <option v-for="size in pageSizeOptions" :key="size" :value="size">
+              {{ size }}
+            </option>
+          </select>
+          <ChevronDown class="w-3 h-3 text-[#64748B] absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        </div>
       </div>
     </div>
 
@@ -107,6 +110,7 @@ import { computed } from 'vue';
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   ChevronsLeft,
   ChevronsRight
 } from 'lucide-vue-next';

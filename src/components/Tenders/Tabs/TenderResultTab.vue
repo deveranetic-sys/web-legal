@@ -139,11 +139,11 @@ const defaultLessons = [
 
 function getSectorBadge(sectorKey) {
   switch (sectorKey) {
-    case 'KONSTRUKSI': return { label: 'Konstruksi', icon: '🏗️', badgeClass: 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5]' };
-    case 'PERTAMBANGAN': return { label: 'Pertambangan', icon: '⛏️', badgeClass: 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]' };
-    case 'MIGAS': return { label: 'Minyak & Gas', icon: '🛢️', badgeClass: 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3]' };
-    case 'ENERGI': return { label: 'Energi Listrik', icon: '⚡', badgeClass: 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5]' };
-    default: return { label: 'Pengadaan Umum', icon: '📦', badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]' };
+    case 'KONSTRUKSI': return { label: 'Konstruksi & Infrastruktur', badgeClass: 'bg-[#FFF7ED] text-[#C2410C] border border-[#FFEDD5]' };
+    case 'PERTAMBANGAN': return { label: 'Pertambangan & Mineral', badgeClass: 'bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]' };
+    case 'MIGAS': return { label: 'Minyak & Gas Bumi', badgeClass: 'bg-[#FDF2F8] text-[#9D174D] border border-[#FCE7F3]' };
+    case 'ENERGI': return { label: 'Energi & Ketenagalistrikan', badgeClass: 'bg-[#ECFDF5] text-[#047857] border border-[#D1FAE5]' };
+    default: return { label: 'Pengadaan Umum', badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]' };
   }
 }
 

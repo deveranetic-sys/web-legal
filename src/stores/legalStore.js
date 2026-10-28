@@ -10,12 +10,25 @@ import {
 // Initialize storage and load hydrated dataset in a single pass
 const initialData = storage.initStorage();
 
-// Normalize approvalFlows: ensure every flow has steps, icon, module, slaDays, etc.
+// Normalize approvalFlows: ensure every flow has steps, clean Lucide icon, module, slaDays, etc.
 if (Array.isArray(initialData.approvalFlows)) {
+  const emojiToIcon = {
+    '⚖️': 'Scale',
+    '📝': 'FileText',
+    '🎯': 'Target',
+    '📑': 'FileText',
+    '🤝': 'Handshake',
+    '🎓': 'MessageSquareQuote',
+    '🛡️': 'ShieldCheck'
+  };
+
   initialData.approvalFlows = initialData.approvalFlows.map(flow => {
     const seed = initialApprovalFlows.find(s => s.id === flow.id);
     if (seed && (!flow.steps || !flow.steps.length)) {
-      return { ...seed, ...flow, steps: JSON.parse(JSON.stringify(seed.steps)) };
+      flow = { ...seed, ...flow, steps: JSON.parse(JSON.stringify(seed.steps)) };
+    }
+    if (flow.icon && emojiToIcon[flow.icon]) {
+      flow.icon = emojiToIcon[flow.icon];
     }
     if (flow.steps && flow.steps.length) {
       flow.steps.forEach(st => {
@@ -24,6 +37,30 @@ if (Array.isArray(initialData.approvalFlows)) {
     }
     return flow;
   });
+}
+
+// Normalize masterSectors: ensure clean Lucide icon names instead of emojis
+if (Array.isArray(initialData.masterSectors)) {
+  const sectorEmojiToIcon = {
+    '🏗️': 'HardHat',
+    '⛏️': 'Pickaxe',
+    '🛢️': 'Flame',
+    '⚡': 'Zap',
+    '📦': 'Package',
+    '🏢': 'Building2',
+    '📡': 'Radio',
+    '🏭': 'Factory',
+    '🔧': 'Wrench',
+    '⛰️': 'Mountain'
+  };
+
+  initialData.masterSectors = initialData.masterSectors.map(sec => {
+    if (sec.icon && sectorEmojiToIcon[sec.icon]) {
+      sec.icon = sectorEmojiToIcon[sec.icon];
+    }
+    return sec;
+  });
+  storage.set(storage.KEYS.MASTER_SECTORS, initialData.masterSectors);
 }
 
 // Normalize requests: ensure every request has approvalChain and currentApprovalLevel
@@ -2262,7 +2299,7 @@ export const legalStore = {
       id: newId,
       code,
       name: payload.name,
-      icon: payload.icon || '🏢',
+      icon: payload.icon || 'Building2',
       badgeClass: payload.badgeClass || 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]',
       regulatoryBasis: payload.regulatoryBasis || 'Regulasi Terkait',
       defaultContractType: payload.defaultContractType || 'Perjanjian Kerja Sama',

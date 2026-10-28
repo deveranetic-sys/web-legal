@@ -199,8 +199,7 @@
           </button>
           <button
             type="submit"
-            class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold cursor-pointer shadow-md transition text-xs"
-            :class="isEdit ? 'bg-indigo-600 hover:bg-indigo-700' : ''"
+            class="px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold cursor-pointer shadow-xs transition text-xs"
           >
             {{ isEdit ? 'Simpan Perubahan' : 'Simpan Surat' }}
           </button>

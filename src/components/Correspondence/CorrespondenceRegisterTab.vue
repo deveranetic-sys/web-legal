@@ -46,19 +46,19 @@
     <!-- Filter and Search Bar (Compact) -->
     <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row gap-2 items-stretch sm:items-center justify-between">
       <div class="flex-1 relative">
-        <Search class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           v-model="corrSearch"
           type="text"
           placeholder="Cari nomor surat, perihal, pihak terkait, atau lampiran..."
-          class="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
+          class="form-input form-input-sm form-input-search"
         />
       </div>
 
       <div class="flex items-center gap-1.5 shrink-0">
         <select
           v-model="filterDirection"
-          class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white text-slate-700 outline-none font-semibold"
+          class="form-select form-select-sm"
         >
           <option value="ALL">Semua Arah</option>
           <option value="MASUK">Surat Masuk</option>
@@ -67,7 +67,7 @@
 
         <select
           v-model="filterStatus"
-          class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white text-slate-700 outline-none font-semibold"
+          class="form-select form-select-sm"
         >
           <option value="ALL">Semua Status</option>
           <option value="SENT">SENT</option>

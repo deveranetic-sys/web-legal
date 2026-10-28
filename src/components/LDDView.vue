@@ -1,52 +1,62 @@
 <template>
   <div class="space-y-6">
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+    <div class="pb-4 border-b border-[#E2E8F0] space-y-3.5">
+      <!-- Tulisan Diatas -->
       <div>
         <div class="flex items-center gap-2">
-          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#DCFCE7] text-[#166534]">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#DCFCE7] text-[#166534] border border-[#BBF7D0]">
             Uji Tuntas Hukum & Transaksi Korporasi
           </span>
-          <span class="text-xs text-slate-500 font-medium">M&A, Ekuitas & Proyek Investasi</span>
+          <span class="text-xs text-[#64748B] font-medium">M&A, Ekuitas & Proyek Investasi</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight mt-1">
           Legal Due Diligence (LDD Workspace)
         </h1>
-        <p class="text-sm text-slate-500 mt-1">
+        <p class="text-xs sm:text-sm text-[#475569] mt-1 max-w-3xl leading-relaxed">
           Pemeriksaan komprehensif kepatuhan aspek korporasi, perizinan, aset, kontrak material, sengketa, dan ketenagakerjaan target.
         </p>
       </div>
 
-      <!-- Project Switcher & Actions -->
-      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-wrap sm:flex-nowrap">
-        <div class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-1.5 shadow-2xs">
-          <FolderKanban class="w-4 h-4 text-emerald-600" />
-          <span class="text-xs text-slate-500 font-medium">Proyek:</span>
-          <select
-            v-model="selectedProjectId"
-            class="bg-transparent text-xs font-bold text-slate-800 outline-none cursor-pointer"
-          >
-            <option v-for="item in lddList" :key="item.id" :value="item.id">
-              {{ item.projectName || item.project }}
-            </option>
-          </select>
+      <!-- Controls: Dropdown dan Dua Button Diletakkan di Ujung Bawah Tulisan Diatas -->
+      <div class="flex flex-wrap items-center gap-2.5 pt-0.5">
+        <!-- Project Selector (Input Group: Prefix Terpisah, Zero Overlap) -->
+        <div class="flex items-center rounded-lg border border-[#CBD5E1] bg-white h-[38px] shadow-2xs hover:border-[#94A3B8] focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-500/15 transition overflow-hidden w-auto min-w-[260px] sm:min-w-[340px] md:min-w-[420px] max-w-[560px]">
+          <div class="flex items-center gap-1.5 px-3 bg-[#F8FAFC] border-r border-[#E2E8F0] h-full text-[#64748B] text-xs font-semibold shrink-0 select-none">
+            <FolderKanban class="w-4 h-4 text-[#2563EB]" />
+            <span>Proyek:</span>
+          </div>
+          <div class="relative flex items-center flex-1 min-w-0 h-full">
+            <select
+              v-model="selectedProjectId"
+              class="w-full h-full bg-transparent text-xs font-bold text-[#0F172A] pl-3 pr-8 outline-none cursor-pointer appearance-none truncate"
+              title="Pilih Proyek Uji Tuntas LDD"
+            >
+              <option v-for="item in lddList" :key="item.id" :value="item.id">
+                {{ item.projectName || item.project }}
+              </option>
+            </select>
+            <ChevronDown class="w-4 h-4 text-[#64748B] absolute right-2.5 pointer-events-none" />
+          </div>
         </div>
 
+        <!-- Hapus Proyek (Danger Action) -->
         <button
           v-if="activeLDD"
           @click="confirmDeleteProject(activeLDD)"
-          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition cursor-pointer whitespace-nowrap"
+          class="inline-flex items-center gap-1.5 px-3.5 h-[38px] rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition cursor-pointer whitespace-nowrap"
           title="Hapus Proyek LDD Ini"
         >
-          <Trash2 class="w-4 h-4" />
+          <Trash2 class="w-3.5 h-3.5" />
           <span>Hapus Proyek</span>
         </button>
 
+        <!-- Tambah Proyek (Primary CTA) -->
         <button
           @click="isAddModalOpen = true"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition cursor-pointer whitespace-nowrap"
+          class="inline-flex items-center gap-1.5 px-4 h-[38px] rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-xs transition cursor-pointer whitespace-nowrap"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 stroke-[2.5]" />
           <span>Tambah Proyek</span>
         </button>
       </div>
@@ -74,24 +84,24 @@
     </div>
 
     <!-- Interactive Checklist -->
-    <div v-if="activeLDD" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-      <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+    <div v-if="activeLDD" class="bg-white rounded-xl border border-[#E2E8F0] shadow-xs overflow-hidden">
+      <div class="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h3 class="font-bold text-slate-900 text-sm">Checklist Uji Tuntas Aspek Legalitas</h3>
-          <p class="text-xs text-slate-500">Klik tombol status untuk mengubah verifikasi (OK / FLAG / N/A)</p>
+          <h3 class="font-bold text-[#0F172A] text-sm">Checklist Uji Tuntas Aspek Legalitas</h3>
+          <p class="text-xs text-[#64748B]">Klik tombol badge status untuk mengubah verifikasi (OK / FLAG / N/A)</p>
         </div>
         <button
           @click="isAddItemModalOpen = true"
-          class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition cursor-pointer flex items-center gap-1"
+          class="px-3.5 py-2 rounded-lg text-xs font-bold bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-xs transition cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
         >
-          <Plus class="w-3.5 h-3.5" />
+          <Plus class="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Tambah Butir Audit</span>
         </button>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs sm:text-sm">
-          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+          <thead class="bg-[#F8FAFC] text-[#64748B] text-xs uppercase font-bold border-b border-[#E2E8F0]">
             <tr>
               <th class="py-3 px-4">Kategori Aspek</th>
               <th class="py-3 px-4">Uraian Pemeriksaan Dokumen</th>
@@ -99,11 +109,11 @@
               <th class="py-3 px-4 text-center">Status Verifikasi</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
-            <tr v-for="item in activeLDD.checklist" :key="item.id" class="hover:bg-slate-50">
-              <td class="py-3.5 px-4 font-bold text-slate-800 whitespace-nowrap">{{ item.category }}</td>
-              <td class="py-3.5 px-4 min-w-[200px] text-slate-700">{{ item.item }}</td>
-              <td class="py-3.5 px-4 text-xs text-slate-600 min-w-[220px]">
+          <tbody class="divide-y divide-[#F1F5F9]">
+            <tr v-for="item in activeLDD.checklist" :key="item.id" class="hover:bg-[#F8FAFC] transition-colors">
+              <td class="py-3.5 px-4 font-bold text-[#0F172A] whitespace-nowrap">{{ item.category }}</td>
+              <td class="py-3.5 px-4 min-w-[200px] text-[#334155] font-medium">{{ item.item }}</td>
+              <td class="py-3.5 px-4 text-xs text-[#64748B] min-w-[220px]">
                 <span :class="item.status === 'FLAG' ? 'text-rose-700 font-semibold' : ''">
                   {{ item.notes || '-' }}
                 </span>
@@ -112,7 +122,8 @@
                 <button
                   @click="toggleStatus(item)"
                   :class="getBadgeClass(item.status)"
-                  class="px-3 py-1 rounded-full text-xs font-black transition cursor-pointer hover:opacity-80"
+                  class="px-3 py-1 rounded-full text-xs font-black transition cursor-pointer hover:opacity-85 shadow-2xs"
+                  title="Klik untuk ubah verifikasi"
                 >
                   {{ item.status }}
                 </button>
@@ -126,84 +137,84 @@
     <!-- MODAL: Tambah Proyek LDD Baru -->
     <div
       v-if="isAddModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150"
       @click.self="isAddModalOpen = false"
     >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
+      <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden border border-[#CBD5E1]">
+        <div class="px-6 py-4 bg-white text-[#0F172A] border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
           <div class="flex items-center gap-2">
-            <Plus class="w-5 h-5 text-emerald-400" />
-            <h3 class="font-extrabold text-white text-base">Inisiasi Proyek Uji Tuntas (LDD)</h3>
+            <Plus class="w-5 h-5 text-[#2563EB]" />
+            <h3 class="font-bold text-[#0F172A] text-base">Inisiasi Proyek Uji Tuntas (LDD)</h3>
           </div>
-          <button @click="isAddModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+          <button @click="isAddModalOpen = false" class="text-[#94A3B8] hover:text-[#0F172A] cursor-pointer transition">✕</button>
         </div>
 
         <form @submit.prevent="submitNewLDD" class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto">
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Nama Proyek LDD / Transaksi *</label>
+            <label class="block font-bold text-[#0F172A] mb-1">Nama Proyek LDD / Transaksi *</label>
             <input
               v-model="newLDDForm.projectName"
               type="text"
               required
               placeholder="Contoh: Akuisisi 60% Saham PT Barito Hydro Power"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+              class="form-input"
             />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-800 mb-1">Target Korporasi *</label>
+              <label class="block font-bold text-[#0F172A] mb-1">Target Korporasi *</label>
               <input
                 v-model="newLDDForm.targetCompany"
                 type="text"
                 required
                 placeholder="PT Barito Hydro Power"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+                class="form-input"
               />
             </div>
             <div>
-              <label class="block font-bold text-slate-800 mb-1">Lead Counsel</label>
+              <label class="block font-bold text-[#0F172A] mb-1">Lead Counsel</label>
               <input
                 v-model="newLDDForm.leadCounsel"
                 type="text"
                 placeholder="Tim Legal M&A Corporate"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+                class="form-input"
               />
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
+              <label class="block font-bold text-[#0F172A] mb-1">Tanggal Mulai</label>
               <input
                 v-model="newLDDForm.startDate"
                 type="date"
                 required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+                class="form-input"
               />
             </div>
             <div>
-              <label class="block font-bold text-slate-800 mb-1">Target Penyelesaian</label>
+              <label class="block font-bold text-[#0F172A] mb-1">Target Penyelesaian</label>
               <input
                 v-model="newLDDForm.targetCompletion"
                 type="date"
                 required
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900"
+                class="form-input"
               />
             </div>
           </div>
 
-          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#E2E8F0]">
             <button
               type="button"
               @click="isAddModalOpen = false"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+              class="px-4 py-2 rounded-lg text-[#475569] hover:bg-[#F1F5F9] font-semibold cursor-pointer transition text-xs"
             >
               Batal
             </button>
             <button
               type="submit"
-              class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+              class="px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold cursor-pointer shadow-xs transition text-xs"
             >
               Simpan Proyek
             </button>
@@ -215,21 +226,24 @@
     <!-- MODAL: Tambah Butir Audit LDD Baru -->
     <div
       v-if="isAddItemModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150"
       @click.self="isAddItemModalOpen = false"
     >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
-        <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
-          <h3 class="font-extrabold text-white text-base">Tambah Butir Audit LDD</h3>
-          <button @click="isAddItemModalOpen = false" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] flex flex-col overflow-hidden border border-[#CBD5E1]">
+        <div class="px-6 py-4 bg-white text-[#0F172A] border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2">
+            <Plus class="w-5 h-5 text-[#2563EB]" />
+            <h3 class="font-bold text-[#0F172A] text-base">Tambah Butir Audit LDD</h3>
+          </div>
+          <button @click="isAddItemModalOpen = false" class="text-[#94A3B8] hover:text-[#0F172A] cursor-pointer transition">✕</button>
         </div>
 
         <form @submit.prevent="submitAddChecklistItem" class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto">
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Kategori Aspek Audit *</label>
+            <label class="block font-bold text-[#0F172A] mb-1">Kategori Aspek Audit *</label>
             <select
               v-model="newItemForm.category"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              class="form-select text-xs font-semibold"
             >
               <option value="Aspek Korporasi">Aspek Korporasi</option>
               <option value="Aspek Perizinan">Aspek Perizinan</option>
@@ -242,21 +256,21 @@
           </div>
 
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Uraian Pemeriksaan *</label>
+            <label class="block font-bold text-[#0F172A] mb-1">Uraian Pemeriksaan *</label>
             <input
               v-model="newItemForm.item"
               type="text"
               required
               placeholder="Misal: Uji keabsahan sertifikat tanah HGB pembangkit"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+              class="form-input"
             />
           </div>
 
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Status Awal</label>
+            <label class="block font-bold text-[#0F172A] mb-1">Status Awal</label>
             <select
               v-model="newItemForm.status"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-bold"
+              class="form-select text-xs font-bold"
             >
               <option value="OK">OK (Memenuhi Syarat)</option>
               <option value="FLAG">FLAG (Temuan / Risiko)</option>
@@ -265,26 +279,26 @@
           </div>
 
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Catatan Hasil Telaah</label>
+            <label class="block font-bold text-[#0F172A] mb-1">Catatan Hasil Telaah</label>
             <textarea
               v-model="newItemForm.notes"
               rows="2"
               placeholder="Catatan hasil verifikasi berkas..."
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 resize-none"
+              class="w-full p-2.5 border border-[#CBD5E1] rounded-lg focus:border-[#2563EB] focus:ring-2 focus:ring-blue-500/15 outline-none text-[#0F172A] resize-none text-xs"
             ></textarea>
           </div>
 
-          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#E2E8F0]">
             <button
               type="button"
               @click="isAddItemModalOpen = false"
-              class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+              class="px-4 py-2 rounded-lg text-[#475569] hover:bg-[#F1F5F9] font-semibold cursor-pointer transition text-xs"
             >
               Batal
             </button>
             <button
               type="submit"
-              class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+              class="px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold cursor-pointer shadow-xs transition text-xs"
             >
               Tambahkan Butir
             </button>
@@ -297,7 +311,7 @@
 
 <script setup>
 import { ref, computed, reactive, watch } from 'vue';
-import { Plus, FolderKanban, Trash2 } from 'lucide-vue-next';
+import { Plus, FolderKanban, Trash2, ChevronDown } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 
 const lddList = computed(() => legalStore.state.ldd);

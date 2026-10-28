@@ -2,23 +2,29 @@
   <div class="space-y-5 animate-in fade-in duration-150">
     <!-- Sector Selector Bar -->
     <div class="bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-[#0F172A]">Pilih Sektor untuk Melihat Alur:</span>
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+          <component :is="getSectorIcon(getSelectedSectorObj?.icon)" class="w-4 h-4" />
+        </div>
+        <div>
+          <span class="font-bold text-[#0F172A] block text-xs">Pilih Sektor Industri:</span>
+          <span class="text-[11px] text-[#64748B]">Tampilkan alur dan tahapan tender terdaftar</span>
+        </div>
       </div>
 
-      <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-        <button
-          v-for="s in masterSectors"
-          :key="s.code"
-          @click="selectedWorkflowSector = s.code"
-          :class="selectedWorkflowSector === s.code
-            ? 'bg-[#6366F1] text-white font-bold shadow-xs'
-            : 'bg-[#F1F5F9] text-[#475569] hover:bg-slate-200'"
-          class="px-3 py-1.5 rounded-xl transition cursor-pointer text-xs flex items-center gap-1.5 shrink-0"
+      <div class="w-full sm:w-80">
+        <select
+          v-model="selectedWorkflowSector"
+          class="form-select"
         >
-          <span>{{ s.icon }}</span>
-          <span>{{ s.name }}</span>
-        </button>
+          <option
+            v-for="s in masterSectors"
+            :key="s.code"
+            :value="s.code"
+          >
+            {{ s.name }} ({{ s.code }})
+          </option>
+        </select>
       </div>
     </div>
 
@@ -26,8 +32,10 @@
     <div class="bg-white rounded-2xl border border-[#E2E8F0] shadow-card overflow-hidden space-y-0">
       <div class="p-5 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="space-y-1">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">{{ getSelectedSectorObj?.icon }}</span>
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+              <component :is="getSectorIcon(getSelectedSectorObj?.icon)" class="w-4 h-4 text-indigo-300" />
+            </div>
             <h3 class="text-lg font-bold">
               Alur Tahapan Tender Sektor: {{ getSelectedSectorObj?.name }}
             </h3>
@@ -76,11 +84,42 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import {
+  HardHat,
+  Pickaxe,
+  Flame,
+  Zap,
+  Package,
+  Building2,
+  Factory,
+  Radio,
+  Wrench,
+  Mountain,
+  Boxes
+} from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const selectedWorkflowSector = ref('KONSTRUKSI');
 
 const masterSectors = computed(() => legalStore.state.masterSectors || []);
+
+function getSectorIcon(iconName) {
+  const map = {
+    hardhat: HardHat, '🏗️': HardHat, konstruksi: HardHat,
+    pickaxe: Pickaxe, '⛏️': Pickaxe, pertambangan: Pickaxe, tambang: Pickaxe,
+    flame: Flame, '🛢️': Flame, migas: Flame,
+    zap: Zap, '⚡': Zap, energi: Zap,
+    package: Package, '📦': Package, umum: Package,
+    building2: Building2, '🏢': Building2, korporasi: Building2,
+    factory: Factory, '🏭': Factory,
+    radio: Radio, '📡': Radio, telko: Radio,
+    wrench: Wrench, '🔧': Wrench,
+    mountain: Mountain, '⛰️': Mountain,
+    boxes: Boxes
+  };
+  const key = String(iconName || '').toLowerCase().trim();
+  return map[key] || Building2;
+}
 
 const getSelectedSectorObj = computed(() => {
   return masterSectors.value.find(s => s.code === selectedWorkflowSector.value) || masterSectors.value[0];

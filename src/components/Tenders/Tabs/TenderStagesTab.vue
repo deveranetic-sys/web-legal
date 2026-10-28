@@ -4,7 +4,9 @@
     <div class="bg-gradient-to-r from-[#F8FAFC] via-[#EEF2FF] to-[#F8FAFC] p-5 rounded-2xl border border-[#C7D2FE] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
       <div class="space-y-1.5">
         <div class="flex items-center gap-2 flex-wrap">
-          <span class="text-2xl">{{ currentSectorObj.icon }}</span>
+          <div class="w-8 h-8 rounded-lg bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+            <component :is="getSectorIcon(currentSectorObj.icon)" class="w-4.5 h-4.5" />
+          </div>
           <h3 class="text-base font-extrabold text-[#0F172A]">
             Alur Kerja Tender: {{ currentSectorObj.name }}
           </h3>
@@ -29,7 +31,7 @@
           class="text-xs font-bold text-[#4338CA] bg-[#EEF2FF] border border-[#C7D2FE] rounded-lg px-2.5 py-1 outline-none cursor-pointer hover:bg-[#E0E7FF] transition"
         >
           <option v-for="sec in (legalStore.state.masterSectors || [])" :key="sec.code || sec.value" :value="sec.code || sec.value">
-            {{ sec.icon }} {{ sec.name || sec.label }} ({{ (legalStore.getStagesForSector(sec.code || sec.value) || []).length }} Tahap)
+            {{ sec.name || sec.label }} ({{ (legalStore.getStagesForSector(sec.code || sec.value) || []).length }} Tahap)
           </option>
         </select>
       </div>
@@ -221,7 +223,9 @@
       <div class="lg:col-span-5 space-y-4">
         <div class="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-card space-y-4">
           <div class="flex items-center gap-2 pb-2 border-b border-[#E2E8F0]">
-            <span class="text-lg">{{ currentSectorObj.icon }}</span>
+            <div class="w-7 h-7 rounded-md bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+              <component :is="getSectorIcon(currentSectorObj.icon)" class="w-4 h-4" />
+            </div>
             <div>
               <h4 class="font-extrabold text-[#0F172A] text-sm">
                 Alat Analisis Sektor: {{ currentSectorObj.name }}
@@ -383,8 +387,44 @@
 
 <script setup>
 import { computed } from 'vue';
-import { Milestone, Check, Info, AlertTriangle, CheckCircle2, FileCheck2 } from 'lucide-vue-next';
+import {
+  Milestone,
+  Check,
+  Info,
+  AlertTriangle,
+  CheckCircle2,
+  FileCheck2,
+  HardHat,
+  Pickaxe,
+  Flame,
+  Zap,
+  Package,
+  Building2,
+  Factory,
+  Radio,
+  Wrench,
+  Mountain,
+  Boxes
+} from 'lucide-vue-next';
 import { legalStore, formatIDR } from '../../../stores/legalStore';
+
+function getSectorIcon(iconName) {
+  const map = {
+    hardhat: HardHat, '🏗️': HardHat, konstruksi: HardHat,
+    pickaxe: Pickaxe, '⛏️': Pickaxe, pertambangan: Pickaxe, tambang: Pickaxe,
+    flame: Flame, '🛢️': Flame, migas: Flame,
+    zap: Zap, '⚡': Zap, energi: Zap,
+    package: Package, '📦': Package, umum: Package,
+    building2: Building2, '🏢': Building2, korporasi: Building2,
+    factory: Factory, '🏭': Factory,
+    radio: Radio, '📡': Radio, telko: Radio,
+    wrench: Wrench, '🔧': Wrench,
+    mountain: Mountain, '⛰️': Mountain,
+    boxes: Boxes
+  };
+  const key = String(iconName || '').toLowerCase().trim();
+  return map[key] || Building2;
+}
 
 const props = defineProps({
   tender: {
@@ -400,7 +440,7 @@ const currentSectorObj = computed(() => {
   return (legalStore.state.masterSectors || []).find(s => s.code === code) || {
     code,
     name: props.tender.sectorLabel || code,
-    icon: '🏗️',
+    icon: 'HardHat',
     regulatoryBasis: 'Perpres 16/2018',
     workflowTemplate: 'SPSE_KONSTRUKSI_8',
     description: 'Pengadaan Terstruktur'
@@ -483,7 +523,7 @@ function getStageCircleClass(currentStageKey, stepStageKey, sIdx) {
     return 'bg-[#6366F1] text-white ring-4 ring-[#C7D2FE] scale-110';
   }
   if (curIdx > sIdx) {
-    return 'bg-[#0F172A] text-white border border-[#0F172A]';
+    return 'bg-emerald-600 text-white border border-emerald-600';
   }
   return 'bg-white text-slate-400 border border-slate-300';
 }

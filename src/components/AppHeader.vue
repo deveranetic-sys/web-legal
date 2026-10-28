@@ -23,58 +23,62 @@
     <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
       
       <!-- Entity Switcher Dropdown -->
-      <div class="hidden md:flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-2.5 py-1">
-        <Building2 class="w-3.5 h-3.5 text-blue-500" />
+      <div class="hidden md:flex items-center gap-2 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md px-2.5 py-1.5 relative">
+        <Building2 class="w-3.5 h-3.5 text-[#2563EB] shrink-0 pointer-events-none" />
         <select
           :value="legalStore.state.currentEntity"
           @change="legalStore.changeEntity($event.target.value)"
-          class="bg-transparent text-xs font-bold text-[#1E293B] focus:outline-none cursor-pointer"
+          class="bg-transparent text-xs font-semibold text-[#0F172A] focus:outline-none cursor-pointer appearance-none pr-7 outline-none"
         >
           <option value="PT Nusantara Energi">PT Nusantara Energi (Holding)</option>
           <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
           <option value="PT Sinergi Tambang Gemilang">PT Sinergi Tambang Gemilang</option>
         </select>
+        <ChevronDown class="w-3.5 h-3.5 text-[#64748B] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
       </div>
 
       <!-- Quick Search Trigger -->
       <button
         @click="legalStore.state.isSearchModalOpen = true"
-        class="hidden sm:flex items-center gap-2 bg-[#F8FAFC] hover:bg-slate-100 border border-[#E2E8F0] text-xs text-[#64748B] px-3 py-1.5 rounded-xl transition cursor-pointer"
+        class="hidden sm:flex items-center gap-2 bg-[#F8FAFC] hover:bg-slate-100 border border-[#CBD5E1] text-xs text-[#64748B] px-2.5 py-1.5 rounded-md transition cursor-pointer"
       >
-        <Search class="w-3.5 h-3.5 text-blue-500" />
+        <Search class="w-3.5 h-3.5 text-[#2563EB]" />
         <span>Cari berkas...</span>
-        <kbd class="bg-white px-1.5 py-0.5 rounded text-[10px] font-mono text-[#64748B] border border-[#E2E8F0]">⌘K</kbd>
+        <kbd class="bg-white px-1.5 py-0.2 rounded text-[10px] font-mono-tabular text-[#64748B] border border-[#CBD5E1]">⌘K</kbd>
       </button>
 
       <!-- Notification Bell -->
       <button
         @click="legalStore.state.isNotificationDrawerOpen = !legalStore.state.isNotificationDrawerOpen"
-        class="relative p-2 rounded-xl text-[#1E293B] hover:bg-slate-100 transition cursor-pointer"
+        class="relative p-1.5 rounded-md text-[#0F172A] hover:bg-[#F1F5F9] border border-transparent hover:border-[#CBD5E1] transition cursor-pointer"
         title="Pemberitahuan Sistem"
       >
-        <Bell class="w-5 h-5" />
+        <Bell class="w-4 h-4 text-[#475569]" />
         <span
           v-if="hasCriticalAlerts"
-          class="absolute top-1.5 right-1.5 flex h-2.5 w-2.5"
+          class="absolute top-1 right-1 flex h-2 w-2"
         >
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
         </span>
       </button>
 
-      <!-- Role Switcher Dropdown (Soft Indigo Pastel Accent) -->
-      <div class="flex items-center gap-2 pl-1.5 sm:pl-2 border-l border-[#E2E8F0]">
-        <select
-          :value="legalStore.state.currentUser?.role"
-          @change="legalStore.switchRole($event.target.value)"
-          class="bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold rounded-xl py-1.5 px-2 sm:px-2.5 focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] cursor-pointer shadow-xs hover:bg-[#E0E7FF] transition max-w-[140px] sm:max-w-none truncate"
-        >
-          <option value="SUPER ADMIN">Super Admin</option>
-          <option value="KEPALA LEGAL">Kepala Legal</option>
-          <option value="STAFF LEGAL">Staff Legal</option>
-          <option value="REQUESTOR">Requestor</option>
-          <option value="DIREKTUR (DASHBOARD)">Direktur (dashboard)</option>
-        </select>
+      <!-- Role Switcher Dropdown (Tactile Precision with Chevron) -->
+      <div class="flex items-center gap-1.5 pl-2 border-l border-[#E2E8F0]">
+        <div class="relative">
+          <select
+            :value="legalStore.state.currentUser?.role"
+            @change="legalStore.switchRole($event.target.value)"
+            class="bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] text-xs font-semibold rounded-md py-1.5 pl-2.5 pr-8 focus:outline-none focus:ring-1 focus:ring-[#2563EB] cursor-pointer appearance-none max-w-[155px] sm:max-w-none truncate"
+          >
+            <option value="SUPER ADMIN">Super Admin</option>
+            <option value="KEPALA LEGAL">Kepala Legal</option>
+            <option value="STAFF LEGAL">Staff Legal</option>
+            <option value="REQUESTOR">Requestor</option>
+            <option value="DIREKTUR (DASHBOARD)">Direktur (dashboard)</option>
+          </select>
+          <ChevronDown class="w-3.5 h-3.5 text-[#2563EB] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        </div>
       </div>
 
     </div>
@@ -83,7 +87,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { Menu, Building2, Search, Bell } from 'lucide-vue-next';
+import { Menu, Building2, Search, Bell, ChevronDown } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 
 const moduleTitles = {

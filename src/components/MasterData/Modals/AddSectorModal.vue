@@ -18,25 +18,31 @@
           />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Kode Sektor (ID)</label>
-            <input
-              v-model="form.code"
-              type="text"
-              required
-              placeholder="Contoh: TELKO"
-              class="w-full px-3 py-2 text-xs font-mono uppercase border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
-            />
-          </div>
-          <div>
-            <label class="block font-bold text-[#0F172A] mb-1">Icon Emoji</label>
-            <input
-              v-model="form.icon"
-              type="text"
-              placeholder="📡"
-              class="w-full px-3 py-2 text-xs border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
-            />
+        <div>
+          <label class="block font-bold text-[#0F172A] mb-1">Kode Sektor (ID) *</label>
+          <input
+            v-model="form.code"
+            type="text"
+            required
+            placeholder="Contoh: TELKO"
+            class="w-full px-3 py-2 text-xs font-mono uppercase border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-[#0F172A] mb-1.5">Pilih Icon Sektor (Lucide SVG)</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button
+              v-for="p in iconPresets"
+              :key="p.id"
+              type="button"
+              @click="form.icon = p.id"
+              :class="form.icon === p.id ? 'bg-[#EEF2FF] text-[#4338CA] border-[#6366F1] font-bold shadow-2xs' : 'bg-white text-slate-600 border-[#E2E8F0] hover:bg-slate-50'"
+              class="flex items-center gap-1.5 p-2 rounded-lg border text-[11px] transition cursor-pointer"
+            >
+              <component :is="p.icon" class="w-3.5 h-3.5 shrink-0" />
+              <span class="truncate">{{ p.label }}</span>
+            </button>
           </div>
         </div>
 
@@ -92,14 +98,35 @@
 
 <script setup>
 import { ref } from 'vue';
+import {
+  HardHat,
+  Pickaxe,
+  Flame,
+  Zap,
+  Package,
+  Building2,
+  Factory,
+  Radio
+} from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const emit = defineEmits(['close']);
 
+const iconPresets = [
+  { id: 'HardHat', label: 'Konstruksi', icon: HardHat },
+  { id: 'Pickaxe', label: 'Tambang', icon: Pickaxe },
+  { id: 'Flame', label: 'Migas', icon: Flame },
+  { id: 'Zap', label: 'Energi', icon: Zap },
+  { id: 'Package', label: 'Pengadaan', icon: Package },
+  { id: 'Building2', label: 'Korporasi', icon: Building2 },
+  { id: 'Factory', label: 'Pabrikasi', icon: Factory },
+  { id: 'Radio', label: 'Telko & IT', icon: Radio }
+];
+
 const form = ref({
   name: '',
   code: '',
-  icon: '🏢',
+  icon: 'HardHat',
   regulatoryBasis: '',
   defaultContractType: '',
   description: ''

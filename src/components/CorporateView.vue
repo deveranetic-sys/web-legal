@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+    <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4 pb-4 border-b border-[#E2E8F0]">
       <div>
         <div class="flex items-center gap-2">
           <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
@@ -17,18 +17,24 @@
         </p>
       </div>
 
-      <!-- Entity Switcher -->
-      <div class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-1.5 shadow-2xs">
-        <Building2 class="w-4 h-4 text-slate-400" />
-        <span class="text-xs text-slate-500 font-medium">Pilih Perseroan:</span>
-        <select
-          v-model="selectedEntityId"
-          class="bg-transparent text-xs font-bold text-slate-800 outline-none cursor-pointer"
-        >
-          <option v-for="c in corporateList" :key="c.id" :value="c.id">
-            {{ c.companyName }}
-          </option>
-        </select>
+      <!-- Entity Switcher (Input Group: Prefix Terpisah, Zero Overlap) -->
+      <div class="flex items-center rounded-lg border border-[#CBD5E1] bg-white h-[38px] shadow-2xs hover:border-[#94A3B8] focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-blue-500/15 transition overflow-hidden shrink-0 w-auto min-w-[260px] sm:min-w-[320px] max-w-[400px]">
+        <div class="flex items-center gap-1.5 px-3 bg-[#F8FAFC] border-r border-[#E2E8F0] h-full text-[#64748B] text-xs font-semibold shrink-0 select-none">
+          <Building2 class="w-4 h-4 text-[#2563EB]" />
+          <span>Perseroan:</span>
+        </div>
+        <div class="relative flex items-center flex-1 min-w-0 h-full">
+          <select
+            v-model="selectedEntityId"
+            class="w-full h-full bg-transparent text-xs font-bold text-[#0F172A] pl-3 pr-8 outline-none cursor-pointer appearance-none truncate"
+            title="Pilih Entitas Perseroan"
+          >
+            <option v-for="c in corporateList" :key="c.id" :value="c.id">
+              {{ c.companyName }}
+            </option>
+          </select>
+          <ChevronDown class="w-4 h-4 text-[#64748B] absolute right-2.5 pointer-events-none" />
+        </div>
       </div>
     </div>
 
@@ -239,7 +245,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Building2, FileText, FileCheck2 } from 'lucide-vue-next';
+import { Building2, FileText, FileCheck2, ChevronDown } from 'lucide-vue-next';
 import { legalStore, formatIDR } from '../stores/legalStore';
 
 const activeSubTab = ref('profile');

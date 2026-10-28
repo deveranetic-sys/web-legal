@@ -60,25 +60,25 @@
     </div>
 
     <!-- Filter & Search Bar Section -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+    <div class="bg-white p-3 rounded-lg border border-[#E2E8F0] shadow-none flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
       <div class="flex-1 relative">
-        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search class="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           v-model="searchQuery"
           type="text"
           :placeholder="activeSubTab === 'clauses' ? 'Cari judul klausul atau isi kalimat...' : 'Cari template surat, somasi, kontrak...'"
-          class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 placeholder-slate-400"
+          class="form-input form-input-search"
         />
       </div>
 
-      <!-- Category Filter Dropdown (Menggantikan Pills) -->
-      <div class="sm:w-64 shrink-0 relative">
-        <Filter class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+      <!-- Category Filter Dropdown (Tactile Precision UI: Single CSS form-select) -->
+      <div class="sm:w-72 md:w-80 shrink-0 relative">
+        <Filter class="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         
         <select
           v-if="activeSubTab === 'templates'"
           v-model="selectedCategory"
-          class="w-full pl-9 pr-8 py-2 text-xs sm:text-sm font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer appearance-none shadow-2xs transition"
+          class="form-select pl-9!"
         >
           <option v-for="cat in templateCategories" :key="cat.key" :value="cat.key">
             {{ cat.label }}
@@ -88,14 +88,12 @@
         <select
           v-else
           v-model="selectedClauseCategory"
-          class="w-full pl-9 pr-8 py-2 text-xs sm:text-sm font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer appearance-none shadow-2xs transition"
+          class="form-select pl-9!"
         >
           <option v-for="cat in clauseCategories" :key="cat.key" :value="cat.key">
             {{ cat.label }}
           </option>
         </select>
-
-        <ChevronDown class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
       </div>
     </div>
 

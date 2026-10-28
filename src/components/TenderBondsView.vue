@@ -80,15 +80,15 @@
 
     <!-- Filters & Search Toolbar -->
     <div class="bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-xs space-y-3">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
         <!-- Search -->
         <div class="md:col-span-5 relative">
-          <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Cari nomor garansi, nama paket lelang, bank penerbit, beneficiary..."
-            class="w-full pl-9 pr-4 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-input form-input-search"
           />
           <button
             v-if="searchQuery"
@@ -103,7 +103,7 @@
         <div class="md:col-span-3">
           <select
             v-model="filterBondType"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Jenis Jaminan</option>
             <option value="BID_BOND">Jaminan Penawaran (Bid Bond)</option>
@@ -117,7 +117,7 @@
         <div class="md:col-span-2">
           <select
             v-model="filterBank"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Bank</option>
             <option value="Mandiri">Bank Mandiri</option>
@@ -131,7 +131,7 @@
         <div class="md:col-span-2">
           <select
             v-model="filterStatus"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Status</option>
             <option value="AKTIF">Aktif</option>
@@ -236,7 +236,7 @@
               <button
                 v-if="bond.status === 'DALAM_PROSES'"
                 @click="updateStatus(bond.id, 'AKTIF')"
-                class="px-2.5 py-1 text-xs font-bold rounded-lg bg-[#1E293B] text-white hover:bg-[#283A52] transition cursor-pointer"
+                class="px-2.5 py-1 text-xs font-bold rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition cursor-pointer"
               >
                 Aktifkan Jaminan
               </button>

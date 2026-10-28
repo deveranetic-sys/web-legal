@@ -20,7 +20,7 @@
       <div class="flex items-center gap-2">
         <button
           @click="exportFullReport"
-          class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer flex items-center gap-1.5"
+          class="px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer flex items-center gap-1.5"
         >
           <Download class="w-4 h-4" />
           <span>Ekspor Laporan Komprehensif (CSV)</span>

@@ -30,21 +30,21 @@
     </div>
 
     <!-- Search Bar & Category Filter -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-3">
-      <div class="flex-1 relative">
-        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center">
+      <div class="flex-1 relative w-full">
+        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Cari undang-undang, nomor regulasi, klausul pasal, atau sektor..."
-          class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-amber-500"
+          class="form-input form-input-search"
         />
       </div>
 
-      <div class="w-full sm:w-56">
+      <div class="w-full sm:w-60">
         <select
           v-model="filterCategory"
-          class="w-full py-2 px-3 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none bg-white text-slate-800 font-medium cursor-pointer"
+          class="form-select"
         >
           <option value="ALL">Semua Kategori Regulasi</option>
           <option value="Undang-Undang">Undang-Undang (UU)</option>

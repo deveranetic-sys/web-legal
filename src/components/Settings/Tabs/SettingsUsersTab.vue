@@ -21,20 +21,20 @@
     </div>
 
     <!-- Filters & Search -->
-    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-3">
-      <div class="flex-1 relative">
-        <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-3 items-center">
+      <div class="flex-1 relative w-full">
+        <Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
         <input
           v-model="userSearchQuery"
           type="text"
           placeholder="Cari berdasarkan nama, NIK, email, departemen..."
-          class="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          class="form-input form-input-search"
         />
       </div>
 
       <select
         v-model="userRoleFilter"
-        class="md:w-48 px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        class="form-select md:w-48 bg-white"
       >
         <option value="">Semua Peran</option>
         <option v-for="(val, rk) in rolesMatrix" :key="rk" :value="rk">{{ rk }}</option>
@@ -42,7 +42,7 @@
 
       <select
         v-model="userStatusFilter"
-        class="md:w-36 px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        class="form-select md:w-36 bg-white"
       >
         <option value="">Semua Status</option>
         <option value="active">Aktif</option>
@@ -139,7 +139,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Users, UserPlus, Search, Fingerprint, LogIn, Edit2, Power } from 'lucide-vue-next';
+import { Users, UserPlus, Search, Fingerprint, LogIn, Edit2, Power, ChevronDown } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const props = defineProps({

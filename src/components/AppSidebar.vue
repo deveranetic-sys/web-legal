@@ -20,7 +20,7 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="text-sm font-bold text-[#0F172A] tracking-tight">LMS ENTERPRISE</span>
+              <span class="text-sm font-bold text-[#0F172A] tracking-tight">E-LEGAL</span>
               <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#EEF2FF] text-[#4338CA] font-bold border border-[#C7D2FE]">v2.6</span>
             </div>
             <p class="text-[10px] text-[#94A3B8] font-medium">Corporate Legal Operations</p>
@@ -72,22 +72,35 @@
         </div>
       </nav>
 
-      <!-- Bottom User Profile Card -->
-      <div class="p-3 border-t border-[#E2E8F0] bg-[#F9FAFB]">
-        <div class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-[#E2E8F0] shadow-xs">
-          <div class="w-8 h-8 rounded-full bg-[#EEF2FF] border border-[#C7D2FE] text-[#4338CA] flex items-center justify-center font-bold text-xs shrink-0">
-            {{ getInitials(legalStore.state.currentUser?.name) }}
+      <!-- Bottom User Profile Card (Pinned at the very bottom) -->
+      <div class="mt-auto p-3 border-t border-[#E2E8F0] bg-[#F8FAFC]">
+        <div class="p-3 rounded-xl bg-white border border-[#CBD5E1] shadow-2xs space-y-2.5">
+          <!-- User info row with prominent name visibility -->
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center font-black text-sm shrink-0 shadow-xs">
+              {{ getInitials(legalStore.state.currentUser?.name) }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-bold text-[#0F172A] leading-snug break-words" :title="legalStore.state.currentUser?.name">
+                {{ legalStore.state.currentUser?.name }}
+              </div>
+              <div class="text-[11px] text-[#64748B] font-medium truncate" :title="legalStore.state.currentUser?.title">
+                {{ legalStore.state.currentUser?.title || legalStore.state.currentUser?.department || 'Corporate Division' }}
+              </div>
+            </div>
           </div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-semibold text-[#0F172A] truncate">{{ legalStore.state.currentUser?.name }}</div>
-            <div class="text-[10px] text-[#94A3B8] truncate">{{ legalStore.state.currentUser?.title }}</div>
-          </div>
-          <div class="shrink-0">
-            <span
-              class="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]"
+
+          <!-- Role Badge row - Full width & high contrast visibility diujung bawah -->
+          <div class="pt-2 border-t border-[#F1F5F9]">
+            <div class="flex items-center justify-between text-[10px] text-[#64748B] font-semibold mb-1">
+              <span>PERAN AKTIF</span>
+            </div>
+            <div
+              class="w-full text-center text-[11px] font-black px-2.5 py-1.5 rounded-lg bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] tracking-wide uppercase shadow-2xs"
+              :title="legalStore.state.currentUser?.role"
             >
               {{ legalStore.state.currentUser?.role }}
-            </span>
+            </div>
           </div>
         </div>
       </div>

@@ -59,7 +59,7 @@
           @click="openAddCorrespondence"
           :class="[
             'px-3.5 py-2 rounded-xl',
-            'bg-slate-900 hover:bg-black text-white text-xs font-bold shadow-sm',
+            'bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-xs',
             'transition cursor-pointer flex items-center gap-1.5',
             'hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap'
           ]"

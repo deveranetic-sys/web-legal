@@ -17,8 +17,8 @@
       >
         <div class="flex items-start justify-between gap-3">
           <div class="flex items-center gap-3">
-            <div class="text-3xl p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
-              {{ sector.icon }}
+            <div class="w-12 h-12 rounded-xl bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+              <component :is="getSectorIcon(sector.icon)" class="w-6 h-6" />
             </div>
             <div>
               <div class="flex items-center gap-2">
@@ -81,10 +81,42 @@
 
 <script setup>
 import { computed } from 'vue';
-import { Edit3, Trash2 } from 'lucide-vue-next';
+import {
+  Edit3,
+  Trash2,
+  HardHat,
+  Pickaxe,
+  Flame,
+  Zap,
+  Package,
+  Building2,
+  Factory,
+  Radio,
+  Wrench,
+  Mountain,
+  Boxes
+} from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const masterSectors = computed(() => legalStore.state.masterSectors || []);
+
+function getSectorIcon(iconName) {
+  const map = {
+    hardhat: HardHat, '🏗️': HardHat, konstruksi: HardHat,
+    pickaxe: Pickaxe, '⛏️': Pickaxe, pertambangan: Pickaxe, tambang: Pickaxe,
+    flame: Flame, '🛢️': Flame, migas: Flame,
+    zap: Zap, '⚡': Zap, energi: Zap,
+    package: Package, '📦': Package, umum: Package,
+    building2: Building2, '🏢': Building2, korporasi: Building2,
+    factory: Factory, '🏭': Factory,
+    radio: Radio, '📡': Radio, telko: Radio,
+    wrench: Wrench, '🔧': Wrench,
+    mountain: Mountain, '⛰️': Mountain,
+    boxes: Boxes
+  };
+  const key = String(iconName || '').toLowerCase().trim();
+  return map[key] || Building2;
+}
 
 async function openEditSector(sector) {
   const newName = await legalStore.prompt({

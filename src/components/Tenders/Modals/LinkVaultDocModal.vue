@@ -31,20 +31,20 @@
             v-for="vDoc in legalStore.state.tenderVault"
             :key="vDoc.id"
             @click="selectedVaultDocId = vDoc.id"
-            :class="selectedVaultDocId === vDoc.id ? 'bg-[#1E293B] text-white border-[#C7D2FE]' : 'hover:bg-slate-50 text-[#0F172A] border-slate-200'"
+            :class="selectedVaultDocId === vDoc.id ? 'bg-[#2563EB] text-white border-[#2563EB]' : 'hover:bg-slate-50 text-[#0F172A] border-slate-200'"
             class="p-2.5 rounded-lg border text-xs cursor-pointer transition flex items-center justify-between gap-2"
           >
             <div class="min-w-0">
               <div class="font-bold truncate" :class="selectedVaultDocId === vDoc.id ? 'text-white' : 'text-[#0F172A]'">
                 {{ vDoc.name }}
               </div>
-              <div class="text-[10px]" :class="selectedVaultDocId === vDoc.id ? 'text-slate-300' : 'text-[#475569]'">
+              <div class="text-[10px]" :class="selectedVaultDocId === vDoc.id ? 'text-blue-100' : 'text-[#475569]'">
                 {{ vDoc.code }} • {{ vDoc.number }}
               </div>
             </div>
             <span
               v-if="selectedVaultDocId === vDoc.id"
-              class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-[#0F172A]"
+              class="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-[#2563EB]"
             >
               Dipilih
             </span>

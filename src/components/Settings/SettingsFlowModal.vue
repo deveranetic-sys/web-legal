@@ -1,100 +1,99 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col border border-slate-200">
+  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/40 backdrop-blur-[2px] animate-in fade-in duration-150">
+    <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col border border-[#CBD5E1]">
       
-      <!-- Modal Header -->
-      <div class="p-6 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/70">
+      <!-- Modal Header (Tactile Precision UI) -->
+      <div class="p-4 border-b border-[#E2E8F0] flex items-center justify-between shrink-0 bg-[#F8FAFC]">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-100 text-[#92400E] flex items-center justify-center font-bold text-lg border border-amber-200">
-            <span>{{ flowForm.icon || '⚖️' }}</span>
+          <div class="w-9 h-9 rounded-md bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center border border-[#BFDBFE] shrink-0">
+            <component :is="getFlowIcon(flowForm.icon || flowForm.module)" class="w-4.5 h-4.5 text-[#2563EB]" />
           </div>
           <div>
-            <h3 class="text-base font-extrabold text-slate-900">
+            <h3 class="text-sm font-semibold text-[#0F172A]">
               {{ isEditing ? `Edit Konfigurasi Alur: ${flowForm.name}` : 'Tambah Alur Persetujuan Baru' }}
             </h3>
-            <p class="text-xs text-slate-500 mt-0.5">
+            <p class="text-[11px] text-[#64748B] mt-0.5">
               Tentukan tahapan hierarki otorisasi, peran approver, target SLA, dan ambang batas nilai (threshold).
             </p>
           </div>
         </div>
         <button
           @click="$emit('close')"
-          class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-xl transition cursor-pointer"
+          class="p-1.5 text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] rounded-md transition cursor-pointer"
         >
-          <X class="w-5 h-5" />
+          <X class="w-4 h-4" />
         </button>
       </div>
 
       <!-- Modal Body Form -->
-      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-5">
-        <form @submit.prevent="handleSaveFlow" id="flow-form" class="space-y-5">
+      <div class="p-4 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+        <form @submit.prevent="handleSaveFlow" id="flow-form" class="space-y-4">
           
           <!-- General Flow Details -->
-          <div class="space-y-4">
+          <div class="space-y-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">
-                Nama Alur Persetujuan <span class="text-rose-500">*</span>
+              <label class="block text-xs font-semibold text-[#0F172A] mb-1">
+                Nama Alur Persetujuan <span class="text-[#B91C1C]">*</span>
               </label>
               <input
                 v-model="flowForm.name"
                 type="text"
                 required
                 placeholder="Misal: Alur Persetujuan Addendum & VO Proyek"
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 font-medium"
+                class="w-full px-3 py-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] font-medium"
               />
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <!-- Icon Picker -->
-              <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Ikon / Simbol</label>
-                <div class="flex items-center gap-1.5">
-                  <input
-                    v-model="flowForm.icon"
-                    type="text"
-                    maxlength="4"
-                    class="w-12 px-2 py-2 text-center bg-slate-50 border border-slate-200 rounded-xl text-sm"
-                  />
-                  <div class="flex items-center gap-1 flex-wrap">
-                    <button
-                      v-for="ico in emojiPresets"
-                      :key="ico"
-                      type="button"
-                      @click="flowForm.icon = ico"
-                      class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-xs cursor-pointer border border-slate-100"
-                    >
-                      {{ ico }}
-                    </button>
-                  </div>
-                </div>
+            <!-- Icon Picker Presets (Lucide Icons, No Emoji) -->
+            <div>
+              <label class="block text-xs font-semibold text-[#0F172A] mb-1.5">Pilih Ikon Standar Alur</label>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <button
+                  v-for="preset in iconPresets"
+                  :key="preset.id"
+                  type="button"
+                  @click="flowForm.icon = preset.id"
+                  :class="isIconSelected(preset.id, preset.emojiAlias)
+                    ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE] ring-1 ring-[#2563EB] font-semibold'
+                    : 'bg-white hover:bg-[#F1F5F9] text-[#64748B] border-[#CBD5E1] font-medium'"
+                  class="h-8 px-2.5 rounded-md border text-xs flex items-center gap-1.5 cursor-pointer transition shadow-none"
+                >
+                  <component :is="preset.icon" class="w-3.5 h-3.5 shrink-0" />
+                  <span>{{ preset.label }}</span>
+                </button>
               </div>
+            </div>
 
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Module Selection -->
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Modul Terkait</label>
-                <select
-                  v-model="flowForm.module"
-                  @change="handleModuleChange"
-                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 font-medium cursor-pointer"
-                >
-                  <option value="requests">Permintaan Legal (Requests)</option>
-                  <option value="contracts">Manajemen Kontrak</option>
-                  <option value="tenders">Tender & Pengadaan</option>
-                  <option value="opinions">Opini Hukum</option>
-                  <option value="disputes">Dispute & Litigasi</option>
-                  <option value="general">Umum / Lainnya</option>
-                </select>
+                <label class="block text-xs font-semibold text-[#0F172A] mb-1">Modul Terkait</label>
+                <div class="relative">
+                  <select
+                    v-model="flowForm.module"
+                    @change="handleModuleChange"
+                    class="w-full pl-3 pr-8 py-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] font-medium cursor-pointer appearance-none"
+                  >
+                    <option value="requests">Permintaan Legal (Requests)</option>
+                    <option value="contracts">Manajemen Kontrak</option>
+                    <option value="tenders">Tender &amp; Pengadaan</option>
+                    <option value="opinions">Opini Hukum</option>
+                    <option value="disputes">Dispute &amp; Litigasi</option>
+                    <option value="general">Umum / Lainnya</option>
+                  </select>
+                  <ChevronDown class="w-3.5 h-3.5 text-[#64748B] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
               </div>
 
               <!-- SLA Global -->
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Total Target SLA (Hari)</label>
+                <label class="block text-xs font-semibold text-[#0F172A] mb-1">Total Target SLA (Hari)</label>
                 <input
                   v-model.number="flowForm.slaDays"
                   type="number"
                   min="1"
                   max="60"
-                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  class="w-full px-3 py-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] font-mono-tabular"
                 />
               </div>
             </div>
@@ -102,27 +101,27 @@
             <!-- Threshold & Status -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Ambang Batas Nilai / Threshold (Rp)</label>
+                <label class="block text-xs font-semibold text-[#0F172A] mb-1">Ambang Batas Nilai / Threshold (Rp)</label>
                 <input
                   v-model.number="flowForm.threshold"
                   type="number"
                   step="1000000"
                   placeholder="0 jika tanpa ambang batas nilai"
-                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  class="w-full px-3 py-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] font-mono-tabular"
                 />
-                <p class="text-[10px] text-slate-400 mt-0.5">Misal: 5000000000 untuk transaksi &gt; Rp 5 Miliar</p>
+                <p class="text-[10px] text-[#64748B] mt-0.5 font-mono-tabular">0 = Berlaku untuk seluruh transaksi</p>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Status Aktivasi Alur</label>
+                <label class="block text-xs font-semibold text-[#0F172A] mb-1">Status Aktivasi Alur</label>
                 <label class="flex items-center gap-2 mt-2 cursor-pointer select-none">
                   <input
                     v-model="flowForm.active"
                     type="checkbox"
-                    class="w-4 h-4 text-indigo-600 rounded-md focus:ring-indigo-500 border-slate-300"
+                    class="w-4 h-4 text-[#2563EB] rounded focus:ring-[#2563EB] border-[#CBD5E1]"
                   />
-                  <span class="text-xs font-semibold text-slate-700">
-                    {{ flowForm.active ? 'Aktif (Dapat dipilih pada pengajuan baru)' : 'Nonaktif (Arsip/Ditangguhkan)' }}
+                  <span class="text-xs font-medium text-[#0F172A]">
+                    {{ flowForm.active ? 'Aktif (Dapat dipilih pada pengajuan baru)' : 'Nonaktif (Ditangguhkan)' }}
                   </span>
                 </label>
               </div>
@@ -130,31 +129,31 @@
 
             <!-- Description -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi & Ruang Lingkup Alur</label>
+              <label class="block text-xs font-semibold text-[#0F172A] mb-1">Deskripsi &amp; Ruang Lingkup Alur</label>
               <textarea
                 v-model="flowForm.description"
                 rows="2"
                 placeholder="Penjelasan kriteria penggunaan alur persetujuan ini..."
-                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+                class="w-full px-3 py-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] resize-none"
               ></textarea>
             </div>
           </div>
 
           <!-- Dynamic Multi-Tier Steps Builder -->
-          <div class="pt-3 border-t border-slate-200 space-y-3">
+          <div class="pt-3 border-t border-[#E2E8F0] space-y-3">
             <div class="flex items-center justify-between">
               <div>
-                <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+                <h4 class="text-xs font-semibold text-[#0F172A] uppercase tracking-wider">
                   Tahapan Rantai Persetujuan (Chain Approval Steps)
                 </h4>
-                <p class="text-[11px] text-slate-500">
+                <p class="text-[11px] text-[#64748B]">
                   Dokumen akan melewati tahapan ini secara berurutan dari Tahap 1 hingga tahap akhir.
                 </p>
               </div>
               <button
                 type="button"
                 @click="addStep"
-                class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-[#4338CA] text-xs font-bold transition cursor-pointer flex items-center gap-1 border border-indigo-200 shadow-2xs"
+                class="px-2.5 py-1 rounded-md bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#2563EB] text-xs font-semibold transition cursor-pointer flex items-center gap-1 border border-[#BFDBFE]"
               >
                 <Plus class="w-3.5 h-3.5" />
                 <span>Tambah Tahap</span>
@@ -162,18 +161,18 @@
             </div>
 
             <!-- Step items -->
-            <div class="space-y-2.5">
+            <div class="space-y-2">
               <div
                 v-for="(step, idx) in flowForm.steps"
                 :key="idx"
-                class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-indigo-200 transition space-y-2"
+                class="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#CBD5E1] transition space-y-2"
               >
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-lg bg-[#4338CA] text-white text-[11px] font-black flex items-center justify-center shrink-0">
+                    <span class="w-5 h-5 rounded bg-[#2563EB] text-white text-[11px] font-bold font-mono-tabular flex items-center justify-center shrink-0">
                       {{ idx + 1 }}
                     </span>
-                    <span class="text-xs font-bold text-slate-800">
+                    <span class="text-xs font-semibold text-[#0F172A]">
                       {{ idx === 0 ? 'Tahap 1 (Maker / Penelaah Awal)' : (idx === flowForm.steps.length - 1 ? `Tahap ${idx + 1} (Final Approver)` : `Tahap ${idx + 1} (Checker / Verifikator)`) }}
                     </span>
                   </div>
@@ -183,7 +182,7 @@
                       v-if="idx > 0"
                       type="button"
                       @click="moveStep(idx, -1)"
-                      class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/50 rounded-md transition cursor-pointer"
+                      class="p-1 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-200/50 rounded transition cursor-pointer"
                       title="Geser ke Atas"
                     >
                       <ArrowUp class="w-3.5 h-3.5" />
@@ -192,7 +191,7 @@
                       v-if="idx < flowForm.steps.length - 1"
                       type="button"
                       @click="moveStep(idx, 1)"
-                      class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/50 rounded-md transition cursor-pointer"
+                      class="p-1 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-200/50 rounded transition cursor-pointer"
                       title="Geser ke Bawah"
                     >
                       <ArrowDown class="w-3.5 h-3.5" />
@@ -201,7 +200,7 @@
                       v-if="flowForm.steps.length > 1"
                       type="button"
                       @click="removeStep(idx)"
-                      class="p-1 text-rose-500 hover:bg-rose-100 rounded-md transition cursor-pointer ml-1"
+                      class="p-1 text-[#B91C1C] hover:bg-[#FEE2E2] rounded transition cursor-pointer ml-1"
                       title="Hapus Tahap Ini"
                     >
                       <Trash2 class="w-3.5 h-3.5" />
@@ -209,41 +208,44 @@
                   </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 pt-1">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-0.5">
                   <!-- Step Name -->
                   <div class="sm:col-span-6">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-0.5">Nama Tahap / Aktivitas</label>
+                    <label class="block text-[10px] font-medium text-[#64748B] mb-0.5">Nama Tahap / Aktivitas</label>
                     <input
                       v-model="step.name"
                       type="text"
                       required
                       placeholder="Misal: Review Kepatuhan Klausul"
-                      class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                      class="w-full px-2.5 py-1 bg-white border border-[#CBD5E1] rounded text-xs text-[#0F172A] focus:outline-none focus:border-[#2563EB]"
                     />
                   </div>
 
                   <!-- Role Required -->
                   <div class="sm:col-span-4">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-0.5">Peran Yang Berwenang (RBAC)</label>
-                    <select
-                      v-model="step.roleRequired"
-                      class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-[#4338CA] focus:outline-none focus:ring-1 focus:ring-indigo-400 cursor-pointer"
-                    >
-                      <option v-for="rName in availableRoles" :key="rName" :value="rName">
-                        {{ rName }}
-                      </option>
-                    </select>
+                    <label class="block text-[10px] font-medium text-[#64748B] mb-0.5">Peran Yang Berwenang (RBAC)</label>
+                    <div class="relative">
+                      <select
+                        v-model="step.roleRequired"
+                        class="w-full pl-2.5 pr-7 py-1 bg-white border border-[#CBD5E1] rounded text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#2563EB] cursor-pointer appearance-none"
+                      >
+                        <option v-for="rName in availableRoles" :key="rName" :value="rName">
+                          {{ rName }}
+                        </option>
+                      </select>
+                      <ChevronDown class="w-3 h-3 text-[#64748B] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
                   </div>
 
                   <!-- Step SLA -->
                   <div class="sm:col-span-2">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-0.5">SLA (Hari)</label>
+                    <label class="block text-[10px] font-medium text-[#64748B] mb-0.5">SLA (Hari)</label>
                     <input
                       v-model.number="step.slaDays"
                       type="number"
                       min="1"
                       max="30"
-                      class="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-400 text-center"
+                      class="w-full px-2 py-1 bg-white border border-[#CBD5E1] rounded text-xs text-[#0F172A] focus:outline-none focus:border-[#2563EB] text-center font-mono-tabular"
                     />
                   </div>
                 </div>
@@ -252,11 +254,9 @@
           </div>
 
           <!-- Auditing Warning -->
-          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2.5">
-            <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <p class="text-[11px] text-amber-800 leading-relaxed">
+          <div class="bg-[#FEF3C7] border border-[#FDE68A] rounded-md p-2.5 flex items-start gap-2">
+            <ShieldAlert class="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+            <p class="text-[11px] text-[#92400E] leading-relaxed">
               <strong>Peringatan Kebijakan:</strong> Konfigurasi hierarki approval ini akan otomatis mengikat seluruh pengajuan berikutnya. Peran yang ditentukan harus dimiliki oleh pegawai aktif di modul Manajemen Pengguna &amp; RBAC.
             </p>
           </div>
@@ -264,20 +264,20 @@
       </div>
 
       <!-- Modal Footer Actions -->
-      <div class="p-4 sm:p-5 border-t border-slate-100 flex items-center justify-end gap-2 shrink-0 bg-slate-50/50">
+      <div class="p-3 border-t border-[#E2E8F0] flex items-center justify-end gap-2 shrink-0 bg-[#F8FAFC]">
         <button
           type="button"
           @click="$emit('close')"
-          class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200/60 transition cursor-pointer"
+          class="px-3 py-1.5 rounded-md text-xs font-semibold text-[#64748B] hover:bg-[#F1F5F9] border border-[#CBD5E1] transition cursor-pointer"
         >
           Batal
         </button>
         <button
           type="submit"
           form="flow-form"
-          class="px-5 py-2.5 rounded-xl bg-[#4338CA] hover:bg-indigo-700 text-white text-xs font-bold transition cursor-pointer shadow-xs flex items-center gap-1.5"
+          class="px-4 py-1.5 rounded-md bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold transition cursor-pointer shadow-2xs flex items-center gap-1.5"
         >
-          <Check class="w-4 h-4 stroke-[2.5]" />
+          <Check class="w-3.5 h-3.5" />
           <span>{{ isEditing ? 'Simpan Perubahan Alur' : 'Buat Alur Persetujuan' }}</span>
         </button>
       </div>
@@ -287,7 +287,27 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { X, Check, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-vue-next';
+import {
+  X,
+  Check,
+  Plus,
+  Trash2,
+  ArrowUp,
+  ArrowDown,
+  ShieldAlert,
+  ChevronDown,
+  Scale,
+  FileText,
+  Target,
+  MessageSquareQuote,
+  Handshake,
+  Gavel,
+  ShieldCheck,
+  ClipboardList,
+  FileSpreadsheet,
+  GitCommit,
+  Workflow
+} from 'lucide-vue-next';
 import { legalStore } from '../../stores/legalStore';
 
 const props = defineProps({
@@ -307,7 +327,50 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const emojiPresets = ['⚖️', '📝', '🎯', '📑', '🤝', '🎓', '🛡️', '🔍'];
+// Presets using Lucide Vue Next SVG Icons (No Emojis)
+const iconPresets = [
+  { id: 'Scale', emojiAlias: '⚖️', label: 'Timbangan Legal', icon: Scale },
+  { id: 'FileText', emojiAlias: '📝', label: 'Kontrak Bisnis', icon: FileText },
+  { id: 'Target', emojiAlias: '🎯', label: 'Lelang / Tender', icon: Target },
+  { id: 'MessageSquareQuote', emojiAlias: '🎓', label: 'Opini Hukum', icon: MessageSquareQuote },
+  { id: 'Handshake', emojiAlias: '🤝', label: 'Perdamaian / Damai', icon: Handshake },
+  { id: 'Gavel', emojiAlias: '🔨', label: 'Litigasi & PHI', icon: Gavel },
+  { id: 'ShieldCheck', emojiAlias: '🛡️', label: 'Kepatuhan Regulasi', icon: ShieldCheck },
+  { id: 'ClipboardList', emojiAlias: '📋', label: 'Permintaan Unit', icon: ClipboardList }
+];
+
+function isIconSelected(presetId, emojiAlias) {
+  const current = flowForm.value.icon;
+  return current === presetId || current === emojiAlias;
+}
+
+// Icon helper function returning Lucide components
+function getFlowIcon(iconOrModule) {
+  if (!iconOrModule) return Scale;
+  
+  if (iconOrModule === '⚖️') return Scale;
+  if (iconOrModule === '📝') return FileText;
+  if (iconOrModule === '🎯') return Target;
+  if (iconOrModule === '📑') return FileText;
+  if (iconOrModule === '🤝') return Handshake;
+  if (iconOrModule === '🎓') return MessageSquareQuote;
+  if (iconOrModule === '🛡️') return ShieldCheck;
+  if (iconOrModule === '🔍') return Scale;
+
+  const key = String(iconOrModule).toLowerCase();
+  if (key === 'scale' || key === 'requests') return Scale;
+  if (key === 'filetext' || key === 'contracts') return FileText;
+  if (key === 'target' || key === 'tenders') return Target;
+  if (key === 'messagesquarequote' || key === 'opinions') return MessageSquareQuote;
+  if (key === 'handshake' || key === 'disputes') return Handshake;
+  if (key === 'gavel') return Gavel;
+  if (key === 'clipboardlist') return ClipboardList;
+  if (key === 'shieldcheck') return ShieldCheck;
+  if (key === 'filespreadsheet') return FileSpreadsheet;
+  if (key === 'gitcommit') return GitCommit;
+
+  return Workflow || Scale;
+}
 
 const isEditing = computed(() => !!(props.flow && props.flow.id));
 
@@ -323,7 +386,7 @@ const availableRoles = computed(() => {
 const flowForm = ref({
   id: '',
   name: '',
-  icon: '⚖️',
+  icon: 'Scale',
   module: 'requests',
   category: 'Permintaan Legal',
   description: '',
@@ -340,7 +403,7 @@ watch(() => props.isOpen, (open) => {
       flowForm.value = {
         id: props.flow.id,
         name: props.flow.name || props.flow.title || '',
-        icon: props.flow.icon || '⚖️',
+        icon: props.flow.icon || 'Scale',
         module: props.flow.module || 'requests',
         category: props.flow.category || 'Permintaan Legal',
         description: props.flow.description || '',
@@ -360,7 +423,7 @@ watch(() => props.isOpen, (open) => {
       flowForm.value = {
         id: '',
         name: '',
-        icon: '⚖️',
+        icon: 'Scale',
         module: 'requests',
         category: 'Permintaan Legal',
         description: '',
@@ -387,6 +450,13 @@ function handleModuleChange() {
     general: 'Umum'
   };
   flowForm.value.category = map[flowForm.value.module] || 'Umum';
+  
+  // Auto select standard icon based on module if default
+  if (flowForm.value.module === 'contracts') flowForm.value.icon = 'FileText';
+  else if (flowForm.value.module === 'tenders') flowForm.value.icon = 'Target';
+  else if (flowForm.value.module === 'opinions') flowForm.value.icon = 'MessageSquareQuote';
+  else if (flowForm.value.module === 'disputes') flowForm.value.icon = 'Handshake';
+  else flowForm.value.icon = 'Scale';
 }
 
 function addStep() {
@@ -394,7 +464,7 @@ function addStep() {
   flowForm.value.steps.push({
     level: newLvl,
     name: `Pemeriksaan Tahap ${newLvl}`,
-    roleRequired: newLvl === 1 ? 'LEGAL COUNSEL' : (newLvl === 2 ? 'LEGAL MANAGER' : 'MANAGEMENT'),
+    roleRequired: newLvl === 1 ? 'STAFF LEGAL' : (newLvl === 2 ? 'KEPALA LEGAL' : 'DIREKTUR (DASHBOARD)'),
     slaDays: 1
   });
   reindexSteps();
@@ -440,7 +510,7 @@ function handleSaveFlow() {
   if (isEditing.value) {
     legalStore.updateApprovalFlow(flowForm.value.id, {
       name: flowForm.value.name.trim(),
-      icon: flowForm.value.icon || '⚖️',
+      icon: flowForm.value.icon || 'Scale',
       module: flowForm.value.module,
       category: flowForm.value.category,
       description: flowForm.value.description,
@@ -452,7 +522,7 @@ function handleSaveFlow() {
   } else {
     legalStore.addApprovalFlow({
       name: flowForm.value.name.trim(),
-      icon: flowForm.value.icon || '⚖️',
+      icon: flowForm.value.icon || 'Scale',
       module: flowForm.value.module,
       category: flowForm.value.category,
       description: flowForm.value.description,

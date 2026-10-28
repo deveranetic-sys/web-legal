@@ -89,15 +89,15 @@
 
     <!-- Filters & Search Toolbar -->
     <div class="bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-xs space-y-3">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
         <!-- Search Input -->
         <div class="md:col-span-5 relative">
-          <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search class="w-4 h-4 text-[#475569] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Cari judul kontrak, nomor, mitra rekanan, atau ID..."
-            class="w-full pl-9 pr-4 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-input form-input-search"
           />
           <button
             v-if="searchQuery"
@@ -112,7 +112,7 @@
         <div class="md:col-span-3">
           <select
             v-model="filterStatus"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Status</option>
             <option value="ACTIVE">Aktif (Valid)</option>
@@ -125,7 +125,7 @@
         <div class="md:col-span-2">
           <select
             v-model="filterType"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Tipe</option>
             <option value="PPA">PPA</option>
@@ -141,7 +141,7 @@
         <div class="md:col-span-2">
           <select
             v-model="filterEntity"
-            class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+            class="form-select"
           >
             <option value="ALL">Semua Entitas</option>
             <option value="PT Nusantara Energi">PT Nusantara Energi</option>
@@ -158,7 +158,7 @@
           <span class="text-[#475569]">Filter Cepat:</span>
           <button
             @click="setQuickFilter('ALL')"
-            :class="filterStatus === 'ALL' && filterType === 'ALL' ? 'bg-[#1E293B] text-white font-medium shadow-xs' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
+            :class="filterStatus === 'ALL' && filterType === 'ALL' ? 'bg-[#2563EB] text-white font-medium shadow-xs' : 'bg-slate-100 text-[#0F172A] hover:bg-slate-200'"
             class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
           >
             Semua ({{ contracts.length }})
@@ -172,7 +172,7 @@
           </button>
           <button
             @click="setQuickFilter('EXPIRING')"
-            :class="filterStatus === 'EXPIRING' ? 'bg-[#1E293B] text-amber-400 font-medium' : 'bg-[#FEF3C7] text-[#92400E] hover:bg-amber-100'"
+            :class="filterStatus === 'EXPIRING' ? 'bg-amber-500 text-white font-medium shadow-xs' : 'bg-[#FEF3C7] text-[#92400E] hover:bg-amber-100'"
             class="px-2.5 py-1 rounded-md transition-colors cursor-pointer"
           >
             Siaga ({{ expiringCount }})
@@ -223,6 +223,7 @@ import {
   Download,
   Plus,
   Search,
+  ChevronDown,
   AlertTriangle
 } from 'lucide-vue-next';
 import { legalStore, formatIDR, calculateDaysRemaining } from '../stores/legalStore';

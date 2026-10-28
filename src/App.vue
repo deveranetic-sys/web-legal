@@ -45,7 +45,7 @@
       <footer class="bg-white border-t border-[#E2E8F0] px-4 sm:px-6 py-2 text-[10px] sm:text-[11px] text-[#475569] flex flex-col sm:flex-row gap-1 sm:gap-0 sm:items-center justify-between shrink-0">
         <div class="flex items-center gap-2 truncate">
           <span class="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse shrink-0"></span>
-          <span class="truncate">LMS Enterprise Legal Suite • Perseroan: <strong class="text-[#0F172A]">{{ legalStore.state.currentEntity }}</strong></span>
+          <span class="truncate">E-LEGAL Enterprise Suite • Perseroan: <strong class="text-[#0F172A]">{{ legalStore.state.currentEntity }}</strong></span>
         </div>
         <div class="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] truncate">
           <span class="truncate">Pengguna: <strong class="text-[#0F172A]">{{ legalStore.state.currentUser?.name }}</strong> ({{ legalStore.state.currentUser?.role }})</span>

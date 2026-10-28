@@ -132,7 +132,7 @@
           </button>
           <button
             @click="closeModal"
-            class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs cursor-pointer transition"
+            class="px-4 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0F172A] border border-[#CBD5E1] font-bold text-xs cursor-pointer transition"
           >
             Tutup
           </button>
