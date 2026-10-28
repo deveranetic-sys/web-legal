@@ -92,7 +92,7 @@ const rolesMatrix = computed(() => legalStore.state.masterRoles || {});
 const roleForm = ref({
   name: '',
   description: '',
-  cloneFromRole: 'LEGAL STAFF'
+  cloneFromRole: 'STAFF LEGAL'
 });
 
 watch(() => props.isOpen, (newVal) => {
@@ -100,7 +100,7 @@ watch(() => props.isOpen, (newVal) => {
     roleForm.value = {
       name: '',
       description: '',
-      cloneFromRole: 'LEGAL STAFF'
+      cloneFromRole: 'STAFF LEGAL'
     };
   }
 });

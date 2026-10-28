@@ -15,10 +15,10 @@
               {{ disp.caseType }} • {{ disp.courtOrInstitution }}
             </span>
             <span
-              :class="disp.riskLevel === 'HIGH' ? 'bg-[#FFE4E6] text-[#9F1239]' : 'bg-[#FEF3C7] text-[#92400E]'"
+              :class="(disp.riskLevel || 'HIGH') === 'HIGH' ? 'bg-[#FFE4E6] text-[#9F1239]' : 'bg-[#FEF3C7] text-[#92400E]'"
               class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase"
             >
-              Risiko: {{ disp.riskLevel }}
+              Risiko: {{ disp.riskLevel || 'HIGH' }}
             </span>
           </div>
           <h3 class="text-base sm:text-lg font-black text-slate-900 mt-2">
@@ -28,21 +28,21 @@
 
         <div class="text-right sm:border-l sm:border-slate-100 sm:pl-4">
           <span class="text-xs text-slate-400 block">Nilai Klaim Sengketa:</span>
-          <span class="text-base font-black text-slate-900 font-mono">{{ formatIDR(disp.disputeValue) }}</span>
+          <span class="text-base font-black text-slate-900 font-mono">{{ formatIDR(disp.disputeValue || disp.claimValue) }}</span>
         </div>
       </div>
 
       <!-- Summary & Next Hearing -->
       <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-        {{ disp.summary }}
+        {{ disp.summary || disp.remarks }}
       </p>
 
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs pt-1">
         <div class="flex flex-wrap items-center gap-4 text-slate-600">
-          <div><span class="text-slate-400">Kuasa Hukum Eksternal:</span> <span class="font-bold">{{ disp.legalCounsel }}</span></div>
+          <div><span class="text-slate-400">Kuasa Hukum Eksternal:</span> <span class="font-bold">{{ disp.legalCounsel || disp.externalCounsel || disp.lawyer || 'Internal Legal' }}</span></div>
           <div class="flex items-center gap-2">
             <span class="text-slate-400">Sidang Berikutnya:</span>
-            <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">{{ disp.nextHearingDate }}</span>
+            <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">{{ disp.nextHearingDate || disp.nextHearing || '-' }}</span>
             
             <!-- Quick Calendar Sync Button -->
             <div class="flex items-center gap-1 ml-1">
@@ -124,9 +124,9 @@ async function confirmDeleteDispute(disp) {
 function syncGoogle(disp) {
   const event = {
     title: `[SIDANG LEGAL] ${disp.caseNumber} - ${disp.company} vs ${disp.opponent}`,
-    description: `Perkara: ${disp.caseNumber}\nLembaga/Pengadilan: ${disp.courtOrInstitution}\nKuasa Hukum: ${disp.legalCounsel}\nKlaim: ${formatIDR(disp.disputeValue)}\n\nRingkasan: ${disp.summary}`,
+    description: `Perkara: ${disp.caseNumber}\nLembaga/Pengadilan: ${disp.courtOrInstitution}\nKuasa Hukum: ${disp.legalCounsel || disp.externalCounsel || '-'}\nKlaim: ${formatIDR(disp.disputeValue || disp.claimValue)}\n\nRingkasan: ${disp.summary || disp.remarks}`,
     location: disp.courtOrInstitution || 'Pengadilan Negeri / BANI Jakarta',
-    startDate: disp.nextHearingDate
+    startDate: disp.nextHearingDate || disp.nextHearing
   };
   openGoogleCalendar(event);
   legalStore.triggerToast(`Membuka Google Calendar untuk sidang ${disp.caseNumber}`, 'info');
@@ -135,9 +135,9 @@ function syncGoogle(disp) {
 function syncICal(disp) {
   const event = {
     title: `[SIDANG LEGAL] ${disp.caseNumber} - ${disp.company} vs ${disp.opponent}`,
-    description: `Perkara: ${disp.caseNumber}\nLembaga/Pengadilan: ${disp.courtOrInstitution}\nKuasa Hukum: ${disp.legalCounsel}\nKlaim: ${formatIDR(disp.disputeValue)}\n\nRingkasan: ${disp.summary}`,
+    description: `Perkara: ${disp.caseNumber}\nLembaga/Pengadilan: ${disp.courtOrInstitution}\nKuasa Hukum: ${disp.legalCounsel || disp.externalCounsel || '-'}\nKlaim: ${formatIDR(disp.disputeValue || disp.claimValue)}\n\nRingkasan: ${disp.summary || disp.remarks}`,
     location: disp.courtOrInstitution || 'Pengadilan Negeri / BANI Jakarta',
-    startDate: disp.nextHearingDate
+    startDate: disp.nextHearingDate || disp.nextHearing
   };
   downloadICalFile(event);
   legalStore.triggerToast(`File kalender (.ics) berhasil diunduh untuk ${disp.caseNumber}`, 'success');

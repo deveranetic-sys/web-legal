@@ -27,23 +27,23 @@ export function runDataIntegrityCheck() {
     }
   }
 
-  // 1. Validasi User & Relasi Peran RBAC
+  // 1. Validasi User & Relasi Peran RBAC (5 Peran Standar)
   const users = state.users || [];
   assert(
     'Users & RBAC',
     'Ketersediaan Akun Pengguna',
-    users.length >= 6,
-    `Tersedia ${users.length} akun pengguna terdaftar (minimal 6 peran unik).`
+    users.length >= 5,
+    `Tersedia ${users.length} akun pengguna terdaftar (minimal 5 peran unik).`
   );
 
   const roles = new Set(users.map(u => u.role));
-  const expectedRoles = ['ADMIN', 'LEGAL MANAGER', 'LEGAL COUNSEL', 'LEGAL STAFF', 'REQUESTOR', 'MANAGEMENT'];
+  const expectedRoles = ['SUPER ADMIN', 'KEPALA LEGAL', 'STAFF LEGAL', 'REQUESTOR', 'DIREKTUR (DASHBOARD)'];
   const hasAllRoles = expectedRoles.every(r => roles.has(r));
   assert(
     'Users & RBAC',
-    'Cakupan 6 Peran Baku (Standard Roles)',
+    'Cakupan 5 Peran Baku (Standard Roles)',
     hasAllRoles,
-    hasAllRoles ? 'Seluruh 6 peran standar terpenuhi.' : `Peran tidak lengkap: ${expectedRoles.filter(r => !roles.has(r)).join(', ')}`
+    hasAllRoles ? 'Seluruh 5 peran standar terpenuhi.' : `Peran tidak lengkap: ${expectedRoles.filter(r => !roles.has(r)).join(', ')}`
   );
 
   const erpSyncedUsers = users.filter(u => u.nik && u.nik.startsWith('EMP-'));

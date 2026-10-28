@@ -1941,15 +1941,15 @@ export const initialCapabilityList = [
 ];
 
 export const initialRolesMatrix = {
-  ADMIN: {
-    label: 'Administrator Sistem',
-    description: 'Akses penuh ke seluruh modul, konfigurasi RBAC, pengguna, dan alur sistem.',
+  'SUPER ADMIN': {
+    label: 'Super Admin',
+    description: 'Akses penuh ke seluruh modul, konfigurasi RBAC, integrasi, manajemen pengguna, dan alur sistem.',
     caps: ['*'],
     isCustom: false
   },
-  'LEGAL MANAGER': {
-    label: 'Legal Operations Manager',
-    description: 'Supervisi operasional divisi legal, persetujuan draf kontrak, dan pembagian tugas.',
+  'KEPALA LEGAL': {
+    label: 'Kepala Legal',
+    description: 'Supervisi operasional divisi legal, telaah risiko, persetujuan (approval) kontrak, dan pembagian tugas tim.',
     caps: [
       'tender.view', 'tender.edit', 'tender.approve',
       'contract.view', 'contract.edit', 'contract.approve',
@@ -1959,9 +1959,9 @@ export const initialRolesMatrix = {
     ],
     isCustom: false
   },
-  'LEGAL COUNSEL': {
-    label: 'Senior Legal Counsel',
-    description: 'Penyusunan penawaran tender, telaah kontrak, analisis risiko hukum, dan litigasi.',
+  'STAFF LEGAL': {
+    label: 'Staff Legal',
+    description: 'Penyusunan draf kontrak, penelaahan yuridis, administrasi berkas lelang, registrasi izin, dan kepatuhan.',
     caps: [
       'tender.view', 'tender.edit',
       'contract.view', 'contract.edit',
@@ -1971,28 +1971,17 @@ export const initialRolesMatrix = {
     ],
     isCustom: false
   },
-  'LEGAL STAFF': {
-    label: 'Legal Specialist & Admin',
-    description: 'Administrasi berkas lelang, unggah vault dokumen, dan pencatatan perizinan.',
-    caps: [
-      'tender.view', 'tender.edit',
-      'contract.view',
-      'request.create',
-      'compliance.manage', 'vault.manage'
-    ],
-    isCustom: false
-  },
   REQUESTOR: {
-    label: 'Requestor / Unit Bisnis',
-    description: 'Pengajuan tiket kebutuhan hukum dan pemantauan status permohonan mandiri.',
+    label: 'Requestor',
+    description: 'Pengajuan tiket kebutuhan hukum unit bisnis dan pemantauan status permohonan mandiri.',
     caps: [
       'request.create'
     ],
     isCustom: false
   },
-  MANAGEMENT: {
-    label: 'Direksi / Board of Directors',
-    description: 'Otorisasi gate final, penandatanganan kontrak bernilai tinggi, dan monitoring eksekutif.',
+  'DIREKTUR (DASHBOARD)': {
+    label: 'Direktur (dashboard)',
+    description: 'Monitoring eksekutif via dashboard, pemantauan KPI korporat, laporan, dan otorisasi final dokumen strategis.',
     caps: [
       'tender.view', 'tender.approve',
       'contract.view', 'contract.approve',
@@ -2020,9 +2009,9 @@ export const initialApprovalFlows = [
     description: 'Evaluasi 6 kriteria tertimbang kelayakan korporasi sebelum tender resmi diikuti perseroan.',
     help: 'Evaluasi 6 kriteria tertimbang kelayakan korporasi sebelum tender diikuti',
     steps: [
-      { level: 1, name: 'Penyusunan Kriteria Skor (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-      { level: 2, name: 'Review Komite Risiko (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-      { level: 3, name: 'Otorisasi Direktur Operasional (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+      { level: 1, name: 'Penyusunan Kriteria Skor (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+      { level: 2, name: 'Review Komite Risiko (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+      { level: 3, name: 'Otorisasi Direktur Operasional (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
     ],
     lastUpdated: '2026-10-15 09:00'
   },
@@ -2033,19 +2022,19 @@ export const initialApprovalFlows = [
     category: 'Permintaan Legal',
     module: 'requests',
     icon: '⚖️',
-    maker: 'Senior Legal Counsel',
-    checker: 'Legal Operations Manager',
-    approver: 'Head of Legal & Director',
+    maker: 'Staff Legal',
+    checker: 'Kepala Legal',
+    approver: 'Direktur (dashboard)',
     threshold: 0,
     status: 'AKTIF',
     active: true,
     slaDays: 4,
     description: 'Proses penelaahan dan otorisasi berjenjang untuk seluruh permohonan legalitas unit bisnis.',
-    help: 'Penelaahan berjenjang 3 level dari Legal Counsel, Legal Manager, hingga Otorisasi Direksi',
+    help: 'Penelaahan berjenjang 3 level dari Staff Legal, Kepala Legal, hingga Otorisasi Direksi',
     steps: [
-      { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-      { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-      { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+      { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+      { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+      { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 2 }
     ],
     lastUpdated: '2026-10-15 09:00'
   },
@@ -2056,9 +2045,9 @@ export const initialApprovalFlows = [
     category: 'Manajemen Kontrak',
     module: 'contracts',
     icon: '📝',
-    maker: 'Commercial Legal Counsel',
-    checker: 'Head of Legal & Compliance',
-    approver: 'Direksi Terkait',
+    maker: 'Staff Legal',
+    checker: 'Kepala Legal',
+    approver: 'Direktur (dashboard)',
     threshold: 5000000000,
     status: 'AKTIF',
     active: true,
@@ -2066,9 +2055,9 @@ export const initialApprovalFlows = [
     description: 'Review legalitas bertingkat sebelum penandatanganan kontrak kerja sama bernilai di atas Rp 5 Miliar.',
     help: 'Review legalitas bertingkat sebelum penandatanganan kontrak kerja sama',
     steps: [
-      { level: 1, name: 'Penyusunan Draf & Negosiasi Klausul (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 2 },
-      { level: 2, name: 'Pemeriksaan Legal Manager & Compliance (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-      { level: 3, name: 'Persetujuan Direksi / BOD (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+      { level: 1, name: 'Penyusunan Draf & Negosiasi Klausul (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 2 },
+      { level: 2, name: 'Pemeriksaan Legal Manager & Compliance (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+      { level: 3, name: 'Persetujuan Direksi / BOD (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 2 }
     ],
     lastUpdated: '2026-10-15 09:00'
   },
@@ -2079,9 +2068,9 @@ export const initialApprovalFlows = [
     category: 'Manajemen Kontrak',
     module: 'contracts',
     icon: '📑',
-    maker: 'Contract Specialist',
-    checker: 'Contract Manager',
-    approver: 'Project Director',
+    maker: 'Staff Legal',
+    checker: 'Kepala Legal',
+    approver: 'Direktur (dashboard)',
     threshold: 500000000,
     status: 'AKTIF',
     active: true,
@@ -2089,9 +2078,9 @@ export const initialApprovalFlows = [
     description: 'Adendum atau perubahan nilai proyek di atas Rp 500 Juta wajib ke Project Director.',
     help: 'Adendum atau perubahan nilai proyek di atas Rp 500 Juta wajib ke Project Director',
     steps: [
-      { level: 1, name: 'Kalkulasi Deviasi Nilai Kontrak (Maker)', roleRequired: 'LEGAL STAFF', slaDays: 1 },
-      { level: 2, name: 'Review Managerial Kontrak (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-      { level: 3, name: 'Pengesahan Project Director (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+      { level: 1, name: 'Kalkulasi Deviasi Nilai Kontrak (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+      { level: 2, name: 'Review Managerial Kontrak (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+      { level: 3, name: 'Pengesahan Project Director (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
     ],
     lastUpdated: '2026-10-15 09:00'
   },
@@ -2102,9 +2091,9 @@ export const initialApprovalFlows = [
     category: 'Dispute & Litigasi',
     module: 'disputes',
     icon: '🤝',
-    maker: 'Litigation Counsel',
-    checker: 'General Counsel',
-    approver: 'Direktur Utama',
+    maker: 'Staff Legal',
+    checker: 'Kepala Legal',
+    approver: 'Direktur (dashboard)',
     threshold: 0,
     status: 'AKTIF',
     active: true,
@@ -2112,9 +2101,9 @@ export const initialApprovalFlows = [
     description: 'Perdamaian di luar/dalam pengadilan mengikat hak perseroan.',
     help: 'Perdamaian di luar/dalam pengadilan mengikat hak perseroan',
     steps: [
-      { level: 1, name: 'Penyusunan Klausul Akta Perdamaian (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 2 },
-      { level: 2, name: 'Review Risiko Litigasi & Finansial (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 2 },
-      { level: 3, name: 'Penandatanganan Direktur Utama (Approver)', roleRequired: 'MANAGEMENT', slaDays: 3 }
+      { level: 1, name: 'Penyusunan Klausul Akta Perdamaian (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 2 },
+      { level: 2, name: 'Review Risiko Litigasi & Finansial (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 2 },
+      { level: 3, name: 'Penandatanganan Direktur Utama (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 3 }
     ],
     lastUpdated: '2026-10-15 09:00'
   },
@@ -2125,9 +2114,9 @@ export const initialApprovalFlows = [
     category: 'Legal Opinion',
     module: 'opinions',
     icon: '🎓',
-    maker: 'Legal Counsel',
-    checker: 'Senior Legal Specialist',
-    approver: 'Head of Legal & Compliance',
+    maker: 'Staff Legal',
+    checker: 'Kepala Legal',
+    approver: 'Direktur (dashboard)',
     threshold: 0,
     status: 'AKTIF',
     active: true,
@@ -2135,9 +2124,9 @@ export const initialApprovalFlows = [
     description: 'Review bertingkat keabsahan rujukan undang-undang dan ratio decidendi opini hukum.',
     help: 'Verifikasi bertingkat opini hukum sebelum diterbitkan ke pemohon',
     steps: [
-      { level: 1, name: 'Riset Regulasi & Preseden (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-      { level: 2, name: 'Peer-Review Legal Manager (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-      { level: 3, name: 'Pengesahan Opini Hukum (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+      { level: 1, name: 'Riset Regulasi & Preseden (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+      { level: 2, name: 'Peer-Review Legal Manager (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+      { level: 3, name: 'Pengesahan Opini Hukum (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
     ],
     lastUpdated: '2026-10-15 09:00'
   }
@@ -2221,7 +2210,7 @@ export const initialErpEmployees = [
     phone: '+62 811-987-100',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'ADMIN'
+    defaultRole: 'SUPER ADMIN'
   },
   {
     nik: 'EMP-0101',
@@ -2232,7 +2221,7 @@ export const initialErpEmployees = [
     phone: '+62 811-987-101',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'ADMIN'
+    defaultRole: 'SUPER ADMIN'
   },
   {
     nik: 'EMP-0102',
@@ -2243,7 +2232,7 @@ export const initialErpEmployees = [
     phone: '+62 812-223-102',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'LEGAL MANAGER'
+    defaultRole: 'KEPALA LEGAL'
   },
   {
     nik: 'EMP-0103',
@@ -2254,7 +2243,7 @@ export const initialErpEmployees = [
     phone: '+62 813-334-103',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'LEGAL COUNSEL'
+    defaultRole: 'STAFF LEGAL'
   },
   {
     nik: 'EMP-0104',
@@ -2265,7 +2254,7 @@ export const initialErpEmployees = [
     phone: '+62 814-445-104',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'LEGAL STAFF'
+    defaultRole: 'STAFF LEGAL'
   },
   {
     nik: 'EMP-0105',
@@ -2287,7 +2276,7 @@ export const initialErpEmployees = [
     phone: '+62 811-000-106',
     workLocation: 'Executive Boardroom - Lt. 35',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'MANAGEMENT'
+    defaultRole: 'DIREKTUR (DASHBOARD)'
   },
   // Karyawan ERP Baru yang Belum Di-Onboard ke LMS:
   {
@@ -2299,7 +2288,7 @@ export const initialErpEmployees = [
     phone: '+62 812-778-107',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'LEGAL COUNSEL'
+    defaultRole: 'STAFF LEGAL'
   },
   {
     nik: 'EMP-0108',
@@ -2332,7 +2321,7 @@ export const initialErpEmployees = [
     phone: '+62 818-112-110',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'LEGAL COUNSEL'
+    defaultRole: 'STAFF LEGAL'
   },
   {
     nik: 'EMP-0111',
@@ -2365,7 +2354,7 @@ export const initialErpEmployees = [
     phone: '+62 815-445-113',
     workLocation: 'Cyber Hub - Lt. 25',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'ADMIN'
+    defaultRole: 'SUPER ADMIN'
   },
   {
     nik: 'EMP-0114',
@@ -2376,7 +2365,7 @@ export const initialErpEmployees = [
     phone: '+62 816-556-114',
     workLocation: 'Head Office Jakarta - Lt. 28',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'LEGAL STAFF'
+    defaultRole: 'STAFF LEGAL'
   },
   {
     nik: 'EMP-0115',
@@ -2387,7 +2376,7 @@ export const initialErpEmployees = [
     phone: '+62 811-667-115',
     workLocation: 'Executive Boardroom - Lt. 35',
     status: 'ACTIVE_EMPLOYEE',
-    defaultRole: 'MANAGEMENT'
+    defaultRole: 'DIREKTUR (DASHBOARD)'
   }
 ];
 

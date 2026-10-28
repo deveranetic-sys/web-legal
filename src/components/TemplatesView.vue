@@ -67,21 +67,35 @@
           v-model="searchQuery"
           type="text"
           :placeholder="activeSubTab === 'clauses' ? 'Cari judul klausul atau isi kalimat...' : 'Cari template surat, somasi, kontrak...'"
-          class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
+          class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 placeholder-slate-400"
         />
       </div>
 
-      <!-- Category Filter Pills (When on Templates Tab) -->
-      <div v-if="activeSubTab === 'templates'" class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-        <button
-          v-for="cat in templateCategories"
-          :key="cat.key"
-          @click="selectedCategory = cat.key"
-          :class="selectedCategory === cat.key ? 'bg-indigo-600 text-white font-bold shadow-2xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
-          class="px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer whitespace-nowrap"
+      <!-- Category Filter Dropdown (Menggantikan Pills) -->
+      <div class="sm:w-64 shrink-0 relative">
+        <Filter class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        
+        <select
+          v-if="activeSubTab === 'templates'"
+          v-model="selectedCategory"
+          class="w-full pl-9 pr-8 py-2 text-xs sm:text-sm font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer appearance-none shadow-2xs transition"
         >
-          {{ cat.label }}
-        </button>
+          <option v-for="cat in templateCategories" :key="cat.key" :value="cat.key">
+            {{ cat.label }}
+          </option>
+        </select>
+
+        <select
+          v-else
+          v-model="selectedClauseCategory"
+          class="w-full pl-9 pr-8 py-2 text-xs sm:text-sm font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer appearance-none shadow-2xs transition"
+        >
+          <option v-for="cat in clauseCategories" :key="cat.key" :value="cat.key">
+            {{ cat.label }}
+          </option>
+        </select>
+
+        <ChevronDown class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
       </div>
     </div>
 
@@ -89,6 +103,7 @@
     <ClausesTab
       v-if="activeSubTab === 'clauses'"
       :search-query="searchQuery"
+      :selected-category="selectedClauseCategory"
       @open-add="openAddClause"
       @open-edit="openEditClause"
     />
@@ -137,7 +152,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Search, Plus } from 'lucide-vue-next';
+import { Search, Plus, Filter, ChevronDown } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 import TemplateGeneratorModal from './TemplateGeneratorModal.vue';
 import AddTemplateModal from './AddTemplateModal.vue';
@@ -149,6 +164,7 @@ import ClauseModal from './Templates/Modals/ClauseModal.vue';
 const activeSubTab = ref('templates');
 const searchQuery = ref('');
 const selectedCategory = ref('ALL');
+const selectedClauseCategory = ref('ALL');
 const previewTmpl = ref(null);
 const selectedTemplateForGen = ref(null);
 const isAddModalOpen = ref(false);
@@ -161,11 +177,19 @@ const clauses = computed(() => legalStore.state.clauses || []);
 const templates = computed(() => legalStore.state.templates || []);
 
 const templateCategories = [
-  { key: 'ALL', label: 'Semua Template' },
+  { key: 'ALL', label: 'Semua Kategori Template' },
   { key: 'SURAT', label: 'Template Surat & Somasi' },
   { key: 'KONTRAK', label: 'Kontrak & Perjanjian' },
   { key: 'CORPORATE', label: 'Korporasi & Legal' }
 ];
+
+const clauseCategories = computed(() => {
+  const cats = [...new Set(clauses.value.map(c => c.category).filter(Boolean))];
+  return [
+    { key: 'ALL', label: 'Semua Kategori Klausul' },
+    ...cats.map(c => ({ key: c, label: c }))
+  ];
+});
 
 function openAddClause() {
   isEditClauseMode.value = false;

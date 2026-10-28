@@ -49,7 +49,7 @@
                 <div class="flex items-center justify-between">
                   <span>{{ roleKey }}</span>
                   <button
-                    v-if="!['ADMIN', 'LEGAL MANAGER', 'REQUESTOR'].includes(roleKey)"
+                    v-if="!['SUPER ADMIN', 'ADMIN', 'KEPALA LEGAL', 'LEGAL MANAGER', 'REQUESTOR', 'DIREKTUR (DASHBOARD)', 'STAFF LEGAL'].includes(roleKey)"
                     @click.stop="confirmDeleteRole(roleKey)"
                     class="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:bg-red-50 rounded transition"
                     title="Hapus Peran Kustom"

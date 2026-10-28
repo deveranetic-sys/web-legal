@@ -96,15 +96,14 @@ Sistem menggunakan layout navigasi **Bilah Sisi Kiri Otentik (Left Sidebar Navig
 
 ---
 
-## 👥 Simulasi Matriks Peran (RBAC Role Switcher)
+## 👥 Simulasi Matriks Peran (RBAC Role Switcher - Dibatasi 5 Peran)
 
 Pengguna dapat berpindah peran kapan saja melalui dropdown pada bilah header atas:
-1. **ADMIN**: Akses penuh ke seluruh modul, pendaftaran data, modifikasi, dan penghapusan data.
-2. **LEGAL MANAGER**: Wewenang operasional penuh, review permohonan, dan persetujuan legal opinion.
-3. **LEGAL COUNSEL**: Penyusunan draf kontrak, penelaahan yuridis, penugasan permohonan legal.
-4. **LEGAL STAFF**: Penanganan administrasi berkas, pendaftaran izin, dan pembaruan kepatuhan.
-5. **REQUESTOR (Unit Bisnis)**: Hak akses khusus internal untuk mengajukan permohonan review (*Legal Requests*) dan membaca perpustakaan regulasi/template, tanpa akses ke modul privat korporat.
-6. **MANAGEMENT (Direksi & Komisaris / BOD & BOC)**: Hak peninjauan eksekutif dan persetujuan, dengan proteksi pelarangan penghapusan arsip (*Audit Trail Preservation*).
+1. **Super Admin**: Akses penuh ke seluruh modul, pendaftaran data, modifikasi, konfigurasi RBAC matriks, dan penghapusan data.
+2. **Kepala Legal**: Wewenang operasional penuh divisi hukum, supervisi penugasan, review permohonan, dan persetujuan tingkat 2 draf kontrak & opini hukum.
+3. **Staff Legal**: Penyusunan draf kontrak (*Maker*), penelaahan yuridis, penanganan administrasi izin OSS/IUP, warkat jaminan, dan pembaruan kepatuhan.
+4. **Requestor**: Hak akses khusus unit bisnis internal untuk mengajukan permohonan review (*Legal Requests*) dan membaca perpustakaan regulasi/template publik, tanpa akses ke data privat korporat & perkara.
+5. **Direktur (dashboard)**: Hak pemantauan eksekutif berfokus pada Dashboard & KPI korporat, laporan, serta otorisasi final dokumen strategis (*Approver*), dengan proteksi pelarangan penghapusan arsip (*Audit Trail Preservation*).
 
 ---
 

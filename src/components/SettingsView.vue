@@ -13,7 +13,7 @@
           Pengaturan Sistem & Kontrol Akses
         </h1>
         <p class="text-sm text-slate-500 mt-1">
-          Konfigurasi terpusat hak akses peran (RBAC), alur persetujuan multi-jenjang berjenjang eskalasi, manajemen akun terintegrasi ERP, dan konektivitas bridge enterprise.
+          Konfigurasi terpusat hak akses peran (RBAC), alur persetujuan multi-jenjang berjenjang eskalasi, manajemen akun terintegrasi ERP, serta kapasitas & cadangan data.
         </p>
       </div>
 
@@ -71,17 +71,6 @@
       </button>
 
       <button
-        @click="activeTab = 'integrasi'"
-        :class="activeTab === 'integrasi' ? 'bg-[#4338CA] text-white shadow-xs font-bold' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 font-medium'"
-        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition cursor-pointer flex items-center gap-2"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        Integrasi ERP & Layanan
-      </button>
-
-      <button
         @click="activeTab = 'storage'"
         :class="activeTab === 'storage' ? 'bg-[#4338CA] text-white shadow-xs font-bold' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 font-medium'"
         class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition cursor-pointer flex items-center gap-2"
@@ -110,10 +99,6 @@
       v-else-if="activeTab === 'flows'"
       @open-edit-flow-modal="openEditFlowModal"
       @open-add-flow-modal="openAddFlowModal"
-    />
-
-    <SettingsIntegrasiTab
-      v-else-if="activeTab === 'integrasi'"
     />
 
     <!-- Storage & Backup Tab Panel -->
@@ -240,11 +225,10 @@ const SettingsRoleModal = defineAsyncComponent(() => import('./Settings/Settings
 const SettingsFlowModal = defineAsyncComponent(() => import('./Settings/SettingsFlowModal.vue'));
 const SettingsUserModal = defineAsyncComponent(() => import('./Settings/SettingsUserModal.vue'));
 const SettingsFlowsTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsFlowsTab.vue'));
-const SettingsIntegrasiTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsIntegrasiTab.vue'));
 const SettingsRolesTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsRolesTab.vue'));
 const SettingsUsersTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsUsersTab.vue'));
 
-// Active Sub-tab ('roles' | 'users' | 'flows' | 'integrasi' | 'storage')
+// Active Sub-tab ('roles' | 'users' | 'flows' | 'storage')
 const activeTab = ref('roles');
 
 // Datasets from store

@@ -315,7 +315,7 @@ const availableRoles = computed(() => {
   const matrix = Object.keys(props.rolesMatrix || {}).length ? props.rolesMatrix : (legalStore.state.rolesMatrix || {});
   const keys = Object.keys(matrix);
   if (!keys.length) {
-    return ['ADMIN', 'LEGAL COUNSEL', 'LEGAL MANAGER', 'MANAGEMENT', 'LEGAL STAFF', 'REQUESTOR'];
+    return ['SUPER ADMIN', 'KEPALA LEGAL', 'STAFF LEGAL', 'REQUESTOR', 'DIREKTUR (DASHBOARD)'];
   }
   return keys;
 });
@@ -350,9 +350,9 @@ watch(() => props.isOpen, (open) => {
         steps: Array.isArray(props.flow.steps) && props.flow.steps.length
           ? JSON.parse(JSON.stringify(props.flow.steps))
           : [
-            { level: 1, name: 'Penyusunan Draf (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-            { level: 2, name: 'Review Kepatuhan (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-            { level: 3, name: 'Pengesahan Akhir (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+            { level: 1, name: 'Penyusunan Draf (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+            { level: 2, name: 'Review Kepatuhan (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+            { level: 3, name: 'Pengesahan Akhir (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
           ]
       };
     } else {
@@ -368,9 +368,9 @@ watch(() => props.isOpen, (open) => {
         threshold: 0,
         active: true,
         steps: [
-          { level: 1, name: 'Pemeriksaan Awal (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-          { level: 2, name: 'Review Manajerial (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-          { level: 3, name: 'Persetujuan Final (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+          { level: 1, name: 'Pemeriksaan Awal (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+          { level: 2, name: 'Review Manajerial (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+          { level: 3, name: 'Persetujuan Final (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
         ]
       };
     }

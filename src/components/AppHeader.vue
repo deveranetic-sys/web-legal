@@ -69,12 +69,11 @@
           @change="legalStore.switchRole($event.target.value)"
           class="bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold rounded-xl py-1.5 px-2.5 focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] cursor-pointer shadow-xs hover:bg-[#E0E7FF] transition"
         >
-          <option value="ADMIN">Role: ADMIN (Full Access)</option>
-          <option value="LEGAL MANAGER">Role: LEGAL MANAGER</option>
-          <option value="LEGAL COUNSEL">Role: LEGAL COUNSEL</option>
-          <option value="LEGAL STAFF">Role: LEGAL STAFF</option>
-          <option value="REQUESTOR">Role: REQUESTOR (Unit Bisnis)</option>
-          <option value="MANAGEMENT">Role: MANAGEMENT (BOD/BOC)</option>
+          <option value="SUPER ADMIN">Role: Super Admin</option>
+          <option value="KEPALA LEGAL">Role: Kepala Legal</option>
+          <option value="STAFF LEGAL">Role: Staff Legal</option>
+          <option value="REQUESTOR">Role: Requestor</option>
+          <option value="DIREKTUR (DASHBOARD)">Role: Direktur (dashboard)</option>
         </select>
       </div>
 

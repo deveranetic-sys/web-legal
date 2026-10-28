@@ -50,8 +50,8 @@
       </div>
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
         <span class="text-xs text-slate-500 font-medium">Sidang Terdekat</span>
-        <div class="text-sm font-bold text-slate-900 mt-1 truncate">29 Sep 2026</div>
-        <div class="text-[11px] text-purple-700 font-semibold mt-0.5">BANI Arbitration Jakarta</div>
+        <div class="text-sm font-bold text-slate-900 mt-1 truncate">{{ nearestHearing.date }}</div>
+        <div class="text-[11px] text-purple-700 font-semibold mt-0.5 truncate">{{ nearestHearing.institution }}</div>
       </div>
     </div>
 
@@ -95,11 +95,26 @@ const selectedDispute = ref(null);
 const disputes = computed(() => legalStore.state.disputes || []);
 
 const highRiskCount = computed(() => {
-  return disputes.value.filter(d => d.riskLevel === 'HIGH').length;
+  return disputes.value.filter(d => (d.riskLevel || 'HIGH') === 'HIGH').length;
 });
 
 const totalClaimValue = computed(() => {
-  return disputes.value.reduce((acc, d) => acc + (d.disputeValue || 0), 0);
+  return disputes.value.reduce((acc, d) => acc + (Number(d.disputeValue || d.claimValue) || 0), 0);
+});
+
+const nearestHearing = computed(() => {
+  const withDate = disputes.value.filter(d => d.nextHearingDate || d.nextHearing);
+  if (withDate.length === 0) return { date: '-', institution: 'Tidak ada jadwal' };
+  const sorted = [...withDate].sort((a, b) => {
+    const da = new Date(a.nextHearingDate || a.nextHearing);
+    const db = new Date(b.nextHearingDate || b.nextHearing);
+    return da - db;
+  });
+  const first = sorted[0];
+  return {
+    date: first.nextHearingDate || first.nextHearing || '-',
+    institution: first.courtOrInstitution || 'Pengadilan Negeri / BANI'
+  };
 });
 
 function openAddModal() {

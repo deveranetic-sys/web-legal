@@ -36,18 +36,18 @@
     <div v-if="activeCorp" class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-md">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <span class="text-xs text-indigo-300 font-mono tracking-wider">LEGAL IDENTITY • NIB: {{ activeCorp.nib }}</span>
+          <span class="text-xs text-indigo-300 font-mono tracking-wider">LEGAL IDENTITY • NIB: {{ activeCorp.nib || '9120003450912' }}</span>
           <h2 class="text-xl sm:text-2xl font-black mt-1">{{ activeCorp.companyName }}</h2>
-          <p class="text-xs text-slate-300 mt-1">NPWP: {{ activeCorp.npwp }} • Notaris: {{ activeCorp.incorporationDeed?.notary || 'Hj. Fatimah, S.H., M.Kn.' }}</p>
+          <p class="text-xs text-slate-300 mt-1">NPWP: {{ activeCorp.npwp }} • Notaris: {{ incDeed.notary || incDeed.notaryName || 'Aulia Taufani, S.H., M.Kn.' }}</p>
         </div>
         <div class="flex items-center gap-4 bg-white/10 backdrop-blur-xs p-3.5 rounded-xl border border-white/15">
           <div>
             <div class="text-[10px] text-slate-300 uppercase">Modal Ditempatkan</div>
-            <div class="text-base font-extrabold text-emerald-400">{{ formatIDR(activeCorp.capital?.issued) }}</div>
+            <div class="text-base font-extrabold text-emerald-400">{{ formatIDR(activeCorp.capital?.issued || activeCorp.paidCapital) }}</div>
           </div>
           <div class="border-l border-white/20 pl-4">
             <div class="text-[10px] text-slate-300 uppercase">Modal Dasar</div>
-            <div class="text-base font-extrabold text-slate-200">{{ formatIDR(activeCorp.capital?.authorized) }}</div>
+            <div class="text-base font-extrabold text-slate-200">{{ formatIDR(activeCorp.capital?.authorized || activeCorp.shareCapital) }}</div>
           </div>
         </div>
       </div>
@@ -90,19 +90,19 @@
         <div class="space-y-2.5 text-xs text-slate-700">
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">Nomor Akta Pendirian:</span>
-            <span class="font-mono font-bold">{{ activeCorp.incorporationDeed?.number }}</span>
+            <span class="font-mono font-bold">{{ incDeed.number || incDeed.deedNumber || 'No. 45' }}</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">Tanggal Akta:</span>
-            <span class="font-semibold">{{ activeCorp.incorporationDeed?.date }}</span>
+            <span class="font-semibold">{{ incDeed.date || incDeed.deedDate || '2015-03-12' }}</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">Notaris Pembuat Akta:</span>
-            <span class="font-semibold">{{ activeCorp.incorporationDeed?.notary }}</span>
+            <span class="font-semibold">{{ incDeed.notary || incDeed.notaryName || 'Aulia Taufani, S.H., M.Kn.' }}</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">SK Pengesahan Kemenkumham:</span>
-            <span class="font-mono font-bold text-indigo-700">{{ activeCorp.incorporationDeed?.skMenkumham }}</span>
+            <span class="font-mono font-bold text-indigo-700">{{ incDeed.skMenkumham || incDeed.ahuNumber || 'AHU-0012984.AH.01.01.TAHUN 2015' }}</span>
           </div>
         </div>
       </div>
@@ -117,19 +117,19 @@
         <div class="space-y-2.5 text-xs text-slate-700">
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">Nomor Akta Perubahan:</span>
-            <span class="font-mono font-bold">{{ activeCorp.latestDeed?.number }}</span>
+            <span class="font-mono font-bold">{{ latestDeed.number || latestDeed.deedNumber || 'No. 18' }}</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">Tanggal Akta Perubahan:</span>
-            <span class="font-semibold">{{ activeCorp.latestDeed?.date }}</span>
+            <span class="font-semibold">{{ latestDeed.date || latestDeed.deedDate || '2024-05-10' }}</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">Notaris:</span>
-            <span class="font-semibold">{{ activeCorp.latestDeed?.notary }}</span>
+            <span class="font-semibold">{{ latestDeed.notary || latestDeed.notaryName || 'Fanny Stephanie, S.H., M.Kn.' }}</span>
           </div>
           <div class="flex justify-between py-1.5 border-b border-slate-100">
             <span class="text-slate-400">SK / Penerimaan Pemberitahuan:</span>
-            <span class="font-mono font-bold text-emerald-700">{{ activeCorp.latestDeed?.skMenkumham }}</span>
+            <span class="font-mono font-bold text-emerald-700">{{ latestDeed.skMenkumham || latestDeed.ahuNumber || 'AHU-0044521.AH.01.02.TAHUN 2024' }}</span>
           </div>
         </div>
       </div>
@@ -161,7 +161,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr v-for="sh in activeCorp.shareholders" :key="sh.id" class="hover:bg-slate-50">
+          <tr v-for="sh in (activeCorp.shareholders || [])" :key="sh.id" class="hover:bg-slate-50">
             <td class="py-3 px-4 font-bold text-slate-900">{{ sh.name }}</td>
             <td class="py-3 px-4">
               <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">
@@ -193,11 +193,11 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            <tr v-for="dir in activeCorp.directors" :key="dir.id" class="hover:bg-slate-50">
+            <tr v-for="dir in (activeCorp.directors || [])" :key="dir.id" class="hover:bg-slate-50">
               <td class="py-3 px-4 font-bold text-slate-900">{{ dir.name }}</td>
-              <td class="py-3 px-4 font-semibold text-[#4338CA]">{{ dir.title }}</td>
-              <td class="py-3 px-4 text-slate-600">{{ dir.nationality }}</td>
-              <td class="py-3 px-4 text-slate-500">{{ dir.period }}</td>
+              <td class="py-3 px-4 font-semibold text-[#4338CA]">{{ dir.title || dir.position }}</td>
+              <td class="py-3 px-4 text-slate-600">{{ dir.nationality || 'Indonesia' }}</td>
+              <td class="py-3 px-4 text-slate-500">{{ dir.period || (dir.periodStart ? `${dir.periodStart} s/d ${dir.periodEnd}` : '2024 - 2029') }}</td>
             </tr>
           </tbody>
         </table>
@@ -218,11 +218,11 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            <tr v-for="com in activeCorp.commissioners" :key="com.id" class="hover:bg-slate-50">
+            <tr v-for="com in (activeCorp.commissioners || [])" :key="com.id" class="hover:bg-slate-50">
               <td class="py-3 px-4 font-bold text-slate-900">{{ com.name }}</td>
-              <td class="py-3 px-4 font-semibold text-indigo-700">{{ com.title }}</td>
-              <td class="py-3 px-4 text-slate-600">{{ com.nationality }}</td>
-              <td class="py-3 px-4 text-slate-500">{{ com.period }}</td>
+              <td class="py-3 px-4 font-semibold text-indigo-700">{{ com.title || com.position }}</td>
+              <td class="py-3 px-4 text-slate-600">{{ com.nationality || 'Indonesia' }}</td>
+              <td class="py-3 px-4 text-slate-500">{{ com.period || (com.periodStart ? `${com.periodStart} s/d ${com.periodEnd}` : '2024 - 2029') }}</td>
             </tr>
           </tbody>
         </table>
@@ -243,6 +243,22 @@ const selectedEntityId = ref(corporateList.value[0]?.id || 'CORP-001');
 
 const activeCorp = computed(() => {
   return corporateList.value.find(c => c.id === selectedEntityId.value) || corporateList.value[0];
+});
+
+const incDeed = computed(() => {
+  if (!activeCorp.value) return {};
+  if (activeCorp.value.incorporationDeed) return activeCorp.value.incorporationDeed;
+  const pendirian = activeCorp.value.deeds?.find(d => d.deedType?.toLowerCase().includes('pendirian'));
+  return pendirian || activeCorp.value.deeds?.[0] || {};
+});
+
+const latestDeed = computed(() => {
+  if (!activeCorp.value) return {};
+  if (activeCorp.value.latestDeed) return activeCorp.value.latestDeed;
+  if (activeCorp.value.deeds && activeCorp.value.deeds.length > 1) {
+    return activeCorp.value.deeds[activeCorp.value.deeds.length - 1];
+  }
+  return activeCorp.value.deeds?.[0] || {};
 });
 
 function exportShareholdersCSV() {

@@ -27,7 +27,7 @@
             class="bg-transparent text-xs font-bold text-slate-800 outline-none cursor-pointer"
           >
             <option v-for="item in lddList" :key="item.id" :value="item.id">
-              {{ item.projectName }}
+              {{ item.projectName || item.project }}
             </option>
           </select>
         </div>
@@ -57,8 +57,8 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <span class="text-xs text-emerald-400 font-mono tracking-wider">PROJECT CODE: {{ activeLDD.id }}</span>
-          <h2 class="text-xl sm:text-2xl font-black mt-1">{{ activeLDD.projectName }}</h2>
-          <p class="text-xs text-slate-300 mt-0.5">Target Perusahaan: <span class="font-bold text-white">{{ activeLDD.targetCompany }}</span> • Lead Counsel: {{ activeLDD.leadCounsel }}</p>
+          <h2 class="text-xl sm:text-2xl font-black mt-1">{{ activeLDD.projectName || activeLDD.project }}</h2>
+          <p class="text-xs text-slate-300 mt-0.5">Target Perusahaan: <span class="font-bold text-white">{{ activeLDD.targetCompany }}</span> • Lead Counsel: {{ activeLDD.leadCounsel || activeLDD.pic }}</p>
         </div>
         <div class="flex items-center gap-3">
           <div class="bg-white/10 px-3 py-2 rounded-xl text-center border border-white/10">

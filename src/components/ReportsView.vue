@@ -150,7 +150,7 @@ const totalContractValue = computed(() => {
 });
 
 const totalDisputeValue = computed(() => {
-  return disputes.value.reduce((acc, d) => acc + (d.disputeValue || 0), 0);
+  return disputes.value.reduce((acc, d) => acc + (Number(d.disputeValue || d.claimValue) || 0), 0);
 });
 
 const activeContractsCount = computed(() => contracts.value.filter(c => c.status === 'ACTIVE').length);

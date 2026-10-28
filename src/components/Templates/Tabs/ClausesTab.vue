@@ -79,6 +79,10 @@ const props = defineProps({
   searchQuery: {
     type: String,
     default: ''
+  },
+  selectedCategory: {
+    type: String,
+    default: 'ALL'
   }
 });
 
@@ -87,9 +91,13 @@ const emit = defineEmits(['open-add', 'open-edit']);
 const clauses = computed(() => legalStore.state.clauses || []);
 
 const filteredClauses = computed(() => {
+  let list = clauses.value;
+  if (props.selectedCategory && props.selectedCategory !== 'ALL') {
+    list = list.filter(c => c.category === props.selectedCategory);
+  }
   const q = props.searchQuery.toLowerCase().trim();
-  if (!q) return clauses.value;
-  return clauses.value.filter(c => {
+  if (!q) return list;
+  return list.filter(c => {
     const title = (c.title || '').toLowerCase();
     const content = (c.content || '').toLowerCase();
     const cat = (c.category || '').toLowerCase();

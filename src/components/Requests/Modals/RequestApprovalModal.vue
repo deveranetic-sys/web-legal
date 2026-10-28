@@ -45,7 +45,7 @@
                 {{ activeStep?.name || 'Verifikasi Persetujuan' }}
               </div>
               <div class="text-[11px] text-slate-600 mt-0.5">
-                Dibutuhkan Peran: <span class="font-bold text-[#4338CA]">{{ activeStep?.roleRequired || 'LEGAL COUNSEL' }}</span>
+                Dibutuhkan Peran: <span class="font-bold text-[#4338CA]">{{ activeStep?.roleRequired || 'STAFF LEGAL' }}</span>
               </div>
             </div>
 
@@ -192,10 +192,15 @@ const activeStep = computed(() => {
 });
 
 const isAuthorized = computed(() => {
-  const role = currentUserRole.value;
-  if (role === 'ADMIN') return true;
+  const role = (currentUserRole.value || '').toUpperCase();
+  if (role === 'SUPER ADMIN' || role === 'ADMIN') return true;
   if (!activeStep.value) return false;
-  return role === activeStep.value.roleRequired;
+  const reqRole = (activeStep.value.roleRequired || '').toUpperCase();
+  if (role === reqRole) return true;
+  if (role === 'KEPALA LEGAL' && (reqRole === 'LEGAL MANAGER' || reqRole === 'KEPALA LEGAL')) return true;
+  if (role === 'STAFF LEGAL' && (reqRole === 'LEGAL COUNSEL' || reqRole === 'LEGAL STAFF' || reqRole === 'STAFF LEGAL')) return true;
+  if ((role === 'DIREKTUR (DASHBOARD)' || role === 'DIREKTUR') && (reqRole === 'MANAGEMENT' || reqRole.includes('DIREKTUR'))) return true;
+  return false;
 });
 
 function submitDecision() {

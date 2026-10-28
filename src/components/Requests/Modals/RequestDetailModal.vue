@@ -206,9 +206,9 @@ const chainSteps = computed(() => {
   }
   // Fallback default 3 steps
   return [
-    { level: 1, name: 'Pemeriksaan Awal Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', status: props.request.status === 'SUBMITTED' ? 'PENDING' : 'APPROVED' },
-    { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', status: props.request.status === 'IN_REVIEW' ? 'PENDING' : (props.request.status === 'APPROVED' ? 'APPROVED' : 'WAITING') },
-    { level: 3, name: 'Persetujuan Final & Otorisasi (Approver)', roleRequired: 'MANAGEMENT', status: props.request.status === 'APPROVED' ? 'APPROVED' : 'WAITING' }
+    { level: 1, name: 'Pemeriksaan Awal Dokumen (Maker)', roleRequired: 'STAFF LEGAL', status: props.request.status === 'SUBMITTED' ? 'PENDING' : 'APPROVED' },
+    { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'KEPALA LEGAL', status: props.request.status === 'IN_REVIEW' ? 'PENDING' : (props.request.status === 'APPROVED' ? 'APPROVED' : 'WAITING') },
+    { level: 3, name: 'Persetujuan Final & Otorisasi (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', status: props.request.status === 'APPROVED' ? 'APPROVED' : 'WAITING' }
   ];
 });
 

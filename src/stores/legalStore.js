@@ -1,11 +1,11 @@
 import { reactive, computed } from 'vue';
-import { storage } from '../services/storage';
+import { storage, normalizeRole } from '../services/storage.js';
 import {
   masterSectorChecklists,
   masterSectorStageGuidance,
   initialCapabilityList,
   initialApprovalFlows
-} from '../data/seedData';
+} from '../data/seedData.js';
 
 // Initialize storage and load hydrated dataset in a single pass
 const initialData = storage.initStorage();
@@ -17,6 +17,11 @@ if (Array.isArray(initialData.approvalFlows)) {
     if (seed && (!flow.steps || !flow.steps.length)) {
       return { ...seed, ...flow, steps: JSON.parse(JSON.stringify(seed.steps)) };
     }
+    if (flow.steps && flow.steps.length) {
+      flow.steps.forEach(st => {
+        st.roleRequired = normalizeRole(st.roleRequired);
+      });
+    }
     return flow;
   });
 }
@@ -27,9 +32,9 @@ if (Array.isArray(initialData.requests)) {
   initialData.requests.forEach(req => {
     if (!req.approvalChain || !req.approvalChain.length) {
       const flowSteps = defaultFlow && defaultFlow.steps ? defaultFlow.steps : [
-        { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-        { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-        { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+        { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+        { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+        { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 2 }
       ];
 
       if (req.status === 'APPROVED' || req.status === 'COMPLETED') {
@@ -37,7 +42,7 @@ if (Array.isArray(initialData.requests)) {
         req.approvalChain = flowSteps.map((s, idx) => ({
           ...s,
           status: 'APPROVED',
-          approverName: req.approvedBy || (idx === 0 ? 'Dimas Prasetyo, S.H.' : (idx === 1 ? 'Siti Rahmawati, S.H., M.H.' : 'Budi Santoso, S.H., LL.M.')),
+          approverName: req.approvedBy || (idx === 0 ? 'Dimas Prasetyo, S.H.' : (idx === 1 ? 'Siti Rahmawati, S.H., M.H.' : 'Ir. Bambang Trihatmodjo')),
           approverRole: s.roleRequired,
           actionDate: req.approvedAt || req.updatedAt || req.requestDate || '2026-08-15 14:00',
           notes: req.approvalNotes || 'Disetujui sesuai prosedur legalitas korporasi.'
@@ -70,9 +75,9 @@ if (Array.isArray(initialData.requests)) {
               ...s,
               status: 'APPROVED',
               approverName: 'Dimas Prasetyo, S.H.',
-              approverRole: 'LEGAL COUNSEL',
+              approverRole: 'STAFF LEGAL',
               actionDate: req.requestDate || '2026-08-11 10:00',
-              notes: 'Pemeriksaan awal valid. Diteruskan ke Legal Manager.'
+              notes: 'Pemeriksaan awal valid. Diteruskan ke Kepala Legal.'
             };
           } else if (idx === 1) {
             return {
@@ -106,6 +111,12 @@ if (Array.isArray(initialData.requests)) {
           notes: ''
         }));
       }
+    } else {
+      // Normalize any existing step roleRequired
+      req.approvalChain.forEach(st => {
+        st.roleRequired = normalizeRole(st.roleRequired);
+        if (st.approverRole) st.approverRole = normalizeRole(st.approverRole);
+      });
     }
   });
 }
@@ -284,16 +295,19 @@ const urgentContracts = computed(() => {
     .slice(0, 4);
 });
 
-// RBAC Permissions Evaluator
+// RBAC Permissions Evaluator (Dibatasi 5 Peran Standar)
 export function hasPermission(module, action = 'view') {
   if (!state.currentUser) return false;
-  const role = state.currentUser.role;
+  const role = (state.currentUser.role || '').toUpperCase().trim();
+  const mod = module.toLowerCase();
 
-  if (role === 'ADMIN') return true;
+  // 1. Super Admin (dan legacy ADMIN): Akses penuh tanpa batas
+  if (role === 'SUPER ADMIN' || role === 'ADMIN') return true;
 
+  // 2. Requestor: Hanya akses ke Dashboard, Permintaan Legal (view/create), Database Regulasi, dan Template
   if (role === 'REQUESTOR') {
-    if (['dashboard', 'requests', 'knowledge', 'templates'].includes(module.toLowerCase())) {
-      if (module.toLowerCase() === 'requests') {
+    if (['dashboard', 'requests', 'knowledge', 'templates'].includes(mod)) {
+      if (mod === 'requests') {
         return action === 'view' || action === 'create';
       }
       return action === 'view';
@@ -301,22 +315,20 @@ export function hasPermission(module, action = 'view') {
     return false;
   }
 
-  if (role === 'MANAGEMENT') {
-    return action !== 'delete';
-  }
-
-  if (role === 'LEGAL MANAGER') return true;
-
-  if (role === 'LEGAL COUNSEL') {
-    if (action === 'delete' && ['corporate', 'settings', 'activity'].includes(module.toLowerCase())) {
-      return false;
-    }
+  // 3. Direktur (dashboard) (dan legacy MANAGEMENT): Monitoring eksekutif, KPI, Laporan & Approval. Proteksi pelarangan hapus data.
+  if (role === 'DIREKTUR (DASHBOARD)' || role.includes('DIREKTUR') || role === 'MANAGEMENT') {
+    if (action === 'delete') return false;
+    if (['settings'].includes(mod) && action === 'edit') return false;
     return true;
   }
 
-  if (role === 'LEGAL STAFF') {
+  // 4. Kepala Legal (dan legacy LEGAL MANAGER): Wewenang operasional penuh, review, approval & delegasi tugas
+  if (role === 'KEPALA LEGAL' || role === 'LEGAL MANAGER') return true;
+
+  // 5. Staff Legal (dan legacy LEGAL COUNSEL / LEGAL STAFF): Draf, telaah berkas, perizinan, compliance. Tidak bisa final approve & delete corporate/settings.
+  if (role === 'STAFF LEGAL' || role === 'LEGAL COUNSEL' || role === 'LEGAL STAFF') {
     if (action === 'approve') return false;
-    if (action === 'delete' && ['disputes', 'ldd', 'corporate', 'settings'].includes(module.toLowerCase())) {
+    if (action === 'delete' && ['corporate', 'settings', 'activity', 'disputes', 'ldd'].includes(mod)) {
       return false;
     }
     return true;
@@ -392,13 +404,20 @@ export const legalStore = {
     state.selectedTenderId = id;
   },
 
-  // Role switching
+  // Role switching (5 Peran Standar)
   switchRole(role) {
-    const foundUser = state.users.find(u => u.role === role) || state.users[0];
+    const targetRole = normalizeRole(role);
+    const foundUser = state.users.find(u => u.role === targetRole || u.role === role) || state.users[0];
     state.currentUser = foundUser;
     storage.set(storage.KEYS.CURRENT_USER, foundUser);
-    this.addActivityLog('SWITCH_ROLE', 'Sistem', foundUser.id, `Pengguna berganti peran ke: ${role} (${foundUser.name})`);
-    this.triggerToast(`Beralih peran ke: ${role} (${foundUser.name})`, 'info');
+
+    // Jika beralih ke Direktur (dashboard) atau Requestor, prioritaskan tampilan Dashboard
+    if (targetRole === 'DIREKTUR (DASHBOARD)' || targetRole === 'REQUESTOR') {
+      state.activeModule = 'dashboard';
+    }
+
+    this.addActivityLog('SWITCH_ROLE', 'Sistem', foundUser.id, `Pengguna berganti peran ke: ${foundUser.role} (${foundUser.name})`);
+    this.triggerToast(`Beralih peran ke: ${foundUser.role} (${foundUser.name})`, 'info');
   },
 
   // Entity switching
@@ -512,15 +531,15 @@ export const legalStore = {
     // Cari flow approval yang relevan atau gunakan default
     const reqFlow = state.approvalFlows.find(f => f.module === 'requests' && f.active) || state.approvalFlows[1] || initialApprovalFlows[1];
     const flowSteps = reqFlow && reqFlow.steps && reqFlow.steps.length ? reqFlow.steps : [
-      { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-      { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-      { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+      { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+      { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+      { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 2 }
     ];
 
     const chain = flowSteps.map((s, idx) => ({
       level: s.level,
       name: s.name,
-      roleRequired: s.roleRequired,
+      roleRequired: normalizeRole(s.roleRequired),
       slaDays: s.slaDays || 1,
       status: idx === 0 ? 'PENDING' : 'WAITING',
       approverName: null,
@@ -595,13 +614,14 @@ export const legalStore = {
     if (!req.approvalChain || !req.approvalChain.length) {
       const defaultFlow = state.approvalFlows.find(f => f.module === 'requests' && f.active) || initialApprovalFlows[1];
       const flowSteps = defaultFlow && defaultFlow.steps ? defaultFlow.steps : [
-        { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-        { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-        { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'MANAGEMENT', slaDays: 2 }
+        { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+        { level: 2, name: 'Verifikasi Kepatuhan & Klausul (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+        { level: 3, name: 'Persetujuan Final & Otorisasi Eksekutif (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 2 }
       ];
       req.currentApprovalLevel = 1;
       req.approvalChain = flowSteps.map((s, idx) => ({
         ...s,
+        roleRequired: normalizeRole(s.roleRequired),
         status: idx === 0 ? 'PENDING' : 'WAITING',
         approverName: null,
         approverRole: null,
@@ -619,8 +639,15 @@ export const legalStore = {
       currentStep = req.approvalChain[req.approvalChain.length - 1];
     }
 
-    const userRole = state.currentUser ? state.currentUser.role : 'ADMIN';
-    const isAuthorized = userRole === 'ADMIN' || userRole === currentStep.roleRequired;
+    const userRole = state.currentUser ? state.currentUser.role : 'SUPER ADMIN';
+    const reqRole = currentStep.roleRequired;
+    const isAuthorized = 
+      userRole === 'SUPER ADMIN' || 
+      userRole === 'ADMIN' || 
+      userRole === reqRole ||
+      (userRole === 'KEPALA LEGAL' && (reqRole === 'LEGAL MANAGER' || reqRole === 'KEPALA LEGAL')) ||
+      (userRole === 'STAFF LEGAL' && (reqRole === 'LEGAL COUNSEL' || reqRole === 'LEGAL STAFF' || reqRole === 'STAFF LEGAL')) ||
+      ((userRole === 'DIREKTUR (DASHBOARD)' || userRole === 'DIREKTUR') && (reqRole === 'MANAGEMENT' || reqRole.includes('DIREKTUR')));
 
     if (!isAuthorized) {
       this.triggerToast(
@@ -2350,7 +2377,7 @@ export const legalStore = {
       nik: userPayload.nik || 'EMP-' + String(Date.now()).slice(-4),
       name: userPayload.name,
       email: userPayload.email,
-      role: userPayload.role || 'LEGAL STAFF',
+      role: userPayload.role || 'STAFF LEGAL',
       department: userPayload.department || 'Legal & Compliance',
       title: userPayload.title || 'Staff Spesialis',
       avatar: userPayload.avatar || initials,
@@ -2474,9 +2501,9 @@ export const legalStore = {
       active: payload.active !== undefined ? payload.active : true,
       slaDays: Number(payload.slaDays) || 3,
       steps: Array.isArray(payload.steps) && payload.steps.length ? payload.steps : [
-        { level: 1, name: 'Review Dokumen (Maker)', roleRequired: 'LEGAL COUNSEL', slaDays: 1 },
-        { level: 2, name: 'Verifikasi Manajerial (Checker)', roleRequired: 'LEGAL MANAGER', slaDays: 1 },
-        { level: 3, name: 'Pengesahan Direksi (Approver)', roleRequired: 'MANAGEMENT', slaDays: 1 }
+        { level: 1, name: 'Review Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
+        { level: 2, name: 'Verifikasi Manajerial (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
+        { level: 3, name: 'Pengesahan Direksi (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
       ],
       lastUpdated: new Date().toISOString().replace('T', ' ').slice(0, 16)
     };

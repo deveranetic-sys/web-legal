@@ -181,13 +181,23 @@ const filteredUsers = computed(() => {
 
 function getRoleBadgeClass(role) {
   switch (role) {
-    case 'ADMIN': return 'bg-purple-100 text-purple-800 border border-purple-200';
-    case 'LEGAL MANAGER': return 'bg-blue-100 text-blue-800 border border-blue-200';
-    case 'LEGAL COUNSEL': return 'bg-indigo-100 text-[#4338CA] border border-indigo-200';
-    case 'LEGAL STAFF': return 'bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]';
-    case 'REQUESTOR': return 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]';
-    case 'MANAGEMENT': return 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-    default: return 'bg-slate-100 text-slate-700 border border-slate-200';
+    case 'SUPER ADMIN':
+    case 'ADMIN':
+      return 'bg-purple-100 text-purple-800 border border-purple-200';
+    case 'KEPALA LEGAL':
+    case 'LEGAL MANAGER':
+      return 'bg-blue-100 text-blue-800 border border-blue-200';
+    case 'STAFF LEGAL':
+    case 'LEGAL COUNSEL':
+    case 'LEGAL STAFF':
+      return 'bg-indigo-100 text-[#4338CA] border border-indigo-200';
+    case 'REQUESTOR':
+      return 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]';
+    case 'DIREKTUR (DASHBOARD)':
+    case 'MANAGEMENT':
+      return 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+    default:
+      return 'bg-slate-100 text-slate-700 border border-slate-200';
   }
 }
 </script>

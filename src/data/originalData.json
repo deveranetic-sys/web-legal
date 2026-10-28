@@ -2,59 +2,80 @@
   "users": [
     {
       "id": "USR-000",
+      "nik": "EMP-0100",
       "name": "Toha, S.H., M.H.",
       "email": "tohalegal@gmail.com",
-      "role": "ADMIN",
+      "role": "SUPER ADMIN",
       "department": "Legal & Corporate Governance",
-      "title": "General Counsel & Lead Legal Director"
+      "title": "General Counsel & Super Admin",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     },
     {
       "id": "USR-001",
+      "nik": "EMP-0101",
       "name": "Budi Santoso, S.H., LL.M.",
       "email": "admin@legal.local",
-      "role": "ADMIN",
+      "role": "SUPER ADMIN",
       "department": "Legal & Corporate Governance",
-      "title": "Head of Legal & Compliance"
+      "title": "Head of Legal & Compliance (Super Admin)",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     },
     {
       "id": "USR-002",
+      "nik": "EMP-0102",
       "name": "Siti Rahmawati, S.H., M.H.",
       "email": "siti.rahma@legal.local",
-      "role": "LEGAL MANAGER",
+      "role": "KEPALA LEGAL",
       "department": "Legal Department",
-      "title": "Legal Operations Manager"
+      "title": "Kepala Legal Operasional",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     },
     {
       "id": "USR-003",
+      "nik": "EMP-0103",
       "name": "Dimas Prasetyo, S.H.",
       "email": "dimas.prasetyo@legal.local",
-      "role": "LEGAL COUNSEL",
+      "role": "STAFF LEGAL",
       "department": "Commercial Legal",
-      "title": "Senior Legal Counsel"
+      "title": "Staff Legal Counsel",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     },
     {
       "id": "USR-004",
+      "nik": "EMP-0104",
       "name": "Anisa Maharani, S.H.",
       "email": "anisa.maharani@legal.local",
-      "role": "LEGAL STAFF",
+      "role": "STAFF LEGAL",
       "department": "Legal Department",
-      "title": "Legal Specialist & Administrator"
+      "title": "Staff Legal Specialist",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     },
     {
       "id": "USR-005",
+      "nik": "EMP-0105",
       "name": "Hendra Gunawan, S.T., M.B.A.",
       "email": "hendra.gunawan@company.local",
       "role": "REQUESTOR",
       "department": "Project Development & Procurement",
-      "title": "VP Project Development"
+      "title": "VP Project Development (Requestor)",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     },
     {
       "id": "USR-006",
+      "nik": "EMP-0106",
       "name": "Ir. Bambang Trihatmodjo",
       "email": "bambang.tri@board.local",
-      "role": "MANAGEMENT",
+      "role": "DIREKTUR (DASHBOARD)",
       "department": "Board of Directors",
-      "title": "President Director"
+      "title": "President Director (Direktur)",
+      "isErpSynced": true,
+      "erpSource": "Workday HRIS"
     }
   ],
   "requests": [
@@ -541,7 +562,9 @@
           "nikOrPassport": "3171021405750001",
           "periodStart": "2024-05-10",
           "periodEnd": "2029-05-10",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Direktur Utama (President Director)",
+          "period": "2024-05-10 s/d 2029-05-10"
         },
         {
           "id": "DIR-02",
@@ -550,7 +573,9 @@
           "nikOrPassport": "E4569812A",
           "periodStart": "2024-05-10",
           "periodEnd": "2029-05-10",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Direktur Keuangan (Chief Financial Officer)",
+          "period": "2024-05-10 s/d 2029-05-10"
         },
         {
           "id": "DIR-03",
@@ -559,7 +584,9 @@
           "nikOrPassport": "3273091807820004",
           "periodStart": "2024-05-10",
           "periodEnd": "2029-05-10",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Direktur Operasional & Pengembangan",
+          "period": "2024-05-10 s/d 2029-05-10"
         }
       ],
       "commissioners": [
@@ -570,7 +597,9 @@
           "nikOrPassport": "3174052309500002",
           "periodStart": "2024-05-10",
           "periodEnd": "2029-05-10",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Komisaris Utama (President Commissioner)",
+          "period": "2024-05-10 s/d 2029-05-10"
         },
         {
           "id": "COM-02",
@@ -579,7 +608,9 @@
           "nikOrPassport": "GB88234190",
           "periodStart": "2024-05-10",
           "periodEnd": "2029-05-10",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Komisaris Independen",
+          "period": "2024-05-10 s/d 2029-05-10"
         }
       ],
       "deeds": [
@@ -628,7 +659,31 @@
         "Ir. Bambang Trihatmodjo (WNI, Pengendali Efektif)",
         "Tan Sri Dato William Tan (WNA Singapura, Beneficial Owner Ultimate)"
       ],
-      "lastUpdated": "2026-08-15"
+      "lastUpdated": "2026-08-15",
+      "capital": {
+        "issued": 250000000000,
+        "authorized": 500000000000
+      },
+      "incorporationDeed": {
+        "number": "No. 45",
+        "deedNumber": "No. 45",
+        "date": "2015-03-12",
+        "deedDate": "2015-03-12",
+        "notary": "Aulia Taufani, S.H., M.Kn.",
+        "notaryName": "Aulia Taufani, S.H., M.Kn.",
+        "skMenkumham": "AHU-0012984.AH.01.01.TAHUN 2015",
+        "ahuNumber": "AHU-0012984.AH.01.01.TAHUN 2015"
+      },
+      "latestDeed": {
+        "number": "No. 18",
+        "deedNumber": "No. 18",
+        "date": "2024-05-10",
+        "deedDate": "2024-05-10",
+        "notary": "Fanny Stephanie, S.H., M.Kn.",
+        "notaryName": "Fanny Stephanie, S.H., M.Kn.",
+        "skMenkumham": "AHU-0044521.AH.01.02.TAHUN 2024",
+        "ahuNumber": "AHU-0044521.AH.01.02.TAHUN 2024"
+      }
     },
     {
       "id": "CORP-002",
@@ -670,7 +725,9 @@
           "nikOrPassport": "3172081204780003",
           "periodStart": "2023-08-01",
           "periodEnd": "2028-08-01",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Direktur Utama",
+          "period": "2023-08-01 s/d 2028-08-01"
         },
         {
           "id": "DIR-05",
@@ -679,7 +736,9 @@
           "nikOrPassport": "3271012903800005",
           "periodStart": "2023-08-01",
           "periodEnd": "2028-08-01",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Direktur Komersial & Logistik",
+          "period": "2023-08-01 s/d 2028-08-01"
         }
       ],
       "commissioners": [
@@ -690,7 +749,9 @@
           "nikOrPassport": "3171021405750001",
           "periodStart": "2023-08-01",
           "periodEnd": "2028-08-01",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Komisaris Utama",
+          "period": "2023-08-01 s/d 2028-08-01"
         }
       ],
       "deeds": [
@@ -719,7 +780,31 @@
       "beneficialOwners": [
         "Ir. Bambang Trihatmodjo (WNI)"
       ],
-      "lastUpdated": "2026-08-10"
+      "lastUpdated": "2026-08-10",
+      "capital": {
+        "issued": 100000000000,
+        "authorized": 200000000000
+      },
+      "incorporationDeed": {
+        "number": "No. 12",
+        "deedNumber": "No. 12",
+        "date": "2020-07-15",
+        "deedDate": "2020-07-15",
+        "notary": "Aryanti Artisari, S.H., M.Kn.",
+        "notaryName": "Aryanti Artisari, S.H., M.Kn.",
+        "skMenkumham": "AHU-0038910.AH.01.01.TAHUN 2020",
+        "ahuNumber": "AHU-0038910.AH.01.01.TAHUN 2020"
+      },
+      "latestDeed": {
+        "number": "No. 12",
+        "deedNumber": "No. 12",
+        "date": "2020-07-15",
+        "deedDate": "2020-07-15",
+        "notary": "Aryanti Artisari, S.H., M.Kn.",
+        "notaryName": "Aryanti Artisari, S.H., M.Kn.",
+        "skMenkumham": "AHU-0038910.AH.01.01.TAHUN 2020",
+        "ahuNumber": "AHU-0038910.AH.01.01.TAHUN 2020"
+      }
     },
     {
       "id": "CORP-003",
@@ -761,7 +846,9 @@
           "nikOrPassport": "3273110906850002",
           "periodStart": "2024-01-15",
           "periodEnd": "2029-01-15",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Direktur",
+          "period": "2024-01-15 s/d 2029-01-15"
         }
       ],
       "commissioners": [
@@ -772,7 +859,9 @@
           "nikOrPassport": "3174094511830007",
           "periodStart": "2024-01-15",
           "periodEnd": "2029-01-15",
-          "status": "ACTIVE"
+          "status": "ACTIVE",
+          "title": "Komisaris",
+          "period": "2024-01-15 s/d 2029-01-15"
         }
       ],
       "deeds": [
@@ -801,7 +890,31 @@
       "beneficialOwners": [
         "Ir. Bambang Trihatmodjo (Melalui PT Nusantara Energi)"
       ],
-      "lastUpdated": "2026-08-01"
+      "lastUpdated": "2026-08-01",
+      "capital": {
+        "issued": 75000000000,
+        "authorized": 150000000000
+      },
+      "incorporationDeed": {
+        "number": "No. 05",
+        "deedNumber": "No. 05",
+        "date": "2022-01-10",
+        "deedDate": "2022-01-10",
+        "notary": "Rina Utami, S.H., M.Kn.",
+        "notaryName": "Rina Utami, S.H., M.Kn.",
+        "skMenkumham": "AHU-0005512.AH.01.01.TAHUN 2022",
+        "ahuNumber": "AHU-0005512.AH.01.01.TAHUN 2022"
+      },
+      "latestDeed": {
+        "number": "No. 05",
+        "deedNumber": "No. 05",
+        "date": "2022-01-10",
+        "deedDate": "2022-01-10",
+        "notary": "Rina Utami, S.H., M.Kn.",
+        "notaryName": "Rina Utami, S.H., M.Kn.",
+        "skMenkumham": "AHU-0005512.AH.01.01.TAHUN 2022",
+        "ahuNumber": "AHU-0005512.AH.01.01.TAHUN 2022"
+      }
     }
   ],
   "licenses": [
@@ -999,27 +1112,36 @@
           "id": "EVT-01",
           "date": "2026-01-15",
           "title": "Pendaftaran Permohonan Arbitrase",
-          "agendaOrNotes": "NE mendaftarkan permohonan arbitrase terhadap GTC GmbH atas wanprestasi delivery schedule."
+          "agendaOrNotes": "NE mendaftarkan permohonan arbitrase terhadap GTC GmbH atas wanprestasi delivery schedule.",
+          "description": "NE mendaftarkan permohonan arbitrase terhadap GTC GmbH atas wanprestasi delivery schedule."
         },
         {
           "id": "EVT-02",
           "date": "2026-03-20",
           "title": "Penetapan Majelis Arbitase",
-          "agendaOrNotes": "Pembentukan Majelis Arbitrase beranggotakan 3 arbiter resmi dikukuhkan Ketua BANI."
+          "agendaOrNotes": "Pembentukan Majelis Arbitrase beranggotakan 3 arbiter resmi dikukuhkan Ketua BANI.",
+          "description": "Pembentukan Majelis Arbitrase beranggotakan 3 arbiter resmi dikukuhkan Ketua BANI."
         },
         {
           "id": "EVT-03",
           "date": "2026-06-12",
           "title": "Sidang Jawaban & Eksepsi Termohon",
-          "agendaOrNotes": "Termohon mengajukan eksepsi overmacht terkait kendala rantai pasok global di Pelabuhan Rotterdam."
+          "agendaOrNotes": "Termohon mengajukan eksepsi overmacht terkait kendala rantai pasok global di Pelabuhan Rotterdam.",
+          "description": "Termohon mengajukan eksepsi overmacht terkait kendala rantai pasok global di Pelabuhan Rotterdam."
         },
         {
           "id": "EVT-04",
           "date": "2026-08-27",
           "title": "Sidang Pemeriksaan Ahli Metalurgi & Engineer",
-          "agendaOrNotes": "Pemeriksaan saksi ahli independen dari Institut Teknologi Bandung (ITB)."
+          "agendaOrNotes": "Pemeriksaan saksi ahli independen dari Institut Teknologi Bandung (ITB).",
+          "description": "Pemeriksaan saksi ahli independen dari Institut Teknologi Bandung (ITB)."
         }
-      ]
+      ],
+      "disputeValue": 42000000000,
+      "riskLevel": "HIGH",
+      "legalCounsel": "Hadiputranto, Hadinoto & Partners (HHP Law Firm)",
+      "summary": "Sengketa keterlambatan pengiriman turbin gas dan klaim liquidated damages kontraktor.",
+      "nextHearingDate": "2026-08-27"
     },
     {
       "id": "CASE-2026-0002",
@@ -1044,21 +1166,29 @@
           "id": "EVT-05",
           "date": "2026-05-14",
           "title": "Pemberian Kuasa Khusus",
-          "agendaOrNotes": "Penandatanganan Surat Kuasa Khusus kepada AHP Law Firm."
+          "agendaOrNotes": "Penandatanganan Surat Kuasa Khusus kepada AHP Law Firm.",
+          "description": "Penandatanganan Surat Kuasa Khusus kepada AHP Law Firm."
         },
         {
           "id": "EVT-06",
           "date": "2026-06-04",
           "title": "Sidang Mediasi Pengadilan",
-          "agendaOrNotes": "Mediasi dinyatakan gagal (Deadlock) karena Tergugat menolak membayar kompensasi kerugian riil."
+          "agendaOrNotes": "Mediasi dinyatakan gagal (Deadlock) karena Tergugat menolak membayar kompensasi kerugian riil.",
+          "description": "Mediasi dinyatakan gagal (Deadlock) karena Tergugat menolak membayar kompensasi kerugian riil."
         },
         {
           "id": "EVT-07",
           "date": "2026-07-22",
           "title": "Pembacaan Jawaban Tergugat",
-          "agendaOrNotes": "Tergugat menyangkal adanya pembatalan sepihak dan mendalilkan fluktuasi harga acuan ESDM."
+          "agendaOrNotes": "Tergugat menyangkal adanya pembatalan sepihak dan mendalilkan fluktuasi harga acuan ESDM.",
+          "description": "Tergugat menyangkal adanya pembatalan sepihak dan mendalilkan fluktuasi harga acuan ESDM."
         }
-      ]
+      ],
+      "disputeValue": 18500000000,
+      "riskLevel": "MEDIUM",
+      "legalCounsel": "Assegaf Hamzah & Partners (AHP)",
+      "summary": "Gugatan perbuatan melawan hukum (PMH) atas pembatalan sepihak kontrak offtake batubara.",
+      "nextHearingDate": "2026-09-03"
     },
     {
       "id": "CASE-2026-0003",
@@ -1083,15 +1213,22 @@
           "id": "EVT-08",
           "date": "2026-04-10",
           "title": "Bipartit I & II Gagal",
-          "agendaOrNotes": "Pekerja menuntut pesangon 2x PMTK lama tanpa memperhitungkan SP3 yang sah."
+          "agendaOrNotes": "Pekerja menuntut pesangon 2x PMTK lama tanpa memperhitungkan SP3 yang sah.",
+          "description": "Pekerja menuntut pesangon 2x PMTK lama tanpa memperhitungkan SP3 yang sah."
         },
         {
           "id": "EVT-09",
           "date": "2026-06-18",
           "title": "Risalah Anjuran Disnaker Kota Bandung",
-          "agendaOrNotes": "Mediator menganjurkan pembayaran kompensasi sesuai ketentuan Pasal 52 PP No. 35/2021."
+          "agendaOrNotes": "Mediator menganjurkan pembayaran kompensasi sesuai ketentuan Pasal 52 PP No. 35/2021.",
+          "description": "Mediator menganjurkan pembayaran kompensasi sesuai ketentuan Pasal 52 PP No. 35/2021."
         }
-      ]
+      ],
+      "disputeValue": 450000000,
+      "riskLevel": "LOW",
+      "legalCounsel": "In-house Legal Representation",
+      "summary": "Perselisihan pemutusan hubungan kerja karena pelanggaran berat SOP keselamatan bendungan.",
+      "nextHearingDate": "2026-08-26"
     }
   ],
   "ldd": [
@@ -1155,7 +1292,67 @@
           "dueDate": "2026-09-25"
         }
       ],
-      "remarks": "Pemeriksaan fisik aset lapangan (site visit) telah selesai dilaksanakan pada 5-8 Agustus 2026."
+      "remarks": "Pemeriksaan fisik aset lapangan (site visit) telah selesai dilaksanakan pada 5-8 Agustus 2026.",
+      "projectName": "Project Helios - Akuisisi 70% Saham PT Surya Mandiri Kencana",
+      "leadCounsel": "Budi Santoso, S.H., LL.M.",
+      "checklist": [
+        {
+          "id": "CHK-HL-01",
+          "category": "Aspek Korporasi",
+          "item": "Pemeriksaan Akta Pendirian, AD/ART & SK Menkumham target",
+          "status": "OK",
+          "notes": "Legalitas dasar perseroan lengkap & sah."
+        },
+        {
+          "id": "CHK-HL-02",
+          "category": "Aspek Pertanahan",
+          "item": "Verifikasi status hak tanah tapak solar farm 4.2 Ha",
+          "status": "FLAG",
+          "notes": "Sebagian tanah masih SHM perorangan, belum pelepasan hak ke HGB atas nama perseroan."
+        },
+        {
+          "id": "CHK-HL-03",
+          "category": "Perizinan & Lingkungan",
+          "item": "Pemenuhan Persetujuan Teknis (Pertek) & Baku Mutu Emisi",
+          "status": "FLAG",
+          "notes": "Addendum Pertek emisi pasca penambahan trafo 30 MVA dalam proses permohonan."
+        },
+        {
+          "id": "CHK-HL-04",
+          "category": "Kontrak Komersial",
+          "item": "Review Perjanjian PPA (Power Purchase Agreement) 25 Tahun PLN",
+          "status": "OK",
+          "notes": "Tarif feed-in tariff terjamin dan jadwal COD selaras dengan RKAP."
+        },
+        {
+          "id": "CHK-HL-05",
+          "category": "Keuangan & Pemegang Saham",
+          "item": "Evaluasi Shareholder Loan IDR 8.5 Miliar",
+          "status": "FLAG",
+          "notes": "Belum ada perjanjian pinjaman pemegang saham tersubordinasi tertulis bertanggal pasti."
+        },
+        {
+          "id": "CHK-HL-06",
+          "category": "Ketenagakerjaan",
+          "item": "Hubungan industrial, struktur upah & BPJS Ketenagakerjaan",
+          "status": "OK",
+          "notes": "100% pekerja terdaftar BPJS dan tidak ada sengketa PHI berjalan."
+        },
+        {
+          "id": "CHK-HL-07",
+          "category": "Perpajakan & Fiskal",
+          "item": "Status KSWP & Kepatuhan Pelaporan SPT Tahunan PPh Badan",
+          "status": "OK",
+          "notes": "Status KSWP Valid di DJP Online, tidak ada sengketa banding pengadilan pajak."
+        },
+        {
+          "id": "CHK-HL-08",
+          "category": "Litigasi & Sengketa",
+          "item": "Pemeriksaan riwayat sengketa pengadilan dan arbitrase",
+          "status": "OK",
+          "notes": "Surat keterangan bebas perkara terverifikasi bersih dari PN dan BANI."
+        }
+      ]
     },
     {
       "id": "LDD-2026-0002",
@@ -1195,7 +1392,53 @@
           "dueDate": "2026-10-01"
         }
       ],
-      "remarks": "Virtual Data Room (VDR) baru dibuka 40% dari total checklist request."
+      "remarks": "Virtual Data Room (VDR) baru dibuka 40% dari total checklist request.",
+      "projectName": "Project Vulcan - Joint Venture Geothermal Patuha 2x55 MW",
+      "leadCounsel": "Dimas Prasetyo, S.H.",
+      "checklist": [
+        {
+          "id": "CHK-VL-01",
+          "category": "Aspek Korporasi",
+          "item": "Pemeriksaan komposisi pemegang saham & batasan kuorum RUPS",
+          "status": "OK",
+          "notes": "Anggaran dasar selaras dengan ketentuan UU PT No. 40/2007."
+        },
+        {
+          "id": "CHK-VL-02",
+          "category": "Kontrak Komersial",
+          "item": "Klausul Change of Control Master PPA No. 044/PPA/2019",
+          "status": "FLAG",
+          "notes": "Wajib mendapatkan written consent tertulis dari Direksi PLN sebelum pengalihan saham >20%."
+        },
+        {
+          "id": "CHK-VL-03",
+          "category": "Lingkungan Hidup",
+          "item": "Izin Lingkungan & Rekomendasi Teknis WKP Panas Bumi Patuha",
+          "status": "FLAG",
+          "notes": "Perlu pembaruan dokumen evaluasi lingkungan hidup pasca penambahan sumur produksi."
+        },
+        {
+          "id": "CHK-VL-04",
+          "category": "Aset & Fasilitas",
+          "item": "Sertifikat Laik Operasi (SLO) dan Persetujuan Kawasan Hutan (PPKH)",
+          "status": "OK",
+          "notes": "Izin PPKH aktif berlaku hingga 2035 dengan Kementerian LHK."
+        },
+        {
+          "id": "CHK-VL-05",
+          "category": "Ketenagakerjaan",
+          "item": "Kepatuhan K3 Panas Bumi dan Perjanjian Kerja Waktu Tertentu",
+          "status": "OK",
+          "notes": "Sertifikasi keselamatan kerja Ditjen EBTKE Kementerian ESDM lengkap."
+        },
+        {
+          "id": "CHK-VL-06",
+          "category": "Litigasi & Sengketa",
+          "item": "Riwayat klaim kontraktor pengeboran (drilling contractor)",
+          "status": "OK",
+          "notes": "Tidak ada arbitrase terbuka atau sita eksekusi aset."
+        }
+      ]
     }
   ],
   "opinions": [

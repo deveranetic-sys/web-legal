@@ -24,7 +24,7 @@
               <span class="font-bold text-slate-900 text-xs sm:text-sm">{{ step.title }}</span>
               <span class="text-[10px] text-slate-400 font-mono">{{ step.date }}</span>
             </div>
-            <p class="text-slate-600 mt-1 leading-relaxed">{{ step.description }}</p>
+            <p class="text-slate-600 mt-1 leading-relaxed">{{ step.description || step.agendaOrNotes }}</p>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
 
       <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-500 font-medium">Sidang: {{ dispute.nextHearingDate }}</span>
+          <span class="text-xs text-slate-500 font-medium">Sidang: {{ dispute.nextHearingDate || dispute.nextHearing || '-' }}</span>
           <button
             @click="syncGoogle"
             class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-purple-700 font-bold text-xs hover:bg-slate-100 cursor-pointer flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
@@ -77,9 +77,9 @@ const emit = defineEmits(['close']);
 function syncGoogle() {
   const event = {
     title: `[SIDANG LEGAL] ${props.dispute.caseNumber} - ${props.dispute.company} vs ${props.dispute.opponent}`,
-    description: `Perkara: ${props.dispute.caseNumber}\nLembaga/Pengadilan: ${props.dispute.courtOrInstitution}\nKuasa Hukum: ${props.dispute.legalCounsel}\nKlaim: ${formatIDR(props.dispute.disputeValue)}\n\nRingkasan: ${props.dispute.summary}`,
+    description: `Perkara: ${props.dispute.caseNumber}\nLembaga/Pengadilan: ${props.dispute.courtOrInstitution}\nKuasa Hukum: ${props.dispute.legalCounsel || props.dispute.externalCounsel || '-'}\nKlaim: ${formatIDR(props.dispute.disputeValue || props.dispute.claimValue)}\n\nRingkasan: ${props.dispute.summary || props.dispute.remarks}`,
     location: props.dispute.courtOrInstitution || 'Pengadilan Negeri / BANI Jakarta',
-    startDate: props.dispute.nextHearingDate
+    startDate: props.dispute.nextHearingDate || props.dispute.nextHearing
   };
   openGoogleCalendar(event);
   legalStore.triggerToast(`Membuka Google Calendar untuk sidang ${props.dispute.caseNumber}`, 'info');
@@ -88,9 +88,9 @@ function syncGoogle() {
 function syncICal() {
   const event = {
     title: `[SIDANG LEGAL] ${props.dispute.caseNumber} - ${props.dispute.company} vs ${props.dispute.opponent}`,
-    description: `Perkara: ${props.dispute.caseNumber}\nLembaga/Pengadilan: ${props.dispute.courtOrInstitution}\nKuasa Hukum: ${props.dispute.legalCounsel}\nKlaim: ${formatIDR(props.dispute.disputeValue)}\n\nRingkasan: ${props.dispute.summary}`,
+    description: `Perkara: ${props.dispute.caseNumber}\nLembaga/Pengadilan: ${props.dispute.courtOrInstitution}\nKuasa Hukum: ${props.dispute.legalCounsel || props.dispute.externalCounsel || '-'}\nKlaim: ${formatIDR(props.dispute.disputeValue || props.dispute.claimValue)}\n\nRingkasan: ${props.dispute.summary || props.dispute.remarks}`,
     location: props.dispute.courtOrInstitution || 'Pengadilan Negeri / BANI Jakarta',
-    startDate: props.dispute.nextHearingDate
+    startDate: props.dispute.nextHearingDate || props.dispute.nextHearing
   };
   downloadICalFile(event);
   legalStore.triggerToast(`File kalender (.ics) berhasil diunduh untuk ${props.dispute.caseNumber}`, 'success');
