@@ -73,10 +73,21 @@ if (Array.isArray(initialData.masterSectors)) {
   storage.set(storage.KEYS.MASTER_SECTORS, initialData.masterSectors);
 }
 
-// Normalize requests: ensure every request has approvalChain and currentApprovalLevel
+// Normalize requests: ensure every request has approvalChain, currentApprovalLevel, and synchronized PIC
 if (Array.isArray(initialData.requests)) {
   const defaultFlow = initialApprovalFlows.find(f => f.module === 'requests') || initialApprovalFlows[1];
   initialData.requests.forEach(req => {
+    // Synchronize picLegal and assignedTo so data and views are 100% in sync
+    if (!req.assignedTo && req.picLegal) {
+      req.assignedTo = req.picLegal;
+    } else if (!req.picLegal && req.assignedTo) {
+      req.picLegal = req.assignedTo;
+    }
+    if (!req.assignedTo) {
+      req.assignedTo = 'Unassigned';
+      req.picLegal = 'Unassigned';
+    }
+
     if (!req.approvalChain || !req.approvalChain.length) {
       const flowSteps = defaultFlow && defaultFlow.steps ? defaultFlow.steps : [
         { level: 1, name: 'Pemeriksaan Awal & Kelayakan Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
@@ -166,6 +177,7 @@ if (Array.isArray(initialData.requests)) {
       });
     }
   });
+  storage.set(storage.KEYS.REQUESTS, initialData.requests);
 }
 
 const state = reactive({
@@ -595,21 +607,28 @@ export const legalStore = {
       notes: ''
     }));
 
+    const assignedPic = payload.picLegal || payload.assignedTo || 'Unassigned';
+
     const req = {
       id: newId,
       ticketNumber: `LR/2026/${String(state.requests.length + 1).padStart(3, '0')}`,
       requestDate: new Date().toISOString().slice(0, 10),
       requestor: payload.requestor || state.currentUser?.name || 'User Requestor',
+      requestorEmail: payload.requestorEmail || state.currentUser?.email || 'requestor@company.local',
       department: payload.department || state.currentUser?.department || 'Operasional',
       company: payload.company || state.currentEntity,
+      project: payload.project || 'Proyek Korporasi',
       requestType: payload.requestType || 'Contract Review',
       urgency: payload.urgency || 'MEDIUM',
       subject: payload.subject,
       description: payload.description,
-      status: 'SUBMITTED',
-      assignedTo: payload.assignedTo || 'Unassigned',
+      status: (assignedPic && assignedPic !== 'Unassigned') ? 'IN_REVIEW' : 'SUBMITTED',
+      assignedTo: assignedPic,
+      picLegal: assignedPic,
       deadline: payload.deadline || new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString().slice(0, 10),
       attachments: payload.attachments || [],
+      attachmentName: payload.attachmentName || '',
+      remarks: payload.remarks || '',
       approvalFlowId: reqFlow ? reqFlow.id : 'AF-02',
       currentApprovalLevel: 1,
       approvalChain: chain
@@ -636,6 +655,7 @@ export const legalStore = {
     const req = state.requests.find(r => r.id === id);
     if (!req) return;
     req.assignedTo = picName;
+    req.picLegal = picName;
     if (req.status === 'SUBMITTED') req.status = 'IN_REVIEW';
     storage.set(storage.KEYS.REQUESTS, state.requests);
     this.addActivityLog('ASSIGN_PIC', 'Permintaan Legal', id, `Menugaskan PIC Legal Counsel: ${picName}`);

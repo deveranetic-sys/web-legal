@@ -112,7 +112,7 @@
         </div>
 
         <!-- Rincian Data Tiket -->
-        <div class="grid grid-cols-2 gap-4 bg-[#F8FAFC] p-3.5 rounded-xl border border-[#E2E8F0]">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-[#F8FAFC] p-3.5 rounded-xl border border-[#E2E8F0]">
           <div>
             <span class="text-[11px] text-[#475569] block">Pemohon / Unit:</span>
             <span class="font-bold text-[#0F172A]">{{ request.requestor }}</span>
@@ -120,7 +120,25 @@
           </div>
           <div>
             <span class="text-[11px] text-[#475569] block">PIC Legal Counsel:</span>
-            <span class="font-bold text-[#0F172A]">{{ request.assignedTo || 'Belum Ditugaskan' }}</span>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span class="font-bold text-[#0F172A]">{{ request.picLegal || request.assignedTo || 'Belum Ditugaskan' }}</span>
+              <button
+                v-if="canManage"
+                type="button"
+                @click="$emit('open-assign', request)"
+                class="text-[10px] text-[#2563EB] hover:underline font-semibold cursor-pointer"
+              >
+                (Ubah)
+              </button>
+            </div>
+          </div>
+          <div>
+            <span class="text-[11px] text-[#475569] block">Proyek Terkait:</span>
+            <span class="font-bold text-[#0F172A]">{{ request.project || 'Proyek Korporasi' }}</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-[#475569] block">Entitas Perseroan:</span>
+            <span class="font-bold text-[#0F172A]">{{ request.company || 'PT Nusantara Energi' }}</span>
           </div>
           <div>
             <span class="text-[11px] text-[#475569] block">Tenggat Waktu:</span>
@@ -197,7 +215,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['close', 'open-approval', 'update-status']);
+const emit = defineEmits(['close', 'open-approval', 'open-assign', 'update-status']);
 
 const chainSteps = computed(() => {
   if (!props.request) return [];

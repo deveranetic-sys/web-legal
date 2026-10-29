@@ -73,31 +73,43 @@
     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
         <!-- Search Input -->
-        <div class="md:col-span-5 relative">
+        <div class="md:col-span-4 relative">
           <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Cari perihal, nomor tiket, atau nama pemohon..."
+            placeholder="Cari perihal, nomor tiket, pemohon, atau PIC..."
             class="form-input form-input-search"
           />
         </div>
 
         <!-- Filter Status -->
-        <div class="md:col-span-3">
+        <div class="md:col-span-2">
           <select
             v-model="filterStatus"
             class="form-select"
           >
-            <option value="ALL">Semua Status ({{ requests.length }})</option>
-            <option value="PENDING_APPROVAL">Menunggu Approval (Pending)</option>
-            <option value="SUBMITTED">Baru Diajukan (Submitted)</option>
-            <option value="IN_REVIEW">Sedang Ditelaah (In Review)</option>
-            <option value="APPROVED">Disetujui (Approved)</option>
-            <option value="REVISION_REQUIRED">Perlu Revisi / Klarifikasi</option>
-            <option value="REJECTED">Ditolak (Rejected)</option>
-            <option value="COMPLETED">Selesai (Completed)</option>
-            <option value="OVERDUE">Melewati Batas SLA (Overdue)</option>
+            <option value="ALL">Semua Status</option>
+            <option value="PENDING_APPROVAL">Menunggu Approval</option>
+            <option value="SUBMITTED">Baru Diajukan</option>
+            <option value="IN_REVIEW">Sedang Ditelaah</option>
+            <option value="APPROVED">Disetujui</option>
+            <option value="REVISION_REQUIRED">Perlu Revisi</option>
+            <option value="REJECTED">Ditolak</option>
+            <option value="COMPLETED">Selesai</option>
+            <option value="OVERDUE">Overdue SLA</option>
+          </select>
+        </div>
+
+        <!-- Filter PIC Counsel -->
+        <div class="md:col-span-2">
+          <select
+            v-model="filterPIC"
+            class="form-select"
+          >
+            <option value="ALL">Semua PIC Legal</option>
+            <option value="UNASSIGNED">Belum Ditugaskan</option>
+            <option v-for="pic in availablePICs" :key="pic" :value="pic">{{ pic }}</option>
           </select>
         </div>
 
@@ -122,7 +134,7 @@
           >
             <option value="ALL">Semua Jenis</option>
             <option value="Contract Review">Contract Review</option>
-            <option value="Drafting">Drafting Kontrak</option>
+            <option value="Contract Drafting">Contract Drafting</option>
             <option value="Legal Opinion">Legal Opinion</option>
             <option value="Litigation Support">Dukungan Litigasi</option>
             <option value="Licensing Assistance">Konsultasi Izin</option>
@@ -199,15 +211,25 @@
 
               <!-- PIC Counsel -->
               <td class="py-3.5 px-4 whitespace-nowrap">
-                <div class="text-xs font-medium text-[#0F172A]">
-                  {{ req.assignedTo || 'Belum Ditugaskan' }}
+                <div v-if="req.picLegal && req.picLegal !== 'Unassigned'" class="text-xs font-semibold text-[#0F172A]">
+                  {{ req.picLegal }}
                 </div>
+                <div v-else-if="req.assignedTo && req.assignedTo !== 'Unassigned'" class="text-xs font-semibold text-[#0F172A]">
+                  {{ req.assignedTo }}
+                </div>
+                <span
+                  v-else
+                  class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"
+                >
+                  Belum Ditugaskan
+                </span>
+
                 <button
                   v-if="canManage"
                   @click="openAssign(req)"
-                  class="text-[10px] text-[#6366F1] hover:text-[#4338CA] hover:underline font-semibold cursor-pointer block mt-0.5"
+                  class="text-[10px] text-[#2563EB] hover:text-[#1D4ED8] hover:underline font-semibold cursor-pointer block mt-1"
                 >
-                  Tugaskan PIC
+                  {{ (req.picLegal && req.picLegal !== 'Unassigned') || (req.assignedTo && req.assignedTo !== 'Unassigned') ? 'Ubah PIC' : '+ Tugaskan PIC' }}
                 </button>
               </td>
 
@@ -304,6 +326,7 @@
       :can-manage="canManage"
       @close="selectedRequest = null"
       @open-approval="openApprovalModal"
+      @open-assign="openAssignFromDetail"
       @update-status="updateStatus"
     />
 
@@ -347,6 +370,7 @@ import RequestAssignCounselModal from './Requests/Modals/RequestAssignCounselMod
 // Filters & State
 const searchQuery = ref('');
 const filterStatus = ref('ALL');
+const filterPIC = ref('ALL');
 const filterUrgency = ref('ALL');
 const filterType = ref('ALL');
 
@@ -357,6 +381,17 @@ const approvalTarget = ref(null);
 
 // Computed Datasets
 const requests = computed(() => legalStore.state.requests || []);
+
+const availablePICs = computed(() => {
+  const set = new Set();
+  (requests.value || []).forEach(r => {
+    const pic = r.picLegal || r.assignedTo;
+    if (pic && pic !== 'Unassigned' && pic !== 'Belum Ditugaskan') {
+      set.add(pic);
+    }
+  });
+  return Array.from(set).sort();
+});
 
 const inReviewCount = computed(() => {
   return requests.value.filter(r => r.status === 'IN_REVIEW').length;
@@ -382,10 +417,13 @@ const canApprove = computed(() => {
 const filteredRequests = computed(() => {
   return requests.value.filter(r => {
     const q = searchQuery.value.toLowerCase().trim();
+    const pic = r.picLegal || r.assignedTo || '';
     const matchSearch = !q ||
       r.subject.toLowerCase().includes(q) ||
       (r.ticketNumber && r.ticketNumber.toLowerCase().includes(q)) ||
-      r.requestor.toLowerCase().includes(q);
+      (r.id && r.id.toLowerCase().includes(q)) ||
+      r.requestor.toLowerCase().includes(q) ||
+      pic.toLowerCase().includes(q);
 
     let matchStatus = true;
     if (filterStatus.value !== 'ALL') {
@@ -396,10 +434,17 @@ const filteredRequests = computed(() => {
       }
     }
 
+    let matchPIC = true;
+    if (filterPIC.value === 'UNASSIGNED') {
+      matchPIC = !pic || pic === 'Unassigned' || pic === 'Belum Ditugaskan';
+    } else if (filterPIC.value !== 'ALL') {
+      matchPIC = pic === filterPIC.value;
+    }
+
     const matchUrgency = filterUrgency.value === 'ALL' || r.urgency === filterUrgency.value;
     const matchType = filterType.value === 'ALL' || r.requestType === filterType.value;
 
-    return matchSearch && matchStatus && matchUrgency && matchType;
+    return matchSearch && matchStatus && matchPIC && matchUrgency && matchType;
   });
 });
 
@@ -481,6 +526,11 @@ function openApprovalModal(req) {
 }
 
 function openAssign(req) {
+  assigningRequest.value = req;
+}
+
+function openAssignFromDetail(req) {
+  selectedRequest.value = null;
   assigningRequest.value = req;
 }
 
