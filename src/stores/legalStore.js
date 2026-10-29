@@ -10,34 +10,44 @@ import {
 // Initialize storage and load hydrated dataset in a single pass
 const initialData = storage.initStorage();
 
-// Normalize approvalFlows: ensure every flow has steps, clean Lucide icon, module, slaDays, etc.
-if (Array.isArray(initialData.approvalFlows)) {
-  const emojiToIcon = {
-    '⚖️': 'Scale',
-    '📝': 'FileText',
-    '🎯': 'Target',
-    '📑': 'FileText',
-    '🤝': 'Handshake',
-    '🎓': 'MessageSquareQuote',
-    '🛡️': 'ShieldCheck'
-  };
+// Normalize & Lock approvalFlows: strictly fix the 6 core standard flows (AF-01 s/d AF-06)
+const emojiToIcon = {
+  '⚖️': 'Scale',
+  '📝': 'FileText',
+  '🎯': 'Target',
+  '📑': 'FileText',
+  '🤝': 'Handshake',
+  '🎓': 'MessageSquareQuote',
+  '🛡️': 'ShieldCheck'
+};
 
-  initialData.approvalFlows = initialData.approvalFlows.map(flow => {
-    const seed = initialApprovalFlows.find(s => s.id === flow.id);
-    if (seed && (!flow.steps || !flow.steps.length)) {
-      flow = { ...seed, ...flow, steps: JSON.parse(JSON.stringify(seed.steps)) };
-    }
-    if (flow.icon && emojiToIcon[flow.icon]) {
-      flow.icon = emojiToIcon[flow.icon];
-    }
-    if (flow.steps && flow.steps.length) {
-      flow.steps.forEach(st => {
-        st.roleRequired = normalizeRole(st.roleRequired);
-      });
-    }
-    return flow;
-  });
-}
+const existingFlows = Array.isArray(initialData.approvalFlows) ? initialData.approvalFlows : [];
+const flowMap = new Map(existingFlows.map(f => [f.id, f]));
+
+initialData.approvalFlows = initialApprovalFlows.map(seed => {
+  const current = flowMap.get(seed.id) || {};
+  const merged = {
+    ...seed,
+    ...current,
+    id: seed.id,
+    module: seed.module,
+    category: seed.category,
+    name: current.name || seed.name,
+    steps: Array.isArray(current.steps) && current.steps.length
+      ? current.steps
+      : JSON.parse(JSON.stringify(seed.steps))
+  };
+  if (merged.icon && emojiToIcon[merged.icon]) {
+    merged.icon = emojiToIcon[merged.icon];
+  }
+  if (merged.steps && merged.steps.length) {
+    merged.steps.forEach(st => {
+      st.roleRequired = normalizeRole(st.roleRequired);
+    });
+  }
+  return merged;
+});
+storage.set(storage.KEYS.APPROVAL_FLOWS, initialData.approvalFlows);
 
 // Normalize masterSectors: ensure clean Lucide icon names instead of emojis
 if (Array.isArray(initialData.masterSectors)) {
@@ -2524,52 +2534,27 @@ export const legalStore = {
     this.triggerToast(`Peran kustom "${roleKey}" berhasil dihapus`, 'info');
   },
 
-  // Approval Flows CRUD
+  // Approval Flows (Locked to 6 Standard Core Flows AF-01 s/d AF-06)
   addApprovalFlow(payload) {
-    const newId = `AF-${String(state.approvalFlows.length + 1).padStart(2, '0')}`;
-    const newFlow = {
-      id: newId,
-      name: payload.name || 'Alur Persetujuan Baru',
-      category: payload.category || 'Permintaan Legal',
-      module: payload.module || 'requests',
-      icon: payload.icon || '⚖️',
-      description: payload.description || '',
-      threshold: Number(payload.threshold) || 0,
-      active: payload.active !== undefined ? payload.active : true,
-      slaDays: Number(payload.slaDays) || 3,
-      steps: Array.isArray(payload.steps) && payload.steps.length ? payload.steps : [
-        { level: 1, name: 'Review Dokumen (Maker)', roleRequired: 'STAFF LEGAL', slaDays: 1 },
-        { level: 2, name: 'Verifikasi Manajerial (Checker)', roleRequired: 'KEPALA LEGAL', slaDays: 1 },
-        { level: 3, name: 'Pengesahan Direksi (Approver)', roleRequired: 'DIREKTUR (DASHBOARD)', slaDays: 1 }
-      ],
-      lastUpdated: new Date().toISOString().replace('T', ' ').slice(0, 16)
-    };
-    state.approvalFlows.push(newFlow);
-    storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
-    this.addActivityLog('CREATE_FLOW', 'Alur Persetujuan', newId, `Menambahkan alur persetujuan baru: ${newFlow.name}`);
-    this.triggerToast(`Alur persetujuan "${newFlow.name}" berhasil dibuat!`, 'success');
-    return newFlow;
+    this.triggerToast('Sistem mengunci 6 alur standar inti. Penambahan alur baru dinonaktifkan.', 'warning');
+    return null;
   },
 
   updateApprovalFlow(id, payload) {
     const flow = state.approvalFlows.find(f => f.id === id);
     if (!flow) return;
-    Object.assign(flow, payload, {
+    const { id: _ignoreId, module: _ignoreMod, category: _ignoreCat, ...safePayload } = payload || {};
+    Object.assign(flow, safePayload, {
       lastUpdated: new Date().toISOString().replace('T', ' ').slice(0, 16)
     });
     storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
     const title = flow.name || flow.title || id;
-    this.addActivityLog('UPDATE_FLOW', 'Alur Persetujuan', id, `Memperbarui alur persetujuan: ${title}`);
-    this.triggerToast(`Alur persetujuan "${title}" berhasil diperbarui`, 'success');
+    this.addActivityLog('UPDATE_FLOW', 'Alur Persetujuan', id, `Memperbarui parameter alur persetujuan: ${title}`);
+    this.triggerToast(`Parameter alur persetujuan "${title}" berhasil diperbarui`, 'success');
   },
 
   deleteApprovalFlow(id) {
-    const flow = state.approvalFlows.find(f => f.id === id);
-    const title = flow ? (flow.name || flow.title) : id;
-    state.approvalFlows = state.approvalFlows.filter(f => f.id !== id);
-    storage.set(storage.KEYS.APPROVAL_FLOWS, state.approvalFlows);
-    this.addActivityLog('DELETE_FLOW', 'Alur Persetujuan', id, `Menghapus alur persetujuan: ${title}`);
-    this.triggerToast(`Alur persetujuan "${title}" berhasil dihapus`, 'info');
+    this.triggerToast('Alur persetujuan standar inti (AF-01 s/d AF-06) telah dikunci dan tidak dapat dihapus.', 'error');
   },
 
   toggleApprovalFlowStatus(id) {

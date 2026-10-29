@@ -98,7 +98,6 @@
     <SettingsFlowsTab
       v-else-if="activeTab === 'flows'"
       @open-edit-flow-modal="openEditFlowModal"
-      @open-add-flow-modal="openAddFlowModal"
     />
 
     <!-- Storage & Backup Tab Panel -->

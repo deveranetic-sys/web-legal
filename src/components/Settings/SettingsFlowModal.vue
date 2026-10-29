@@ -9,11 +9,16 @@
             <component :is="getFlowIcon(flowForm.icon || flowForm.module)" class="w-4.5 h-4.5 text-[#2563EB]" />
           </div>
           <div>
-            <h3 class="text-sm font-semibold text-[#0F172A]">
-              {{ isEditing ? `Edit Konfigurasi Alur: ${flowForm.name}` : 'Tambah Alur Persetujuan Baru' }}
-            </h3>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-sm font-semibold text-[#0F172A]">
+                Edit Konfigurasi Alur: {{ flowForm.name }}
+              </h3>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] px-1.5 py-0.5 rounded">
+                <Lock class="w-3 h-3" /> Terkunci ({{ flowForm.id || 'AF' }})
+              </span>
+            </div>
             <p class="text-[11px] text-[#64748B] mt-0.5">
-              Tentukan tahapan hierarki otorisasi, peran approver, target SLA, dan ambang batas nilai (threshold).
+              Penyesuaian parameter operasional: SLA per tahap, peran berwenang, ambang batas (threshold), dan catatan lingkup.
             </p>
           </div>
         </div>
@@ -65,14 +70,14 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- Module Selection -->
+              <!-- Module Selection (Locked) -->
               <div>
-                <label class="block text-xs font-semibold text-[#0F172A] mb-1">Modul Terkait</label>
+                <label class="block text-xs font-semibold text-[#0F172A] mb-1">Modul Terkait (Terkunci)</label>
                 <div class="relative">
                   <select
                     v-model="flowForm.module"
-                    @change="handleModuleChange"
-                    class="w-full pl-3 pr-8 py-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] font-medium cursor-pointer appearance-none"
+                    disabled
+                    class="w-full pl-3 pr-8 py-1.5 bg-[#F1F5F9] border border-[#CBD5E1] rounded-md text-xs sm:text-[13px] text-[#64748B] font-medium appearance-none cursor-not-allowed opacity-90"
                   >
                     <option value="requests">Permintaan Legal (Requests)</option>
                     <option value="contracts">Manajemen Kontrak</option>
@@ -81,7 +86,7 @@
                     <option value="disputes">Dispute &amp; Litigasi</option>
                     <option value="general">Umum / Lainnya</option>
                   </select>
-                  <ChevronDown class="w-3.5 h-3.5 text-[#64748B] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Lock class="w-3.5 h-3.5 text-[#64748B] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
@@ -150,14 +155,10 @@
                   Dokumen akan melewati tahapan ini secara berurutan dari Tahap 1 hingga tahap akhir.
                 </p>
               </div>
-              <button
-                type="button"
-                @click="addStep"
-                class="px-2.5 py-1 rounded-md bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#2563EB] text-xs font-semibold transition cursor-pointer flex items-center gap-1 border border-[#BFDBFE]"
-              >
-                <Plus class="w-3.5 h-3.5" />
-                <span>Tambah Tahap</span>
-              </button>
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#E2E8F0] px-2.5 py-1 rounded-md">
+                <Lock class="w-3 h-3 text-[#64748B]" />
+                <span>Struktur 3-Tier SOP Terkunci</span>
+              </span>
             </div>
 
             <!-- Step items -->
@@ -195,15 +196,6 @@
                       title="Geser ke Bawah"
                     >
                       <ArrowDown class="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      v-if="flowForm.steps.length > 1"
-                      type="button"
-                      @click="removeStep(idx)"
-                      class="p-1 text-[#B91C1C] hover:bg-[#FEE2E2] rounded transition cursor-pointer ml-1"
-                      title="Hapus Tahap Ini"
-                    >
-                      <Trash2 class="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -278,7 +270,7 @@
           class="px-4 py-1.5 rounded-md bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold transition cursor-pointer shadow-2xs flex items-center gap-1.5"
         >
           <Check class="w-3.5 h-3.5" />
-          <span>{{ isEditing ? 'Simpan Perubahan Alur' : 'Buat Alur Persetujuan' }}</span>
+          <span>Simpan Parameter Alur</span>
         </button>
       </div>
     </div>
@@ -288,6 +280,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import {
+  Lock,
   X,
   Check,
   Plus,

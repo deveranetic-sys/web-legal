@@ -14,17 +14,14 @@
             </span>
           </div>
           <p class="text-[11px] text-[#64748B] mt-0.5 max-w-3xl leading-relaxed">
-            Konfigurasi alur otorisasi berjenjang (Maker ➔ Checker ➔ Approver) untuk seluruh modul operasional hukum: Permintaan Legal, Kontrak, Tender, Opini Hukum, dan Sengketa.
+            SOP perseroan menetapkan dan mengunci 6 alur otorisasi berjenjang standar (AF-01 s/d AF-06): Tender Lelang, Permintaan Legal, Draf Kontrak Korporasi, Addendum VO, Settlement Sengketa, dan Opini Hukum.
           </p>
         </div>
       </div>
-      <button
-        @click="$emit('open-add-flow-modal')"
-        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-xs transition cursor-pointer shadow-2xs shrink-0 self-start md:self-center whitespace-nowrap"
-      >
-        <Plus class="w-3.5 h-3.5" />
-        <span>Tambah Alur Baru</span>
-      </button>
+      <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] font-bold text-xs shrink-0 self-start md:self-center shadow-2xs">
+        <Lock class="w-3.5 h-3.5 text-[#2563EB]" />
+        <span>6 Alur Standar Terkunci</span>
+      </div>
     </div>
 
     <!-- Filters & Search Bar (Tactile Control Bar) -->
@@ -152,21 +149,17 @@
           </div>
 
           <div class="flex items-center gap-1.5">
-            <button
-              @click="confirmDeleteFlow(flow)"
-              class="px-2 py-1 text-[#B91C1C] hover:bg-[#FEE2E2] text-xs font-semibold rounded-md border border-transparent hover:border-[#FCA5A5] transition cursor-pointer flex items-center gap-1"
-              title="Hapus Alur Persetujuan"
-            >
-              <Trash2 class="w-3.5 h-3.5" />
-              <span>Hapus</span>
-            </button>
+            <span class="inline-flex items-center gap-1 text-[11px] text-[#64748B] font-medium bg-[#F8FAFC] border border-[#E2E8F0] px-2 py-1 rounded-md">
+              <Lock class="w-3 h-3 text-[#64748B]" />
+              <span>Standar Inti Terkunci</span>
+            </span>
 
             <button
               @click="$emit('open-edit-flow-modal', flow)"
               class="px-2.5 py-1 bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#2563EB] border border-[#BFDBFE] text-xs font-semibold rounded-md transition cursor-pointer flex items-center gap-1"
             >
               <Edit3 class="w-3.5 h-3.5" />
-              <span>Edit Alur</span>
+              <span>Edit Parameter</span>
             </button>
           </div>
         </div>
@@ -180,15 +173,8 @@
       </div>
       <h4 class="text-xs sm:text-sm font-semibold text-[#0F172A]">Tidak ada alur persetujuan yang cocok</h4>
       <p class="text-xs text-[#64748B] max-w-sm mx-auto">
-        Silakan ubah kata kunci pencarian atau buat konfigurasi alur persetujuan baru.
+        Silakan ubah kata kunci pencarian atau filter modul untuk menampilkan 6 alur persetujuan standar.
       </p>
-      <button
-        @click="$emit('open-add-flow-modal')"
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] text-white text-xs font-semibold rounded-md hover:bg-[#1D4ED8] transition cursor-pointer"
-      >
-        <Plus class="w-3.5 h-3.5" />
-        <span>Buat Alur Baru</span>
-      </button>
     </div>
   </div>
 </template>
@@ -196,11 +182,10 @@
 <script setup>
 import { ref, computed } from 'vue';
 import {
-  Plus,
+  Lock,
   Search,
   Clock,
   Edit3,
-  Trash2,
   ChevronRight,
   ChevronDown,
   GitCommit,
@@ -217,7 +202,7 @@ import {
 } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
-const emit = defineEmits(['open-edit-flow-modal', 'open-add-flow-modal']);
+const emit = defineEmits(['open-edit-flow-modal']);
 
 const searchQuery = ref('');
 const filterModule = ref('ALL');
@@ -290,19 +275,5 @@ function formatThreshold(val) {
     return `Rp ${(val / 1000000).toLocaleString('id-ID')} Juta`;
   }
   return `Rp ${val.toLocaleString('id-ID')}`;
-}
-
-async function confirmDeleteFlow(flow) {
-  const confirmed = await legalStore.confirm({
-    title: 'Hapus Alur Persetujuan?',
-    message: `Apakah Anda yakin ingin menghapus alur "${flow.name}"? Pengajuan baru untuk modul terkait tidak akan dapat menggunakan alur ini.`,
-    confirmText: 'Ya, Hapus Alur',
-    cancelText: 'Batal',
-    variant: 'danger'
-  });
-
-  if (confirmed) {
-    legalStore.deleteApprovalFlow(flow.id);
-  }
 }
 </script>
