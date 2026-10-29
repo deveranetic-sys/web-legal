@@ -127,13 +127,8 @@
             v-model="filterType"
             class="form-select"
           >
-            <option value="ALL">Semua Tipe</option>
-            <option value="PPA">PPA</option>
-            <option value="EPC">EPC</option>
-            <option value="CSA">CSA</option>
-            <option value="Sewa">Sewa</option>
-            <option value="Insurance">Asuransi</option>
-            <option value="Konsultansi">Konsultansi</option>
+            <option value="ALL">Semua Tipe Kontrak</option>
+            <option v-for="t in availableContractTypes" :key="t" :value="t">{{ t }}</option>
           </select>
         </div>
 
@@ -143,11 +138,8 @@
             v-model="filterEntity"
             class="form-select"
           >
-            <option value="ALL">Semua Entitas</option>
-            <option value="PT Nusantara Energi">PT Nusantara Energi</option>
-            <option value="PT Java Power Solutions">PT Java Power Solutions</option>
-            <option value="PT Borneo Mineral Resources">PT Borneo Mineral</option>
-            <option value="PT Sumatera Green Energy">PT Sumatera Green</option>
+            <option value="ALL">Semua Entitas Perseroan</option>
+            <option v-for="e in availableEntities" :key="e" :value="e">{{ e }}</option>
           </select>
         </div>
       </div>
@@ -251,6 +243,22 @@ function openEditModal(contract) {
 }
 
 const contracts = computed(() => legalStore.state.contracts);
+
+const availableContractTypes = computed(() => {
+  const set = new Set();
+  (contracts.value || []).forEach(c => {
+    if (c.contractType) set.add(c.contractType);
+  });
+  return Array.from(set).sort();
+});
+
+const availableEntities = computed(() => {
+  const set = new Set();
+  (contracts.value || []).forEach(c => {
+    if (c.company) set.add(c.company);
+  });
+  return Array.from(set).sort();
+});
 
 const activeContractsCount = computed(() => {
   return contracts.value.filter(c => c.status === 'ACTIVE').length;

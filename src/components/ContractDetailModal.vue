@@ -68,12 +68,24 @@
               <span class="font-semibold text-[#0F172A] text-xs">{{ contract.contractType }}</span>
             </div>
             <div>
+              <span class="text-[#475569] text-[10px] uppercase font-semibold block">Proyek Terkait</span>
+              <span class="font-semibold text-[#0F172A] text-xs">{{ contract.project || 'Proyek Korporasi' }}</span>
+            </div>
+            <div>
               <span class="text-[#475569] text-[10px] uppercase font-semibold block">Tanggal Mulai Berlaku</span>
               <span class="font-semibold text-[#0F172A] text-xs">{{ contract.effectiveDate }}</span>
             </div>
             <div>
               <span class="text-[#475569] text-[10px] uppercase font-semibold block">Tanggal Selesai (Expiry)</span>
               <span class="font-semibold text-[#0F172A] text-xs">{{ contract.expiryDate }}</span>
+            </div>
+            <div>
+              <span class="text-[#475569] text-[10px] uppercase font-semibold block">Hukum yang Berlaku</span>
+              <span class="font-semibold text-[#0F172A] text-xs">{{ contract.governingLaw || 'Hukum Republik Indonesia' }}</span>
+            </div>
+            <div>
+              <span class="text-[#475569] text-[10px] uppercase font-semibold block">Forum Penyelesaian Sengketa</span>
+              <span class="font-semibold text-[#0F172A] text-xs">{{ contract.disputeResolution || 'Arbitrase BANI di Jakarta' }}</span>
             </div>
           </div>
 
@@ -105,9 +117,16 @@
           </div>
 
           <div>
-            <h4 class="font-semibold text-[#0F172A] mb-1">Ketentuan Termin Pembayaran:</h4>
-            <p class="p-3.5 bg-[#F9FAFB] rounded-xl border border-[#E2E8F0] text-[#0F172A] leading-relaxed">
-              {{ contract.paymentTerms }}
+            <h4 class="font-semibold text-[#0F172A] mb-1">Ketentuan Termin Pembayaran &amp; Retensi:</h4>
+            <p class="p-3.5 bg-[#F9FAFB] rounded-xl border border-[#E2E8F0] text-[#0F172A] leading-relaxed whitespace-pre-line">
+              {{ contract.paymentTerms || 'Pembayaran bertahap sesuai milestone pekerjaan.' }}
+            </p>
+          </div>
+
+          <div v-if="contract.penalty">
+            <h4 class="font-semibold text-[#0F172A] mb-1">Sanksi &amp; Denda Keterlambatan:</h4>
+            <p class="p-3 bg-rose-50/60 rounded-xl border border-rose-200 text-rose-900 leading-relaxed text-xs">
+              {{ contract.penalty }}
             </p>
           </div>
         </div>

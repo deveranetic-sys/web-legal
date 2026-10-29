@@ -799,9 +799,14 @@ export const legalStore = {
       pic: payload.pic || state.currentUser?.name || 'Legal Staff',
       legalPic: payload.legalPic || 'Budi Santoso, S.H.',
       status: autoStatus,
-      renewalStatus: payload.renewalStatus || 'Renewable',
-      keyObligations: payload.keyObligations || 'Pelaksanaan pekerjaan sesuai spesifikasi teknis.',
-      paymentTerms: payload.paymentTerms || 'Pembayaran bertahap sesuai milestone.',
+      renewalStatus: payload.renewalStatus || 'Non-Renewable',
+      keyObligations: payload.keyObligations || 'Pelaksanaan pekerjaan sesuai spesifikasi teknis dan klausul kontrak.',
+      paymentTerms: payload.paymentTerms || 'Pembayaran bertahap sesuai milestone pekerjaan.',
+      penalty: payload.penalty || 'Denda keterlambatan 1‰ per hari kalender maksimal 5% dari nilai kontrak.',
+      governingLaw: payload.governingLaw || 'Hukum Republik Indonesia',
+      disputeResolution: payload.disputeResolution || 'Arbitrase BANI di Jakarta',
+      documentLink: payload.documentLink || '',
+      remarks: payload.remarks || '',
       addendums: []
     };
     state.contracts.unshift(newContract);
@@ -819,6 +824,7 @@ export const legalStore = {
     if (payload.company !== undefined) c.company = payload.company;
     if (payload.counterparty !== undefined) c.counterparty = payload.counterparty;
     if (payload.contractType !== undefined) c.contractType = payload.contractType;
+    if (payload.project !== undefined) c.project = payload.project;
     if (payload.effectiveDate !== undefined) c.effectiveDate = payload.effectiveDate;
     if (payload.expiryDate !== undefined) {
       c.expiryDate = payload.expiryDate;
@@ -828,12 +834,18 @@ export const legalStore = {
       else if (c.status === 'EXPIRED' || c.status === 'EXPIRING') c.status = 'ACTIVE';
     }
     if (payload.contractValue !== undefined) c.contractValue = parseFloat(payload.contractValue) || 0;
+    if (payload.currency !== undefined) c.currency = payload.currency;
     if (payload.pic !== undefined) c.pic = payload.pic;
     if (payload.legalPic !== undefined) c.legalPic = payload.legalPic;
     if (payload.status !== undefined) c.status = payload.status;
     if (payload.renewalStatus !== undefined) c.renewalStatus = payload.renewalStatus;
     if (payload.keyObligations !== undefined) c.keyObligations = payload.keyObligations;
     if (payload.paymentTerms !== undefined) c.paymentTerms = payload.paymentTerms;
+    if (payload.penalty !== undefined) c.penalty = payload.penalty;
+    if (payload.governingLaw !== undefined) c.governingLaw = payload.governingLaw;
+    if (payload.disputeResolution !== undefined) c.disputeResolution = payload.disputeResolution;
+    if (payload.documentLink !== undefined) c.documentLink = payload.documentLink;
+    if (payload.remarks !== undefined) c.remarks = payload.remarks;
 
     storage.set(storage.KEYS.CONTRACTS, state.contracts);
     this.addActivityLog('UPDATE', 'Manajemen Kontrak', id, `Memperbarui data kontrak: ${c.contractTitle}`);
