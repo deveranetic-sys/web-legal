@@ -60,13 +60,15 @@
       :disputes="disputes"
       @open-edit="openEditModal"
       @open-timeline="openTimelineModal"
+      @open-add-chronology="openAddChronologyModal"
     />
 
     <!-- MODAL: Timeline & Kronologi Sidang -->
     <DisputeTimelineModal
       v-if="selectedDispute"
       :dispute="selectedDispute"
-      @close="selectedDispute = null"
+      :initial-open-add="openAddChronologyDirectly"
+      @close="closeTimelineModal"
     />
 
     <!-- MODAL: Tambah / Edit Perkara Sengketa -->
@@ -91,6 +93,7 @@ const isFormModalOpen = ref(false);
 const isEditMode = ref(false);
 const currentDisputeData = ref({});
 const selectedDispute = ref(null);
+const openAddChronologyDirectly = ref(false);
 
 const disputes = computed(() => legalStore.state.disputes || []);
 
@@ -130,7 +133,18 @@ function openEditModal(disp) {
 }
 
 function openTimelineModal(disp) {
+  openAddChronologyDirectly.value = false;
   selectedDispute.value = disp;
+}
+
+function openAddChronologyModal(disp) {
+  openAddChronologyDirectly.value = true;
+  selectedDispute.value = disp;
+}
+
+function closeTimelineModal() {
+  selectedDispute.value = null;
+  openAddChronologyDirectly.value = false;
 }
 
 function formatCompactIDR(amount) {

@@ -4,46 +4,46 @@
     @click.self="$emit('close')"
   >
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
-      <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between shrink-0">
+      <div class="px-6 py-4 bg-[#F8FAFC] text-[#0F172A] border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
-          <component :is="isEdit ? Pencil : Plus" class="w-5 h-5 text-purple-400" />
-          <h3 class="font-extrabold text-white text-base">
+          <component :is="isEdit ? Pencil : Plus" class="w-5 h-5 text-purple-600" />
+          <h3 class="font-bold text-[#0F172A] text-base">
             {{ isEdit ? 'Perbarui Data Sengketa' : 'Pendaftaran Perkara & Sengketa Baru' }}
           </h3>
         </div>
-        <button @click="$emit('close')" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        <button @click="$emit('close')" class="w-8 h-8 rounded-lg text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#E2E8F0] flex items-center justify-center cursor-pointer transition">✕</button>
       </div>
 
-      <form @submit.prevent="submitForm" class="p-6 space-y-4 text-xs sm:text-sm overflow-y-auto">
+      <form @submit.prevent="submitForm" class="p-6 space-y-4 text-xs overflow-y-auto flex-1">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Nomor Perkara / Register *</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Nomor Perkara / Register *</label>
             <input
               v-model="form.caseNumber"
               type="text"
               required
               placeholder="45/BANI/ARB/2026"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 font-mono"
+              class="form-input text-xs w-full h-[36px] font-mono"
             />
           </div>
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Pihak Lawan (Opponent) *</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Pihak Lawan (Opponent) *</label>
             <input
               v-model="form.opponent"
               type="text"
               required
               placeholder="PT Mitra Jaya Abadi"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              class="form-input text-xs w-full h-[36px]"
             />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Klasifikasi Sengketa</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Klasifikasi Sengketa</label>
             <select
               v-model="form.caseType"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none"
+              class="form-select text-xs w-full h-[36px]"
             >
               <option value="Arbitrase BANI">Arbitrase BANI</option>
               <option value="Gugatan Perdata (Wanprestasi)">Gugatan Perdata (Wanprestasi)</option>
@@ -53,33 +53,33 @@
             </select>
           </div>
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Pengadilan / Lembaga Arbitrase</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Pengadilan / Lembaga Arbitrase</label>
             <input
               v-model="form.courtOrInstitution"
               type="text"
               required
               placeholder="BANI Arbitration Jakarta / PN Jakpus"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              class="form-input text-xs w-full h-[36px]"
             />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Nilai Tuntutan / Gugatan (IDR) *</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Nilai Tuntutan / Gugatan (IDR) *</label>
             <input
               v-model.number="form.disputeValue"
               type="number"
               min="0"
               required
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 font-mono font-bold"
+              class="form-input text-xs w-full h-[36px] font-mono font-bold"
             />
           </div>
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Tingkat Risiko Finansial</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Tingkat Risiko Finansial</label>
             <select
               v-model="form.riskLevel"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none font-bold"
+              class="form-select text-xs w-full h-[36px] font-bold"
             >
               <option value="HIGH">Tinggi (High Risk)</option>
               <option value="MEDIUM">Sedang (Medium Risk)</option>
@@ -90,10 +90,10 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Entitas Perseroan</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Entitas Perseroan</label>
             <select
               v-model="form.company"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white text-slate-900 outline-none"
+              class="form-select text-xs w-full h-[36px]"
             >
               <option value="PT Nusantara Energi">PT Nusantara Energi</option>
               <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
@@ -102,50 +102,51 @@
             </select>
           </div>
           <div>
-            <label class="block font-bold text-slate-800 mb-1">Jadwal Sidang Berikutnya</label>
+            <label class="block font-semibold text-[#0F172A] mb-1">Jadwal Sidang Berikutnya</label>
             <input
               v-model="form.nextHearingDate"
               type="date"
               required
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+              class="form-input text-xs w-full h-[36px]"
             />
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-800 mb-1">Kuasa Hukum / Counsel Penanggung Jawab</label>
+          <label class="block font-semibold text-[#0F172A] mb-1">Kuasa Hukum / Counsel Penanggung Jawab</label>
           <input
             v-model="form.legalCounsel"
             type="text"
             placeholder="Tim Litigasi Internal & Retained Lawyer"
-            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900"
+            class="form-input text-xs w-full h-[36px]"
           />
         </div>
 
         <div>
-          <label class="block font-bold text-slate-800 mb-1">Ringkasan Pokok Perkara & Petitum *</label>
+          <label class="block font-semibold text-[#0F172A] mb-1">Ringkasan Pokok Perkara & Petitum *</label>
           <textarea
             v-model="form.summary"
             required
             rows="3"
             placeholder="Jelaskan dasar tuntutan, kronologi wanprestasi/perbuatan melawan hukum, serta langkah mitigasi..."
-            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none text-slate-900 resize-none"
+            class="form-input text-xs w-full p-2.5 leading-relaxed"
           ></textarea>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#E2E8F0]">
           <button
             type="button"
             @click="$emit('close')"
-            class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold cursor-pointer transition text-xs"
+            class="px-4 py-2 rounded-lg border border-[#CBD5E1] bg-white text-[#475569] hover:bg-[#F1F5F9] font-semibold cursor-pointer transition text-xs"
           >
             Batal
           </button>
           <button
             type="submit"
-            class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer transition shadow-xs text-xs flex items-center gap-1.5"
           >
-            {{ isEdit ? 'Simpan Perubahan' : 'Simpan Perkara' }}
+            <component :is="isEdit ? Check : Plus" class="w-4 h-4 stroke-[2.5]" />
+            <span>{{ isEdit ? 'Simpan Perubahan' : 'Daftarkan Perkara' }}</span>
           </button>
         </div>
       </form>
@@ -155,7 +156,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Plus, Pencil } from 'lucide-vue-next';
+import { Plus, Pencil, Check } from 'lucide-vue-next';
 import { legalStore } from '../../stores/legalStore';
 
 const props = defineProps({

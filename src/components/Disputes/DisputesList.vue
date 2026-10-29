@@ -66,27 +66,43 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2 self-start sm:self-auto">
+        <div class="flex items-center gap-1.5 self-start sm:self-auto">
+          <!-- Edit Symbol Button -->
           <button
             @click="$emit('open-edit', disp)"
-            class="p-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition cursor-pointer flex items-center gap-1"
+            class="w-8 h-8 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center transition cursor-pointer shadow-2xs"
             title="Edit Data Sengketa"
           >
             <Pencil class="w-3.5 h-3.5" />
-            <span>Edit</span>
           </button>
+
+          <!-- Delete Symbol Button -->
           <button
             @click="confirmDeleteDispute(disp)"
-            class="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition cursor-pointer flex items-center gap-1"
+            class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 flex items-center justify-center transition cursor-pointer shadow-2xs"
             title="Hapus Data Sengketa"
           >
             <Trash2 class="w-3.5 h-3.5" />
           </button>
+
+          <!-- Quick Add Chronology Button -->
+          <button
+            @click="$emit('open-add-chronology', disp)"
+            class="px-3 h-8 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-2xs whitespace-nowrap"
+            title="Tambah Butir Kronologi Baru untuk Perkara Ini"
+          >
+            <Plus class="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>+ Kronologi</span>
+          </button>
+
+          <!-- View Timeline Button -->
           <button
             @click="$emit('open-timeline', disp)"
-            class="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition cursor-pointer whitespace-nowrap"
+            class="px-3 h-8 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition cursor-pointer border border-purple-200 whitespace-nowrap flex items-center gap-1 shadow-2xs"
+            title="Lihat Riwayat Kronologi Lengkap"
           >
-            Lihat Kronologi
+            <Clock class="w-3.5 h-3.5" />
+            <span>Lihat Kronologi ({{ disp.timeline?.length || 0 }})</span>
           </button>
         </div>
       </div>
@@ -95,7 +111,7 @@
 </template>
 
 <script setup>
-import { Calendar, Download, Pencil, Trash2 } from 'lucide-vue-next';
+import { Calendar, Download, Pencil, Trash2, Plus, Clock } from 'lucide-vue-next';
 import { legalStore, formatIDR } from '../../stores/legalStore';
 import { openGoogleCalendar, downloadICalFile } from '../../services/calendarService';
 
@@ -106,7 +122,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['open-edit', 'open-timeline']);
+const emit = defineEmits(['open-edit', 'open-timeline', 'open-add-chronology']);
 
 async function confirmDeleteDispute(disp) {
   const confirmed = await legalStore.confirm({

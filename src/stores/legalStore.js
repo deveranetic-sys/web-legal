@@ -1003,6 +1003,42 @@ export const legalStore = {
     return d;
   },
 
+  addDisputeChronology(disputeId, chronologyItem) {
+    const dispute = state.disputes.find(item => item.id === disputeId);
+    if (!dispute) return false;
+    if (!Array.isArray(dispute.timeline)) dispute.timeline = [];
+    
+    const newItem = {
+      date: chronologyItem.date || new Date().toISOString().slice(0, 10),
+      title: chronologyItem.title || 'Tahapan Perkara Baru',
+      description: chronologyItem.description || chronologyItem.agendaOrNotes || ''
+    };
+    
+    dispute.timeline.push(newItem);
+    // Sort chronology in ascending order by date
+    dispute.timeline.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Optionally update the next hearing date
+    if (chronologyItem.updateNextHearing && chronologyItem.date) {
+      dispute.nextHearingDate = chronologyItem.date;
+    }
+    
+    storage.set(storage.KEYS.DISPUTES, state.disputes);
+    this.addActivityLog('UPDATE', 'Dispute & Litigation', disputeId, `Menambahkan kronologi perkara: ${newItem.title} (${newItem.date})`);
+    this.triggerToast(`Kronologi "${newItem.title}" berhasil ditambahkan!`, 'success');
+    return newItem;
+  },
+
+  deleteDisputeChronology(disputeId, itemIndex) {
+    const dispute = state.disputes.find(item => item.id === disputeId);
+    if (!dispute || !Array.isArray(dispute.timeline)) return;
+    
+    const removed = dispute.timeline.splice(itemIndex, 1)[0];
+    storage.set(storage.KEYS.DISPUTES, state.disputes);
+    this.addActivityLog('UPDATE', 'Dispute & Litigation', disputeId, `Menghapus tahapan kronologi: ${removed?.title || itemIndex}`);
+    this.triggerToast('Butir kronologi berhasil dihapus', 'info');
+  },
+
   deleteDispute(id) {
     const d = state.disputes.find(item => item.id === id);
     const name = d ? (d.caseNumber || d.opponent) : id;
