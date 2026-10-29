@@ -12,27 +12,9 @@
           <span>Surya Era Enterprise Legal Suite</span>
         </div>
         <h2 class="text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">Executive Legal Operations Dashboard</h2>
-        <p class="text-[#475569] text-xs lg:text-sm max-w-2xl leading-relaxed">
+        <p class="text-[#475569] text-xs lg:text-sm max-w-3xl leading-relaxed">
           Sentralisasi portofolio kontrak komersial, permohonan legal unit bisnis, surat menyurat & somasi, sengketa BANI/Litigasi, dan kepatuhan regulasi grup perseroan.
         </p>
-      </div>
-
-      <div class="flex items-center gap-2.5 z-10 shrink-0 flex-nowrap">
-        <button 
-          @click="legalStore.exportContractsCSV()"
-          class="flex items-center gap-1.5 rounded-xl bg-[#EEF2FF] hover:bg-[#E0E7FF] text-[#4338CA] border border-[#C7D2FE] text-xs font-semibold px-4 py-2.5 transition active:scale-95 cursor-pointer shadow-xs whitespace-nowrap"
-        >
-          <Download class="w-4 h-4 text-[#4338CA]" />
-          <span>Ekspor CSV</span>
-        </button>
-        <button 
-          v-if="canCreateContract"
-          @click="openAddContract"
-          class="flex items-center gap-1.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white text-xs font-semibold px-4 py-2.5 shadow-sm transition active:scale-95 cursor-pointer focus:ring-3 focus:ring-[#C7D2FE] whitespace-nowrap"
-        >
-          <Plus class="w-4 h-4" />
-          <span>Tambah Kontrak</span>
-        </button>
       </div>
     </div>
 
@@ -339,8 +321,6 @@
 <script setup>
 import { computed } from 'vue';
 import {
-  Download,
-  Plus,
   ClipboardList,
   AlertTriangle,
   FileText,
@@ -358,19 +338,11 @@ function tenderMissingCount(tender) {
   return tender.documents?.filter(d => d.status === 'KURANG' || d.status === 'KEDALUWARSA').length || 0;
 }
 
-const canCreateContract = computed(() => {
-  return legalStore.hasPermission('contracts', 'create');
-});
-
 function formatCompactIDR(amount) {
   if (!amount) return 'Rp 0';
   if (amount >= 1_000_000_000_000) return `Rp ${(amount / 1_000_000_000_000).toFixed(1)} Triliun`;
   if (amount >= 1_000_000_000) return `Rp ${(amount / 1_000_000_000).toFixed(1)} Miliar`;
   return formatIDR(amount);
-}
-
-function openAddContract() {
-  legalStore.state.isAddContractModalOpen = true;
 }
 
 function viewDetail(contract) {
