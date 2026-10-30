@@ -39,17 +39,16 @@
         <div class="flex items-center gap-2">
           <button
             @click="copyText(template.contentSample)"
-            class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5"
+            class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-2xs transition"
           >
             <Copy class="w-3.5 h-3.5" />
             <span>Salin Draf</span>
           </button>
           <button
-            @click="$emit('generate', template)"
-            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-sm"
+            @click="$emit('close')"
+            class="px-4 py-2 rounded-xl bg-[#4338CA] hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer shadow-xs transition"
           >
-            <Zap class="w-3.5 h-3.5" />
-            <span>Generate Naskah</span>
+            Tutup
           </button>
         </div>
       </div>
@@ -58,7 +57,7 @@
 </template>
 
 <script setup>
-import { X, Paperclip, Copy, Zap } from 'lucide-vue-next';
+import { X, Paperclip, Copy } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const props = defineProps({
@@ -68,7 +67,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['close', 'generate']);
+const emit = defineEmits(['close']);
 
 function copyText(text) {
   if (!text) return;

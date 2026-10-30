@@ -113,7 +113,6 @@
       :selected-category="selectedCategory"
       @open-add="isAddModalOpen = true"
       @preview="openPreview"
-      @generate="openGenerator"
     />
 
     <!-- Modal Preview Template Draf -->
@@ -121,7 +120,6 @@
       v-if="previewTmpl"
       :template="previewTmpl"
       @close="previewTmpl = null"
-      @generate="openGenerator"
     />
 
     <!-- Modal Tambah / Edit Klausul Standar -->
@@ -130,13 +128,6 @@
       :is-edit="isEditClauseMode"
       :initial-data="selectedClauseData"
       @close="isClauseModalOpen = false"
-    />
-
-    <!-- Modal Interactive Template Generator with Merge Fields -->
-    <TemplateGeneratorModal
-      v-if="selectedTemplateForGen"
-      :template="selectedTemplateForGen"
-      @close="selectedTemplateForGen = null"
     />
 
     <!-- Modal Tambah Template Baru -->
@@ -152,7 +143,6 @@
 import { ref, computed } from 'vue';
 import { Search, Plus, Filter, ChevronDown } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
-import TemplateGeneratorModal from './TemplateGeneratorModal.vue';
 import AddTemplateModal from './AddTemplateModal.vue';
 import ClausesTab from './Templates/Tabs/ClausesTab.vue';
 import TemplatesListTab from './Templates/Tabs/TemplatesListTab.vue';
@@ -164,7 +154,6 @@ const searchQuery = ref('');
 const selectedCategory = ref('ALL');
 const selectedClauseCategory = ref('ALL');
 const previewTmpl = ref(null);
-const selectedTemplateForGen = ref(null);
 const isAddModalOpen = ref(false);
 
 const isClauseModalOpen = ref(false);
@@ -203,10 +192,6 @@ function openEditClause(clause) {
 
 function openPreview(tmpl) {
   previewTmpl.value = tmpl;
-}
-
-function openGenerator(tmpl) {
-  selectedTemplateForGen.value = tmpl;
 }
 
 function handleTemplateCreated() {
