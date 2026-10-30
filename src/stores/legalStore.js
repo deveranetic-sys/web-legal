@@ -100,6 +100,17 @@ if (Array.isArray(initialData.masterContractTypes)) {
   storage.set(storage.KEYS.MASTER_CONTRACT_TYPES, initialData.masterContractTypes);
 }
 
+// Normalize clauses: ensure content and standardLanguage, and explanation and riskNotes are bidirectional
+if (Array.isArray(initialData.clauses)) {
+  initialData.clauses.forEach(cl => {
+    if (!cl.content && cl.standardLanguage) cl.content = cl.standardLanguage;
+    if (!cl.standardLanguage && cl.content) cl.standardLanguage = cl.content;
+    if (!cl.explanation && cl.riskNotes) cl.explanation = cl.riskNotes;
+    if (!cl.riskNotes && cl.explanation) cl.riskNotes = cl.explanation;
+  });
+  storage.set(storage.KEYS.CLAUSES, initialData.clauses);
+}
+
 // Normalize requests: ensure every request has approvalChain, currentApprovalLevel, and synchronized PIC
 if (Array.isArray(initialData.requests)) {
   const defaultFlow = initialApprovalFlows.find(f => f.module === 'requests') || initialApprovalFlows[1];

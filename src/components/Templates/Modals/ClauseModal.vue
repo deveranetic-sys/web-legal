@@ -130,31 +130,29 @@ onMounted(() => {
       title: props.initialData.title || '',
       category: props.initialData.category || 'Proteksi Risiko & Liabilitas',
       standardModel: props.initialData.standardModel || 'Standar Korporasi',
-      content: props.initialData.content || '',
-      explanation: props.initialData.explanation || props.initialData.description || ''
+      content: props.initialData.content || props.initialData.standardLanguage || '',
+      explanation: props.initialData.explanation || props.initialData.riskNotes || props.initialData.description || ''
     };
   }
 });
 
 function submitForm() {
+  const payload = {
+    title: form.value.title,
+    category: form.value.category,
+    standardModel: form.value.standardModel,
+    content: form.value.content,
+    standardLanguage: form.value.content,
+    description: form.value.explanation,
+    explanation: form.value.explanation,
+    riskNotes: form.value.explanation
+  };
+
   if (props.isEdit && props.initialData.id) {
-    legalStore.updateClause(props.initialData.id, {
-      title: form.value.title,
-      category: form.value.category,
-      standardModel: form.value.standardModel,
-      content: form.value.content,
-      description: form.value.explanation,
-      explanation: form.value.explanation
-    });
+    legalStore.updateClause(props.initialData.id, payload);
     legalStore.triggerToast('Klausul berhasil diperbarui!', 'success');
   } else {
-    legalStore.addClause({
-      title: form.value.title,
-      category: form.value.category,
-      standardModel: form.value.standardModel,
-      content: form.value.content,
-      explanation: form.value.explanation
-    });
+    legalStore.addClause(payload);
     legalStore.triggerToast('Klausul baru berhasil ditambahkan!', 'success');
   }
   emit('close');
