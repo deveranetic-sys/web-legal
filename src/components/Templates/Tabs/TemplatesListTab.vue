@@ -87,20 +87,30 @@
         </div>
 
         <!-- Bottom Action Buttons -->
-        <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-          <button
-            v-if="tmpl.contentSample"
-            @click="$emit('preview', tmpl)"
-            class="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-100/70 text-[#4338CA] font-bold text-xs cursor-pointer flex items-center gap-1.5 transition"
-          >
-            <Eye class="w-3.5 h-3.5 text-[#4338CA]" />
-            <span>Lihat Draf Naskah</span>
-          </button>
-          <span v-else class="text-[11px] text-slate-400">Berkas Terlampir</span>
+        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button
+              v-if="tmpl.contentSample"
+              @click="$emit('preview', tmpl)"
+              class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition"
+            >
+              <Eye class="w-3.5 h-3.5 text-slate-500" />
+              <span>Lihat Draf</span>
+            </button>
+
+            <button
+              @click="$emit('generate', tmpl)"
+              class="px-3 py-1.5 rounded-lg bg-[#4338CA] hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-xs transition"
+              title="Generate naskah resmi interaktif berbasis merge fields"
+            >
+              <Zap class="w-3.5 h-3.5" />
+              <span>Generate Naskah</span>
+            </button>
+          </div>
 
           <button
             @click="downloadTemplate(tmpl)"
-            class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition"
+            class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer flex items-center gap-1.5 transition"
             :title="tmpl.fileName ? 'Unduh berkas asli template' : 'Unduh draf teks'"
           >
             <Download class="w-3.5 h-3.5 text-slate-500" />
@@ -114,7 +124,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { FileText, Plus, Paperclip, Eye, Download, Trash2 } from 'lucide-vue-next';
+import { FileText, Plus, Paperclip, Eye, Zap, Download, Trash2 } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const props = defineProps({
@@ -128,7 +138,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['open-add', 'preview']);
+const emit = defineEmits(['open-add', 'preview', 'generate']);
 
 const templates = computed(() => legalStore.state.templates || []);
 

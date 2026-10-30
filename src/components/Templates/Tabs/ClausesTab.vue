@@ -80,15 +80,26 @@
         </p>
       </div>
 
-      <!-- Bottom Action Buttons: Lihat Draf Naskah & Salin Draf -->
-      <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
-        <button
-          @click="openClausePreview(clause)"
-          class="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-100/70 text-[#4338CA] font-bold text-xs cursor-pointer flex items-center gap-1.5 transition shadow-2xs"
-        >
-          <Eye class="w-3.5 h-3.5 text-[#4338CA]" />
-          <span>Lihat Draf Naskah</span>
-        </button>
+      <!-- Bottom Action Buttons: Lihat Draf, Generate Naskah & Salin Teks -->
+      <div class="pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button
+            @click="openClausePreview(clause)"
+            class="px-3 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-100/70 text-[#4338CA] font-bold text-xs cursor-pointer flex items-center gap-1.5 transition shadow-2xs"
+          >
+            <Eye class="w-3.5 h-3.5 text-[#4338CA]" />
+            <span>Lihat Draf Naskah</span>
+          </button>
+
+          <button
+            @click="$emit('generate', clause)"
+            class="px-3 py-1.5 rounded-lg bg-[#4338CA] hover:bg-indigo-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-xs transition"
+            title="Generate naskah resmi interaktif berbasis merge fields"
+          >
+            <Zap class="w-3.5 h-3.5" />
+            <span>Generate Naskah</span>
+          </button>
+        </div>
 
         <button
           @click="copyText(getClauseContent(clause))"
@@ -106,13 +117,14 @@
       :clause="selectedClauseForPreview"
       @close="selectedClauseForPreview = null"
       @edit="handleEditFromPreview"
+      @generate="handleGenerateFromPreview"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { FileText, Plus, Copy, Pencil, Trash2, Eye, ShieldAlert } from 'lucide-vue-next';
+import { FileText, Plus, Copy, Pencil, Trash2, Eye, Zap, ShieldAlert } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 import ClausePreviewModal from '../Modals/ClausePreviewModal.vue';
 
@@ -127,7 +139,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['open-add', 'open-edit']);
+const emit = defineEmits(['open-add', 'open-edit', 'generate']);
 
 const selectedClauseForPreview = ref(null);
 
@@ -164,6 +176,11 @@ function openClausePreview(clause) {
 function handleEditFromPreview(clause) {
   selectedClauseForPreview.value = null;
   emit('open-edit', clause);
+}
+
+function handleGenerateFromPreview(clause) {
+  selectedClauseForPreview.value = null;
+  emit('generate', clause);
 }
 
 function copyText(text) {

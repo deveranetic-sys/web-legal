@@ -93,7 +93,7 @@
           <button
             type="button"
             @click="copyDraft"
-            class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-800 border border-[#CBD5E1] font-bold rounded-xl text-xs transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 border border-[#CBD5E1] font-bold rounded-xl text-xs transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
             <Copy class="w-3.5 h-3.5 text-indigo-600" />
             <span>Salin Draf Naskah</span>
@@ -101,8 +101,18 @@
 
           <button
             type="button"
+            @click="$emit('generate', clause)"
+            class="px-3.5 py-2 bg-[#4338CA] hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            title="Buka generator naskah interaktif berbasis merge fields"
+          >
+            <Zap class="w-3.5 h-3.5" />
+            <span>Generate Naskah</span>
+          </button>
+
+          <button
+            type="button"
             @click="$emit('close')"
-            class="px-4 py-2 bg-[#4338CA] hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition cursor-pointer shadow-xs"
+            class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition cursor-pointer"
           >
             Tutup
           </button>
@@ -114,7 +124,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { X, FileText, ShieldAlert, Copy, Pencil } from 'lucide-vue-next';
+import { X, FileText, ShieldAlert, Copy, Pencil, Zap } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
 const props = defineProps({
@@ -124,7 +134,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['close', 'edit']);
+const emit = defineEmits(['close', 'edit', 'generate']);
 
 const clauseContent = computed(() => {
   return props.clause.content || props.clause.standardLanguage || 'Belum ada draf rumusan untuk klausul ini.';
@@ -140,3 +150,4 @@ function copyDraft() {
   legalStore.triggerToast('Draf naskah klausul berhasil disalin ke clipboard!', 'success');
 }
 </script>
+
