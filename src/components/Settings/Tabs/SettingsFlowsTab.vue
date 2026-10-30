@@ -9,21 +9,21 @@
         <div>
           <div class="flex items-center gap-2 flex-wrap">
             <h3 class="text-xs sm:text-sm font-extrabold text-[#0F172A]">
-              Konfigurasi Alur Persetujuan Bertingkat (Chain Approval Engine)
+              Konfigurasi Alur Persetujuan Bertingkat (Dynamic Approval Chain)
             </h3>
             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-[#4338CA] border border-indigo-200">
-              Multi-Tier Routing
+              Multi-Tier Dynamic
             </span>
           </div>
           <p class="text-[11px] text-[#64748B] mt-0.5 leading-normal">
-            SOP perseroan mengunci 6 alur otorisasi berjenjang standar (AF-01 s/d AF-06) dengan pembagian peran Maker, Checker, dan Approver.
+            Konfigurasi persetujuan fleksibel tanpa batas level (1 s/d N tahap): leluasa menentukan jumlah jenjang approval dan pihak berwenang di tiap tahapan.
           </p>
         </div>
       </div>
 
       <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#4338CA] border border-indigo-200 font-bold text-xs shrink-0 self-start sm:self-center shadow-2xs">
-        <Lock class="w-3.5 h-3.5 text-[#4338CA]" />
-        <span>6 Alur Standar Terkunci</span>
+        <Workflow class="w-3.5 h-3.5 text-[#4338CA]" />
+        <span>Multi-Level Bebas</span>
       </div>
     </div>
 
@@ -146,13 +146,14 @@
         <!-- Card Bottom Row: Linear Stepper Pipeline (Stacked Downward, 100% Contained) -->
         <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 space-y-2">
           <!-- Stepper Header Label -->
-          <div class="flex items-center justify-between text-[10px] text-[#64748B] font-semibold uppercase tracking-wider">
-            <span class="flex items-center gap-1.5">
-              <span>Rantai Persetujuan</span>
+          <div class="flex items-center justify-between text-[10px] text-[#64748B] font-semibold uppercase tracking-wider gap-2">
+            <span class="flex items-center gap-1.5 shrink-0">
+              <Workflow class="w-3.5 h-3.5 text-[#4338CA]" />
+              <span class="font-bold text-[#0F172A]">Rantai Persetujuan</span>
               <span class="text-slate-400 font-normal">({{ (flow.steps || []).length }} Level Otorisasi):</span>
             </span>
-            <span class="text-[#4338CA] font-bold font-mono lowercase tracking-normal">
-              maker ➔ checker ➔ approver
+            <span class="text-[#4338CA] font-bold font-mono text-[10px] truncate max-w-[60%] text-right lowercase">
+              {{ (flow.steps || []).map(s => s.roleRequired).join(' ➔ ') }}
             </span>
           </div>
 
@@ -191,8 +192,8 @@
           <div class="flex items-center gap-2">
             <span>Terakhir diperbarui: <strong class="text-[#0F172A]">{{ flow.lastUpdated || '2026-10-15' }}</strong></span>
             <span>•</span>
-            <span class="flex items-center gap-1 text-slate-500">
-              <Lock class="w-3 h-3 text-slate-400" /> Standar SOP Inti Terkunci
+            <span class="flex items-center gap-1 text-indigo-700 font-semibold">
+              <Workflow class="w-3 h-3 text-[#4338CA]" /> {{ (flow.steps || []).length }} Level Otorisasi Fleksibel
             </span>
           </div>
         </div>

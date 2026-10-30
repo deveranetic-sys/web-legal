@@ -146,19 +146,25 @@
 
           <!-- Dynamic Multi-Tier Steps Builder -->
           <div class="pt-3 border-t border-[#E2E8F0] space-y-3">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h4 class="text-xs font-semibold text-[#0F172A] uppercase tracking-wider">
-                  Tahapan Rantai Persetujuan (Chain Approval Steps)
+                <h4 class="text-xs font-bold text-[#0F172A] uppercase tracking-wider flex items-center gap-1.5">
+                  <Workflow class="w-3.5 h-3.5 text-[#4338CA]" />
+                  <span>Tahapan Rantai Persetujuan ({{ flowForm.steps.length }} Level)</span>
                 </h4>
-                <p class="text-[11px] text-[#64748B]">
-                  Dokumen akan melewati tahapan ini secara berurutan dari Tahap 1 hingga tahap akhir.
+                <p class="text-[11px] text-[#64748B] mt-0.5">
+                  Tentukan jumlah level persetujuan secara leluasa dan pilih pihak/peran yang berwenang di setiap tahapan.
                 </p>
               </div>
-              <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#64748B] bg-[#F1F5F9] border border-[#E2E8F0] px-2.5 py-1 rounded-md">
-                <Lock class="w-3 h-3 text-[#64748B]" />
-                <span>Struktur 3-Tier SOP Terkunci</span>
-              </span>
+
+              <button
+                type="button"
+                @click="addStep"
+                class="px-3 py-1.5 bg-[#4338CA] hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs shrink-0 self-start sm:self-auto"
+              >
+                <Plus class="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Tambah Level Persetujuan</span>
+              </button>
             </div>
 
             <!-- Step items -->
@@ -166,25 +172,31 @@
               <div
                 v-for="(step, idx) in flowForm.steps"
                 :key="idx"
-                class="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#CBD5E1] transition space-y-2"
+                class="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] hover:border-indigo-200 transition space-y-2.5 shadow-2xs"
               >
-                <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center justify-between gap-2 border-b border-[#E2E8F0]/70 pb-2">
                   <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded bg-[#2563EB] text-white text-[11px] font-bold font-mono-tabular flex items-center justify-center shrink-0">
+                    <span class="w-6 h-6 rounded-full bg-indigo-50 border border-indigo-200 text-[#4338CA] text-xs font-black font-mono-tabular flex items-center justify-center shrink-0">
                       {{ idx + 1 }}
                     </span>
-                    <span class="text-xs font-semibold text-[#0F172A]">
-                      {{ idx === 0 ? 'Tahap 1 (Maker / Penelaah Awal)' : (idx === flowForm.steps.length - 1 ? `Tahap ${idx + 1} (Final Approver)` : `Tahap ${idx + 1} (Checker / Verifikator)`) }}
-                    </span>
+                    <div>
+                      <span class="text-xs font-bold text-[#0F172A]">
+                        Level {{ idx + 1 }}:
+                        <span class="text-[#4338CA] font-semibold ml-1">
+                          {{ idx === 0 ? 'Inisiasi / Penelaah Awal (Maker)' : (idx === flowForm.steps.length - 1 ? 'Persetujuan Akhir (Final Approver)' : 'Verifikator / Reviewer (Checker)') }}
+                        </span>
+                      </span>
+                    </div>
                   </div>
 
+                  <!-- Step Controls: Move Up, Move Down, Delete -->
                   <div class="flex items-center gap-1">
                     <button
                       v-if="idx > 0"
                       type="button"
                       @click="moveStep(idx, -1)"
-                      class="p-1 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-200/50 rounded transition cursor-pointer"
-                      title="Geser ke Atas"
+                      class="p-1 text-slate-500 hover:text-[#0F172A] hover:bg-slate-200/60 rounded transition cursor-pointer"
+                      title="Geser Tahap ke Atas"
                     >
                       <ArrowUp class="w-3.5 h-3.5" />
                     </button>
@@ -192,36 +204,46 @@
                       v-if="idx < flowForm.steps.length - 1"
                       type="button"
                       @click="moveStep(idx, 1)"
-                      class="p-1 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-200/50 rounded transition cursor-pointer"
-                      title="Geser ke Bawah"
+                      class="p-1 text-slate-500 hover:text-[#0F172A] hover:bg-slate-200/60 rounded transition cursor-pointer"
+                      title="Geser Tahap ke Bawah"
                     >
                       <ArrowDown class="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      @click="removeStep(idx)"
+                      :disabled="flowForm.steps.length <= 1"
+                      :class="flowForm.steps.length <= 1 ? 'opacity-30 cursor-not-allowed' : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer'"
+                      class="p-1 rounded transition ml-1"
+                      :title="flowForm.steps.length <= 1 ? 'Minimal harus ada 1 tahap persetujuan' : 'Hapus tahap persetujuan ini'"
+                    >
+                      <Trash2 class="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-0.5">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 pt-0.5">
                   <!-- Step Name -->
                   <div class="sm:col-span-6">
-                    <label class="block text-[10px] font-medium text-[#64748B] mb-0.5">Nama Tahap / Aktivitas</label>
+                    <label class="block text-[10px] font-bold text-[#0F172A] mb-1">Nama Tahap / Aktivitas *</label>
                     <input
                       v-model="step.name"
                       type="text"
                       required
                       placeholder="Misal: Review Kepatuhan Klausul"
-                      class="w-full px-2.5 py-1 bg-white border border-[#CBD5E1] rounded text-xs text-[#0F172A] focus:outline-none focus:border-[#2563EB]"
+                      class="w-full px-2.5 py-1.5 bg-white border border-[#CBD5E1] rounded-lg text-xs text-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#C7D2FE] focus:border-[#4338CA] font-medium"
                     />
                   </div>
 
                   <!-- Role Required -->
                   <div class="sm:col-span-4">
-                    <label class="block text-[10px] font-medium text-[#64748B] mb-0.5">Peran Yang Berwenang (RBAC)</label>
+                    <label class="block text-[10px] font-bold text-[#0F172A] mb-1">Peran / Pihak Berwenang *</label>
                     <div class="relative">
                       <select
                         v-model="step.roleRequired"
-                        class="w-full pl-2.5 pr-7 py-1 bg-white border border-[#CBD5E1] rounded text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#2563EB] cursor-pointer appearance-none"
+                        class="w-full pl-2.5 pr-7 py-1.5 bg-white border border-[#CBD5E1] rounded-lg text-xs font-bold text-[#4338CA] focus:outline-none focus:ring-1 focus:ring-[#C7D2FE] focus:border-[#4338CA] cursor-pointer appearance-none"
                       >
-                        <option v-for="rName in availableRoles" :key="rName" :value="rName">
+                        <option v-for="rName in getStepRoles(step.roleRequired)" :key="rName" :value="rName">
                           {{ rName }}
                         </option>
                       </select>
@@ -231,13 +253,13 @@
 
                   <!-- Step SLA -->
                   <div class="sm:col-span-2">
-                    <label class="block text-[10px] font-medium text-[#64748B] mb-0.5">SLA (Hari)</label>
+                    <label class="block text-[10px] font-bold text-[#0F172A] mb-1">Target SLA (Hari)</label>
                     <input
                       v-model.number="step.slaDays"
                       type="number"
                       min="1"
                       max="30"
-                      class="w-full px-2 py-1 bg-white border border-[#CBD5E1] rounded text-xs text-[#0F172A] focus:outline-none focus:border-[#2563EB] text-center font-mono-tabular"
+                      class="w-full px-2 py-1.5 bg-white border border-[#CBD5E1] rounded-lg text-xs text-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#C7D2FE] focus:border-[#4338CA] text-center font-mono-tabular font-bold"
                     />
                   </div>
                 </div>
@@ -370,11 +392,26 @@ const isEditing = computed(() => !!(props.flow && props.flow.id));
 const availableRoles = computed(() => {
   const matrix = Object.keys(props.rolesMatrix || {}).length ? props.rolesMatrix : (legalStore.state.rolesMatrix || {});
   const keys = Object.keys(matrix);
-  if (!keys.length) {
-    return ['SUPER ADMIN', 'KEPALA LEGAL', 'STAFF LEGAL', 'REQUESTOR', 'DIREKTUR (DASHBOARD)'];
-  }
-  return keys;
+  const defaults = [
+    'STAFF LEGAL',
+    'KEPALA LEGAL',
+    'DIREKTUR (DASHBOARD)',
+    'DIREKTUR UTAMA',
+    'VP / GENERAL MANAGER',
+    'PROJECT MANAGER',
+    'SUPER ADMIN',
+    'REQUESTOR',
+    'KOMITE RISIKO & AUDIT',
+    'FINANCE & TREASURY'
+  ];
+  return Array.from(new Set([...keys, ...defaults]));
 });
+
+function getStepRoles(currentRole) {
+  const list = new Set(availableRoles.value);
+  if (currentRole) list.add(currentRole);
+  return Array.from(list);
+}
 
 const flowForm = ref({
   id: '',
@@ -454,13 +491,29 @@ function handleModuleChange() {
 
 function addStep() {
   const newLvl = flowForm.value.steps.length + 1;
+  const suggestedRoles = [
+    'STAFF LEGAL',
+    'KEPALA LEGAL',
+    'DIREKTUR (DASHBOARD)',
+    'DIREKTUR UTAMA',
+    'VP / GENERAL MANAGER',
+    'SUPER ADMIN'
+  ];
+  const role = suggestedRoles[Math.min(newLvl - 1, suggestedRoles.length - 1)];
+  const name = newLvl === 1
+    ? 'Penelaahan Awal Dokumen (Maker)'
+    : (newLvl === 2
+      ? 'Verifikasi Kepatuhan & Risiko (Checker)'
+      : `Persetujuan Eksekutif Level ${newLvl} (Approver)`);
+
   flowForm.value.steps.push({
     level: newLvl,
-    name: `Pemeriksaan Tahap ${newLvl}`,
-    roleRequired: newLvl === 1 ? 'STAFF LEGAL' : (newLvl === 2 ? 'KEPALA LEGAL' : 'DIREKTUR (DASHBOARD)'),
+    name,
+    roleRequired: role,
     slaDays: 1
   });
   reindexSteps();
+  legalStore.triggerToast(`Tahap persetujuan Level ${newLvl} berhasil ditambahkan`, 'info');
 }
 
 function removeStep(idx) {
@@ -468,8 +521,10 @@ function removeStep(idx) {
     legalStore.triggerToast('Minimal harus ada 1 tahap persetujuan.', 'warning');
     return;
   }
+  const removedName = flowForm.value.steps[idx].name || `Level ${idx + 1}`;
   flowForm.value.steps.splice(idx, 1);
   reindexSteps();
+  legalStore.triggerToast(`Tahap "${removedName}" berhasil dihapus`, 'info');
 }
 
 function moveStep(idx, direction) {
@@ -499,6 +554,9 @@ function handleSaveFlow() {
   }
 
   reindexSteps();
+
+  const calculatedSla = flowForm.value.steps.reduce((sum, s) => sum + (Number(s.slaDays) || 1), 0);
+  const totalSla = Number(flowForm.value.slaDays) > 0 ? Number(flowForm.value.slaDays) : calculatedSla;
 
   if (isEditing.value) {
     legalStore.updateApprovalFlow(flowForm.value.id, {
