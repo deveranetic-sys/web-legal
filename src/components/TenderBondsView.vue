@@ -282,7 +282,7 @@
             <select
               v-model="newBondForm.tenderId"
               required
-              class="w-full px-3 py-2 border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] text-[#0F172A] bg-white"
+              class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A] bg-white"
             >
               <option v-for="t in legalStore.state.tenders" :key="t.id" :value="t.id">
                 {{ t.id }} - {{ t.title }} ({{ t.organizer }})
@@ -296,7 +296,7 @@
               <select
                 v-model="newBondForm.bondType"
                 @change="onBondTypeChange"
-                class="w-full px-3 py-2 border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] text-[#0F172A] bg-white"
+                class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A] bg-white"
               >
                 <option value="BID_BOND">Jaminan Penawaran (Bid Bond)</option>
                 <option value="PERFORMANCE_BOND">Jaminan Pelaksanaan (Performance Bond)</option>
@@ -308,7 +308,7 @@
               <label class="block font-bold text-[#0F172A] mb-1">Bank Penerbit *</label>
               <select
                 v-model="newBondForm.bankIssuer"
-                class="w-full px-3 py-2 border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] text-[#0F172A] bg-white"
+                class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A] bg-white"
               >
                 <option value="PT Bank Mandiri (Persero) Tbk">PT Bank Mandiri (Persero) Tbk</option>
                 <option value="PT Bank Rakyat Indonesia (Persero) Tbk">PT Bank Rakyat Indonesia (Persero) Tbk</option>

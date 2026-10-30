@@ -448,7 +448,7 @@
             <select
               :value="currentSelectedTender.id"
               @change="openProjectDetail($event.target.value)"
-              class="py-1.5 px-3 text-xs font-bold border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-[#F8FAFC] text-[#0F172A]"
+              class="form-select form-select-sm text-xs font-bold border border-[#E2E8F0] rounded-xl text-[#0F172A] bg-white min-w-[200px]"
             >
               <option v-for="t in filteredTenders" :key="t.id" :value="t.id">
                 {{ t.id }} - {{ t.title }}

@@ -215,7 +215,7 @@
           <div class="md:col-span-3">
             <select
               v-model="filterTenderId"
-              class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A] font-semibold"
             >
               <option value="ALL">Semua Paket Lelang ({{ tenders.length }})</option>
               <option v-for="t in tenders" :key="t.id" :value="t.id">
@@ -228,7 +228,7 @@
           <div class="md:col-span-2">
             <select
               v-model="filterCategory"
-              class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A] font-semibold"
             >
               <option value="ALL">Semua Kategori</option>
               <option value="Legal Administrasi">Legal Administrasi</option>
@@ -242,7 +242,7 @@
           <div class="md:col-span-2">
             <select
               v-model="filterUrgency"
-              class="w-full py-2 px-3 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A] font-semibold"
             >
               <option value="ALL">Semua Status Gap</option>
               <option value="MANDATORY_ONLY">Hanya Dokumen Wajib</option>

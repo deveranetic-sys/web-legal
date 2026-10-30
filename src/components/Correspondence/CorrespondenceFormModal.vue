@@ -37,7 +37,7 @@
             <label class="block font-bold text-slate-800 mb-1">Arah Surat *</label>
             <select
               v-model="form.direction"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-semibold"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
             >
               <option value="KELUAR">Surat Keluar (Outgoing)</option>
               <option value="MASUK">Surat Masuk (Incoming)</option>
@@ -50,7 +50,7 @@
             <label class="block font-bold text-slate-800 mb-1">Jenis Surat</label>
             <select
               v-model="form.type"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
             >
               <option value="Surat Somasi">Surat Somasi (Peringatan)</option>
               <option value="Surat Kuasa Khusus">Surat Kuasa Khusus</option>
@@ -129,7 +129,7 @@
             <label class="block font-bold text-slate-800 mb-1">Status Pengiriman</label>
             <select
               v-model="form.status"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-bold"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-bold text-slate-900"
             >
               <option value="SENT">Terkirim (SENT)</option>
               <option value="RECEIVED">Diterima (RECEIVED)</option>

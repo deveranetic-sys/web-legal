@@ -77,7 +77,7 @@
             </label>
             <select
               v-model="form.category"
-              class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium shadow-2xs cursor-pointer"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl text-slate-800 font-semibold shadow-2xs cursor-pointer"
             >
               <option value="Template Surat (Korespondensi / Somasi)">Template Surat (Korespondensi / Somasi)</option>
               <option value="Surat Kuasa & Otorisasi Legal">Surat Kuasa & Otorisasi Legal</option>
@@ -96,7 +96,7 @@
             </label>
             <select
               v-model="form.language"
-              class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium shadow-2xs cursor-pointer"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl text-slate-800 font-semibold shadow-2xs cursor-pointer"
             >
               <option value="Bahasa Indonesia">Bahasa Indonesia</option>
               <option value="Bilingual (ID/EN)">Bilingual (Bahasa Indonesia & English)</option>

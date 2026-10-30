@@ -204,7 +204,7 @@
               <label class="block font-bold text-slate-800 mb-1">Tipe Dokumen Izin</label>
               <select
                 v-model="newForm.licenseType"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="OSS RBA (NIB)">OSS RBA (NIB)</option>
                 <option value="PB-UMKU Sektoral">PB-UMKU Sektoral</option>
@@ -230,7 +230,7 @@
               <label class="block font-bold text-slate-800 mb-1">Instansi Penerbit</label>
               <select
                 v-model="newForm.authority"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Kementerian ESDM">Kementerian ESDM</option>
                 <option value="Kementerian Investasi / BKPM">Kementerian Investasi / BKPM</option>
@@ -243,7 +243,7 @@
               <label class="block font-bold text-slate-800 mb-1">Entitas Pemegang Izin</label>
               <select
                 v-model="newForm.company"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="PT Nusantara Energi">PT Nusantara Energi</option>
                 <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
@@ -333,7 +333,7 @@
               <label class="block font-bold text-slate-800 mb-1">Tipe Dokumen Izin</label>
               <select
                 v-model="editForm.licenseType"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="OSS RBA (NIB)">OSS RBA (NIB)</option>
                 <option value="PB-UMKU Sektoral">PB-UMKU Sektoral</option>
@@ -367,7 +367,7 @@
               <label class="block font-bold text-slate-800 mb-1">Entitas Pemegang Izin</label>
               <select
                 v-model="editForm.company"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="PT Nusantara Energi">PT Nusantara Energi</option>
                 <option value="PT Indo Mineral Tambang">PT Indo Mineral Tambang</option>
@@ -399,7 +399,7 @@
               <label class="block font-bold text-slate-800 mb-1">Status Izin</label>
               <select
                 v-model="editForm.status"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 outline-none font-bold"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-bold text-slate-900"
               >
                 <option value="ACTIVE">Aktif (Valid)</option>
                 <option value="RENEWAL_IN_PROGRESS">Perpanjangan</option>

@@ -179,7 +179,7 @@
               <label class="block font-bold text-slate-800 mb-1">Frekuensi Pelaporan</label>
               <select
                 v-model="newForm.frequency"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Per Semester">Per Semester</option>
                 <option value="Triwulanan (Quarterly)">Triwulanan (Quarterly)</option>
@@ -203,7 +203,7 @@
               <label class="block font-bold text-slate-800 mb-1">Entitas Perseroan</label>
               <select
                 v-model="newForm.company"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="PT Nusantara Energi">PT Nusantara Energi</option>
                 <option value="PT Indo Mineral Tambang">PT Indo Mineral Tambang</option>
@@ -293,7 +293,7 @@
               <label class="block font-bold text-slate-800 mb-1">Frekuensi</label>
               <select
                 v-model="editForm.frequency"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Per Semester">Per Semester</option>
                 <option value="Triwulanan (Quarterly)">Triwulanan (Quarterly)</option>
@@ -317,7 +317,7 @@
               <label class="block font-bold text-slate-800 mb-1">Status Kepatuhan</label>
               <select
                 v-model="editForm.status"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none font-bold"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-bold text-slate-900"
               >
                 <option value="COMPLIANT">COMPLIANT (Terpenuhi)</option>
                 <option value="UPCOMING">UPCOMING (Mendatang)</option>

@@ -155,7 +155,7 @@
               <label class="block font-bold text-slate-700 mb-1">Forum Arbitrase / Penyelesaian Sengketa</label>
               <select
                 v-model="form.arbitrationForum"
-                class="w-full p-2 bg-white border border-slate-300 rounded-lg text-slate-900"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Badan Arbitrase Nasional Indonesia (BANI) di Jakarta">Badan Arbitrase Nasional Indonesia (BANI) Jakarta</option>
                 <option value="Pengadilan Negeri Jakarta Pusat">Pengadilan Negeri Jakarta Pusat</option>

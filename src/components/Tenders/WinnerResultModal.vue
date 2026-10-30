@@ -16,7 +16,7 @@
             <label class="block font-bold text-[#0F172A] mb-1">Hasil Akhir *</label>
             <select
               v-model="form.resultStatus"
-              class="w-full px-3 py-2 text-xs border border-[#E2E8F0] rounded-xl font-bold bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] border border-[#E2E8F0] rounded-xl font-bold bg-white text-[#0F172A]"
             >
               <option value="MENANG">MENANG (Juara 1)</option>
               <option value="KALAH">GUGUR / KALAH</option>

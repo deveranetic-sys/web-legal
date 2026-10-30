@@ -84,7 +84,7 @@
             <label class="block font-bold text-[#0F172A] mb-1">Entitas Perseroan Peserta *</label>
             <select
               v-model="form.company"
-              class="w-full px-3 py-2.5 text-xs border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] bg-white border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A]"
             >
               <option value="PT Nusantara Energi">PT Nusantara Energi</option>
               <option value="PT Java Power Solutions">PT Java Power Solutions</option>
@@ -132,7 +132,7 @@
             <label class="block font-bold text-[#0F172A] mb-1">Tahapan Saat Ini</label>
             <select
               v-model="form.stage"
-              class="w-full px-3 py-2.5 text-xs border border-[#E2E8F0] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] bg-white border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A]"
             >
               <option value="PERSIAPAN_PENGADAAN">1. Persiapan Pengadaan</option>
               <option value="PENGUMUMAN_PENDAFTARAN">2. Pengumuman & Pendaftaran</option>

@@ -25,7 +25,7 @@
           <label class="block font-bold text-[#0F172A] mb-1">Pilih Paket Lelang Sasaran *</label>
           <select
             v-model="targetTenderId"
-            class="w-full py-2.5 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A] text-xs font-semibold"
+            class="form-select text-xs w-full h-[38px] bg-white border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A]"
           >
             <option v-for="t in tenders" :key="t.id" :value="t.id">
               {{ t.id }} - {{ t.title }} ({{ t.company }})

@@ -4,14 +4,19 @@
     @click.self="$emit('close')"
   >
     <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200">
-      <div class="px-6 py-4 bg-[#1E293B] text-white border-b border-[#1E293B] flex items-center justify-between">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <component :is="isEdit ? Pencil : Plus" class="w-5 h-5 text-indigo-400" />
-          <h3 class="font-extrabold text-white text-base">
-            {{ isEdit ? 'Edit Klausul Standar' : 'Tambah Klausul Standar Baru' }}
-          </h3>
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-[#4338CA] border border-indigo-200 flex items-center justify-center font-bold">
+            <component :is="isEdit ? Pencil : Plus" class="w-4 h-4 text-[#4338CA]" />
+          </div>
+          <div>
+            <h3 class="font-extrabold text-[#0F172A] text-sm sm:text-base">
+              {{ isEdit ? 'Edit Klausul Standar' : 'Tambah Klausul Standar Baru' }}
+            </h3>
+            <p class="text-[11px] text-[#64748B]">Parameter baku klausul kontrak korporasi</p>
+          </div>
         </div>
-        <button @click="$emit('close')" class="text-slate-400 hover:text-white cursor-pointer transition">✕</button>
+        <button @click="$emit('close')" class="text-slate-400 hover:text-slate-600 cursor-pointer transition">✕</button>
       </div>
 
       <form @submit.prevent="submitForm" class="p-6 space-y-4 text-xs sm:text-sm">
@@ -22,16 +27,16 @@
             type="text"
             required
             placeholder="Contoh: Klausul Arbitrase BANI & Batasan Tanggung Jawab"
-            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900"
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#4338CA] outline-none text-slate-900"
           />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-800 mb-1">Kategori Klausul</label>
             <select
               v-model="form.category"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
             >
               <option value="Proteksi Risiko & Liabilitas">Proteksi Risiko & Liabilitas</option>
               <option value="Penyelesaian Sengketa & Arbitrase">Penyelesaian Sengketa & Arbitrase</option>
@@ -46,7 +51,7 @@
             <label class="block font-bold text-slate-800 mb-1">Model Referensi / Standar</label>
             <select
               v-model="form.standardModel"
-              class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white text-slate-900 outline-none"
+              class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
             >
               <option value="Standar Korporasi">Standar Korporasi PT Nusantara</option>
               <option value="BANI Arbitrase">Model BANI Arbitrase</option>
@@ -64,7 +69,7 @@
             required
             rows="4"
             placeholder="Tuliskan rumusan lengkap pasal atau klausul baku..."
-            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-mono text-xs"
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#4338CA] outline-none text-slate-900 font-mono text-xs leading-relaxed"
           ></textarea>
         </div>
 
@@ -74,7 +79,7 @@
             v-model="form.explanation"
             rows="2"
             placeholder="Jelaskan kapan klausul ini wajib disisipkan dan batasan negosiasi..."
-            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 resize-none"
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#C7D2FE] focus:border-[#4338CA] outline-none text-slate-900 resize-none leading-relaxed"
           ></textarea>
         </div>
 
@@ -88,7 +93,7 @@
           </button>
           <button
             type="submit"
-            class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer shadow-md transition text-xs"
+            class="px-5 py-2 rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white font-bold cursor-pointer shadow-md transition text-xs"
           >
             {{ isEdit ? 'Simpan Perubahan' : 'Simpan Klausul' }}
           </button>

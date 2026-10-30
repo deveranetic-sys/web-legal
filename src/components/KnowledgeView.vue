@@ -218,7 +218,7 @@
               <label class="block font-bold text-slate-800 mb-1">Kategori Dokumen Hukum</label>
               <select
                 v-model="newRegForm.category"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Undang-Undang">Undang-Undang (UU)</option>
                 <option value="Peraturan Pemerintah">Peraturan Pemerintah (PP)</option>
@@ -233,7 +233,7 @@
               <label class="block font-bold text-slate-800 mb-1">Sektor Industri Terkait</label>
               <select
                 v-model="newRegForm.sector"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Ketenagalistrikan & Energi">Ketenagalistrikan & Energi</option>
                 <option value="Pertambangan Mineral & Batubara">Pertambangan Mineral & Batubara</option>
@@ -359,7 +359,7 @@
               <label class="block font-bold text-slate-800 mb-1">Kategori Dokumen Hukum</label>
               <select
                 v-model="editRegForm.category"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Undang-Undang">Undang-Undang (UU)</option>
                 <option value="Peraturan Pemerintah">Peraturan Pemerintah (PP)</option>
@@ -374,7 +374,7 @@
               <label class="block font-bold text-slate-800 mb-1">Sektor Industri Terkait</label>
               <select
                 v-model="editRegForm.sector"
-                class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 bg-white text-slate-900 outline-none"
+                class="form-select text-xs w-full h-[38px] bg-white border border-slate-300 rounded-xl font-semibold text-slate-900"
               >
                 <option value="Ketenagalistrikan & Energi">Ketenagalistrikan & Energi</option>
                 <option value="Pertambangan Mineral & Batubara">Pertambangan Mineral & Batubara</option>

@@ -92,7 +92,7 @@
             <label class="block font-bold text-[#0F172A] mb-1">Kategori Dokumen *</label>
             <select
               v-model="form.category"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white"
+              class="form-select text-xs w-full h-[38px] bg-white border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A]"
             >
               <option value="Legal Administrasi">Legal Administrasi</option>
               <option value="Kualifikasi Teknis">Kualifikasi Teknis</option>

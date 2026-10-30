@@ -38,7 +38,7 @@
             <label class="block font-bold text-[#0F172A] mb-1">Jenis / Kategori Arsip</label>
             <select
               v-model="form.documentType"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] bg-white border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A]"
             >
               <option value="Akta Notaris & Korporasi">Akta Notaris & Korporasi</option>
               <option value="SK Pengesahan Kemenkumham">SK Pengesahan Kemenkumham</option>
@@ -53,7 +53,7 @@
               v-model="form.number"
               type="text"
               required
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] font-mono"
+              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] font-mono text-xs"
             />
           </div>
         </div>
@@ -65,14 +65,14 @@
               v-model="form.issuer"
               type="text"
               required
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A]"
+              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none text-[#0F172A] text-xs"
             />
           </div>
           <div>
             <label class="block font-bold text-[#0F172A] mb-1">Entitas Perseroan</label>
             <select
               v-model="form.company"
-              class="w-full py-2 px-3 border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#C7D2FE] outline-none bg-white text-[#0F172A]"
+              class="form-select text-xs w-full h-[38px] bg-white border border-[#E2E8F0] rounded-xl font-semibold text-[#0F172A]"
             >
               <option value="PT Nusantara Energi">PT Nusantara Energi</option>
               <option value="PT Nusantara Holdings Utama">PT Nusantara Holdings Utama</option>
