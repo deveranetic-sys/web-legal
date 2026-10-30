@@ -219,10 +219,12 @@ const state = reactive({
   masterStages: initialData.masterStages,
   masterContractTypes: initialData.masterContractTypes,
   rolesMatrix: initialData.rolesMatrix,
+  masterRoles: initialData.rolesMatrix,
   approvalFlows: initialData.approvalFlows,
   erpIntegrations: initialData.erpIntegrations,
   erpEmployees: initialData.erpEmployees,
   capabilityList: initialCapabilityList,
+  masterCapabilities: initialCapabilityList,
   selectedTenderId: 'TND-2026-001',
 
   // Toast feedback
@@ -2545,11 +2547,15 @@ export const legalStore = {
   // Role Matrix Permissions
   toggleRoleCapability(roleKey, capKey) {
     if (!state.rolesMatrix[roleKey]) return;
+    if (!state.rolesMatrix[roleKey].capabilities) {
+      state.rolesMatrix[roleKey].capabilities = {};
+    }
     const caps = state.rolesMatrix[roleKey].capabilities;
-    if (!caps) return;
     caps[capKey] = !caps[capKey];
+    state.rolesMatrix[roleKey].caps = Object.keys(caps).filter(k => caps[k]);
     storage.set(storage.KEYS.ROLES_MATRIX, state.rolesMatrix);
-    const capInfo = state.capabilityList.find(c => c.key === capKey);
+    const capList = state.capabilityList || initialCapabilityList;
+    const capInfo = capList.find(c => c.key === capKey);
     const label = capInfo ? capInfo.label : capKey;
     const statusText = caps[capKey] ? 'diberikan' : 'dicabut';
     this.addActivityLog('UPDATE_PERMISSION', 'Peran & Izin', roleKey, `Izin "${label}" untuk peran ${roleKey} ${statusText}`);
@@ -2557,36 +2563,31 @@ export const legalStore = {
   },
 
   addCustomRole({ name, description, cloneFromRole }) {
+    if (!name || typeof name !== 'string') return false;
     const roleKey = name.trim().toUpperCase();
     if (state.rolesMatrix[roleKey]) {
       this.triggerToast(`Peran dengan kode "${roleKey}" sudah ada`, 'error');
       return false;
     }
-    const baseCaps = cloneFromRole && state.rolesMatrix[cloneFromRole]
-      ? { ...state.rolesMatrix[cloneFromRole].capabilities }
-      : {
-        can_create_request: true,
-        can_review_contract: false,
-        can_approve_contract: false,
-        can_sign_contract: false,
-        can_manage_tender: false,
-        can_approve_tender_bid: false,
-        can_view_tender_bonds: true,
-        can_manage_disputes: false,
-        can_manage_compliance: false,
-        can_access_confidential_docs: false,
-        can_export_reports: true,
-        can_manage_users: false,
-        can_manage_settings: false
-      };
+    const capList = state.capabilityList || initialCapabilityList;
+    let baseCaps = {};
+    if (cloneFromRole && state.rolesMatrix[cloneFromRole]?.capabilities) {
+      baseCaps = { ...state.rolesMatrix[cloneFromRole].capabilities };
+    } else {
+      for (const cap of capList) {
+        baseCaps[cap.key] = false;
+      }
+    }
     state.rolesMatrix[roleKey] = {
+      label: name.trim(),
       name: name.trim(),
       description: description || `Peran kustom operasional: ${name}`,
       isCustom: true,
+      caps: Object.keys(baseCaps).filter(k => baseCaps[k]),
       capabilities: baseCaps
     };
     storage.set(storage.KEYS.ROLES_MATRIX, state.rolesMatrix);
-    this.addActivityLog('CREATE_ROLE', 'Peran & Izin', roleKey, `Membuat peran kustom baru: ${roleKey}`);
+    this.addActivityLog('CREATE_ROLE', 'Peran & Izin', roleKey, `Membuat peran kustom baru: ${roleKey} (Kloning dari: ${cloneFromRole || 'Izin Kosong'})`);
     this.triggerToast(`Peran baru "${roleKey}" berhasil ditambahkan ke matriks`, 'success');
     return true;
   },

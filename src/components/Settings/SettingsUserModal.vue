@@ -219,6 +219,10 @@ const props = defineProps({
   initialUser: {
     type: Object,
     default: null
+  },
+  rolesMatrix: {
+    type: Object,
+    default: () => ({})
   }
 });
 
@@ -228,7 +232,12 @@ const erpSearchQuery = ref('');
 const erpFilterMode = ref('all');
 const selectedErpEmployee = ref(null);
 
-const rolesMatrix = computed(() => legalStore.state.masterRoles || {});
+const rolesMatrix = computed(() => {
+  if (props.rolesMatrix && Object.keys(props.rolesMatrix).length > 0) {
+    return props.rolesMatrix;
+  }
+  return legalStore.state.rolesMatrix || legalStore.state.masterRoles || {};
+});
 const erpEmployees = computed(() => legalStore.state.erpEmployees || []);
 const users = computed(() => legalStore.state.users || []);
 

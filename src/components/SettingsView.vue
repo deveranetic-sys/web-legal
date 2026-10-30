@@ -195,6 +195,7 @@
       :is-open="isUserModalOpen"
       :is-editing="isEditingUser"
       :initial-user="editingUserObj"
+      :roles-matrix="rolesMatrix"
       @close="isUserModalOpen = false"
     />
 

@@ -27,7 +27,7 @@
             <tr>
               <th class="py-3 px-4 min-w-[200px]">Peran (Role)</th>
               <th
-                v-for="cap in (legalStore.state.masterCapabilities || [])"
+                v-for="cap in capabilitiesList"
                 :key="cap.key"
                 class="py-3 px-2 text-center min-w-[100px]"
                 :title="cap.label + ' (' + cap.category + ')'"
@@ -59,7 +59,7 @@
                 </div>
               </td>
               <td
-                v-for="cap in (legalStore.state.masterCapabilities || [])"
+                v-for="cap in capabilitiesList"
                 :key="cap.key"
                 class="py-2 px-2 text-center border-r border-slate-100"
               >
@@ -81,6 +81,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { ShieldAlert, Plus, Trash2 } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
@@ -92,6 +93,10 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['open-add-role-modal']);
+
+const capabilitiesList = computed(() => {
+  return legalStore.state.capabilityList || legalStore.state.masterCapabilities || [];
+});
 
 async function confirmDeleteRole(roleKey) {
   const confirmed = await legalStore.confirm({

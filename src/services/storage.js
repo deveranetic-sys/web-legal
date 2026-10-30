@@ -24,7 +24,8 @@ import {
   initialRolesMatrix,
   initialApprovalFlows,
   initialErpIntegrations,
-  initialErpEmployees
+  initialErpEmployees,
+  initialCapabilityList
 } from '../data/seedData.js';
 
 const STORAGE_KEYS = {
@@ -67,6 +68,30 @@ export function normalizeRole(role) {
   if (r === 'REQUESTOR') return 'REQUESTOR';
   if (r === 'MANAGEMENT' || r.includes('DIREKTUR')) return 'DIREKTUR (DASHBOARD)';
   return role;
+}
+
+export function normalizeRolesMatrix(roles) {
+  if (!roles || typeof roles !== 'object') roles = initialRolesMatrix;
+  const result = {};
+  for (const [key, role] of Object.entries(roles)) {
+    const capsObj = role.capabilities ? { ...role.capabilities } : {};
+    const roleCaps = Array.isArray(role.caps) ? role.caps : [];
+    const isSuper = roleCaps.includes('*') || key === 'SUPER ADMIN' || key === 'ADMIN';
+    for (const cap of initialCapabilityList) {
+      if (capsObj[cap.key] === undefined) {
+        capsObj[cap.key] = isSuper || roleCaps.includes(cap.key);
+      }
+    }
+    result[key] = {
+      ...role,
+      label: role.label || key,
+      description: role.description || '',
+      isCustom: !!role.isCustom,
+      caps: Object.keys(capsObj).filter(k => capsObj[k]),
+      capabilities: capsObj
+    };
+  }
+  return result;
 }
 
 export function normalizeCorporate(list) {
@@ -302,7 +327,7 @@ export const storage = {
       masterSectors: this.get(STORAGE_KEYS.MASTER_SECTORS, initialMasterSectors),
       masterStages: this.get(STORAGE_KEYS.MASTER_STAGES, initialMasterTenderStages),
       masterContractTypes: this.get(STORAGE_KEYS.MASTER_CONTRACT_TYPES, initialMasterContractTypes),
-      rolesMatrix: this.get(STORAGE_KEYS.ROLES_MATRIX, initialRolesMatrix),
+      rolesMatrix: normalizeRolesMatrix(this.get(STORAGE_KEYS.ROLES_MATRIX, initialRolesMatrix)),
       approvalFlows: this.get(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows),
       erpIntegrations: this.get(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations),
       erpEmployees: this.get(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees)
@@ -341,7 +366,7 @@ export const storage = {
     this.set(STORAGE_KEYS.MASTER_SECTORS, initialMasterSectors);
     this.set(STORAGE_KEYS.MASTER_STAGES, initialMasterTenderStages);
     this.set(STORAGE_KEYS.MASTER_CONTRACT_TYPES, initialMasterContractTypes);
-    this.set(STORAGE_KEYS.ROLES_MATRIX, initialRolesMatrix);
+    this.set(STORAGE_KEYS.ROLES_MATRIX, normalizeRolesMatrix(initialRolesMatrix));
     this.set(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows);
     this.set(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations);
     this.set(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees);
