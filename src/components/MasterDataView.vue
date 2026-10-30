@@ -24,11 +24,10 @@
         </button>
 
         <button
-          v-if="activeTab !== 'stages'"
           @click="openAddModalForCurrentTab"
           class="px-4 py-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
         >
-          <Plus class="w-4 h-4" />
+          <Plus class="w-4 h-4 stroke-[2.5]" />
           <span>{{ getAddButtonLabel }}</span>
         </button>
       </div>
@@ -84,7 +83,7 @@
     <!-- Active Tab Components -->
     <MasterDocTypesTab v-if="activeTab === 'doctypes'" />
     <MasterSectorsTab v-else-if="activeTab === 'sectors'" />
-    <MasterStagesTab v-else-if="activeTab === 'stages'" />
+    <MasterStagesTab v-else-if="activeTab === 'stages'" ref="stagesTabRef" />
     <MasterContractTypesTab v-else-if="activeTab === 'contracts'" />
 
     <!-- Modals -->
@@ -128,6 +127,7 @@ const AddContractTypeModal = defineAsyncComponent(() => import('./MasterData/Mod
 
 const activeTab = ref('doctypes'); // 'doctypes', 'sectors', 'stages', 'contracts'
 
+const stagesTabRef = ref(null);
 const isAddDocTypeModalOpen = ref(false);
 const isAddSectorModalOpen = ref(false);
 const isAddContractTypeModalOpen = ref(false);
@@ -140,6 +140,7 @@ const getAddButtonLabel = computed(() => {
   switch (activeTab.value) {
     case 'doctypes': return 'Tambah Tipe Dokumen';
     case 'sectors': return 'Tambah Sektor Industri';
+    case 'stages': return 'Tambah Tahapan Tender';
     case 'contracts': return 'Tambah Tipe Kontrak';
     default: return 'Tambah Data';
   }
@@ -150,6 +151,8 @@ function openAddModalForCurrentTab() {
     isAddDocTypeModalOpen.value = true;
   } else if (activeTab.value === 'sectors') {
     isAddSectorModalOpen.value = true;
+  } else if (activeTab.value === 'stages') {
+    stagesTabRef.value?.openAddModal?.();
   } else if (activeTab.value === 'contracts') {
     isAddContractTypeModalOpen.value = true;
   }

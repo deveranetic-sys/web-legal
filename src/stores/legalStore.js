@@ -4,7 +4,8 @@ import {
   masterSectorChecklists,
   masterSectorStageGuidance,
   initialCapabilityList,
-  initialApprovalFlows
+  initialApprovalFlows,
+  initialMasterTenderStages
 } from '../data/seedData.js';
 
 // Initialize storage and load hydrated dataset in a single pass
@@ -2314,22 +2315,14 @@ export const legalStore = {
   // Dynamic Sector Stages Getter
   getStagesForSector(sectorKey) {
     const key = (sectorKey || 'KONSTRUKSI').toUpperCase();
-    if (state.masterStages && state.masterStages[key] && state.masterStages[key].length > 0) {
+    if (!state.masterStages) state.masterStages = {};
+    if (state.masterStages[key] && Array.isArray(state.masterStages[key]) && state.masterStages[key].length > 0) {
       return state.masterStages[key];
     }
-    if (state.masterStages && state.masterStages['KONSTRUKSI']) {
-      return state.masterStages['KONSTRUKSI'];
-    }
-    return [
-      { key: 'PERSIAPAN_PENGADAAN', name: '1. Tahap Persiapan Pengadaan', shortName: '1. Persiapan KAK & HPS', description: 'Penyusunan KAK/spesifikasi teknis, DED, dan penetapan HPS.' },
-      { key: 'PENGUMUMAN_PENDAFTARAN', name: '2. Pengumuman Lelang & Pendaftaran Peserta', shortName: '2. Pengumuman & Pendaftaran', description: 'Pokja mengumumkan tender secara terbuka.' },
-      { key: 'AANWIJZING', name: '3. Pemberian Penjelasan (Aanwijzing)', shortName: '3. Pemberian Penjelasan', description: 'Pertemuan teknis panitia tender dan peserta.' },
-      { key: 'PENYAMPAIAN_PENAWARAN', name: '4. Penyampaian Dokumen Penawaran', shortName: '4. Penyampaian Penawaran', description: 'Peserta menyusun dan mengunggah dokumen penawaran.' },
-      { key: 'EVALUASI_PEMBUKTIAN', name: '5. Evaluasi Penawaran & Pembuktian', shortName: '5. Evaluasi & Pembuktian', description: 'Pemeriksaan berjenjang teknis, harga, dan pembuktian kualifikasi.' },
-      { key: 'PENGUMUMAN_PEMENANG', name: '6. Penetapan & Pengumuman Pemenang', shortName: '6. Pengumuman Pemenang', description: 'Pokja menetapkan urutan pemenang tender.' },
-      { key: 'MASA_SANGGAH', name: '7. Masa Sanggah (5 Hari)', shortName: '7. Masa Sanggah', description: 'Waktu sanggahan bagi peserta yang gugur.' },
-      { key: 'SPPBJ_KONTRAK', name: '8. Penerbitan SPPBJ & Kontrak', shortName: '8. SPPBJ & Kontrak', description: 'Penyerahan jaminan pelaksanaan dan tanda tangan kontrak resmi.' }
-    ];
+    const fallback = initialMasterTenderStages[key] || initialMasterTenderStages['KONSTRUKSI'] || [];
+    state.masterStages[key] = JSON.parse(JSON.stringify(fallback));
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    return state.masterStages[key];
   },
 
   // Master Data: Document Types CRUD
@@ -2426,6 +2419,92 @@ export const legalStore = {
     storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
     this.addActivityLog('UPDATE_STAGES', 'Data Master', key, `Memperbarui template tahapan proses lelang untuk sektor ${key}`);
     this.triggerToast(`Template tahapan untuk sektor ${key} berhasil disimpan`, 'success');
+  },
+
+  addStageToSector(sectorKey, stagePayload, insertIndex = -1) {
+    const key = (sectorKey || 'KONSTRUKSI').toUpperCase();
+    const stages = this.getStagesForSector(key);
+    
+    let stageKey = stagePayload.key ? stagePayload.key.trim().toUpperCase().replace(/[^A-Z0-9_]/g, '_') : '';
+    if (!stageKey) {
+      stageKey = `TAHAP_${Date.now().toString().slice(-4)}`;
+    }
+    
+    const newStage = {
+      key: stageKey,
+      name: stagePayload.name || 'Tahapan Lelang Baru',
+      shortName: stagePayload.shortName || stagePayload.name || 'Tahap Baru',
+      description: stagePayload.description || 'Deskripsi rincian tahapan proses lelang.'
+    };
+    
+    if (insertIndex >= 0 && insertIndex < stages.length) {
+      stages.splice(insertIndex, 0, newStage);
+    } else {
+      stages.push(newStage);
+    }
+    
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    this.addActivityLog('CREATE', 'Alur Tahapan Tender', key, `Menambahkan tahapan "${newStage.name}" pada sektor ${key}`);
+    this.triggerToast(`Tahapan "${newStage.name}" berhasil ditambahkan ke sektor ${key}!`, 'success');
+    return newStage;
+  },
+
+  updateStageInSector(sectorKey, stageIndex, stagePayload) {
+    const key = (sectorKey || 'KONSTRUKSI').toUpperCase();
+    const stages = this.getStagesForSector(key);
+    if (!stages[stageIndex]) return false;
+    
+    const stage = stages[stageIndex];
+    if (stagePayload.name !== undefined) stage.name = stagePayload.name;
+    if (stagePayload.shortName !== undefined) stage.shortName = stagePayload.shortName;
+    if (stagePayload.key !== undefined) stage.key = stagePayload.key.trim().toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+    if (stagePayload.description !== undefined) stage.description = stagePayload.description;
+    
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    this.addActivityLog('UPDATE', 'Alur Tahapan Tender', key, `Memperbarui tahapan "${stage.name}" pada sektor ${key}`);
+    this.triggerToast(`Tahapan "${stage.name}" berhasil diperbarui!`, 'success');
+    return true;
+  },
+
+  deleteStageFromSector(sectorKey, stageIndex) {
+    const key = (sectorKey || 'KONSTRUKSI').toUpperCase();
+    const stages = this.getStagesForSector(key);
+    if (!stages[stageIndex]) return false;
+    if (stages.length <= 1) {
+      this.triggerToast('Minimal harus ada 1 tahapan dalam alur sektor!', 'warning');
+      return false;
+    }
+    
+    const removed = stages.splice(stageIndex, 1)[0];
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    this.addActivityLog('DELETE', 'Alur Tahapan Tender', key, `Menghapus tahapan "${removed?.name || stageIndex}" dari sektor ${key}`);
+    this.triggerToast(`Tahapan "${removed?.name}" berhasil dihapus`, 'info');
+    return true;
+  },
+
+  moveStageInSector(sectorKey, stageIndex, direction) {
+    const key = (sectorKey || 'KONSTRUKSI').toUpperCase();
+    const stages = this.getStagesForSector(key);
+    const targetIndex = stageIndex + direction;
+    if (targetIndex < 0 || targetIndex >= stages.length) return false;
+    
+    const [movedItem] = stages.splice(stageIndex, 1);
+    stages.splice(targetIndex, 0, movedItem);
+    
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    this.addActivityLog('REORDER', 'Alur Tahapan Tender', key, `Mengubah urutan tahapan "${movedItem.name}" pada sektor ${key}`);
+    this.triggerToast(`Urutan tahapan berhasil dipindahkan`, 'success');
+    return true;
+  },
+
+  resetSectorStagesToDefault(sectorKey) {
+    const key = (sectorKey || 'KONSTRUKSI').toUpperCase();
+    const defaultList = initialMasterTenderStages[key] || initialMasterTenderStages['KONSTRUKSI'] || [];
+    state.masterStages[key] = JSON.parse(JSON.stringify(defaultList));
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    this.addActivityLog('RESET', 'Alur Tahapan Tender', key, `Mengembalikan alur tahapan sektor ${key} ke standar bawaan`);
+    this.triggerToast(`Alur tahapan sektor ${key} berhasil dikembalikan ke standar awal`, 'info');
+    return true;
   },
 
   // Master Data: Contract Types CRUD
