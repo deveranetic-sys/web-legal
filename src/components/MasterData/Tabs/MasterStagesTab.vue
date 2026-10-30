@@ -31,10 +31,10 @@
         <button
           @click="openAddStageModal"
           class="px-3.5 h-[38px] bg-[#4338CA] hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shadow-xs"
-          title="Tambah tahapan baru untuk sektor ini"
+          title="Tambah butir tahapan (step) baru ke dalam alur sektor ini"
         >
           <Plus class="w-4 h-4 stroke-[2.5]" />
-          <span>Tambah Tahap</span>
+          <span>Tambah Butir Tahap</span>
         </button>
 
         <button
@@ -300,8 +300,13 @@ async function handleResetStages() {
   }
 }
 
-// Expose openAddModal for MasterDataView top button
+function setSector(code) {
+  selectedWorkflowSector.value = code;
+}
+
+// Expose openAddModal and setSector for MasterDataView
 defineExpose({
+  setSector,
   openAddModal: openAddStageModal
 });
 </script>

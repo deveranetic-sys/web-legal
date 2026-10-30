@@ -101,6 +101,12 @@
       v-if="isAddContractTypeModalOpen"
       @close="isAddContractTypeModalOpen = false"
     />
+
+    <AddWorkflowModal
+      :is-open="isAddWorkflowModalOpen"
+      @close="isAddWorkflowModalOpen = false"
+      @created="handleWorkflowCreated"
+    />
   </div>
 </template>
 
@@ -124,6 +130,7 @@ const MasterContractTypesTab = defineAsyncComponent(() => import('./MasterData/T
 const AddDocTypeModal = defineAsyncComponent(() => import('./MasterData/Modals/AddDocTypeModal.vue'));
 const AddSectorModal = defineAsyncComponent(() => import('./MasterData/Modals/AddSectorModal.vue'));
 const AddContractTypeModal = defineAsyncComponent(() => import('./MasterData/Modals/AddContractTypeModal.vue'));
+const AddWorkflowModal = defineAsyncComponent(() => import('./MasterData/Modals/AddWorkflowModal.vue'));
 
 const activeTab = ref('doctypes'); // 'doctypes', 'sectors', 'stages', 'contracts'
 
@@ -131,6 +138,7 @@ const stagesTabRef = ref(null);
 const isAddDocTypeModalOpen = ref(false);
 const isAddSectorModalOpen = ref(false);
 const isAddContractTypeModalOpen = ref(false);
+const isAddWorkflowModalOpen = ref(false);
 
 const masterDocTypes = computed(() => legalStore.state.masterDocTypes || []);
 const masterSectors = computed(() => legalStore.state.masterSectors || []);
@@ -140,7 +148,7 @@ const getAddButtonLabel = computed(() => {
   switch (activeTab.value) {
     case 'doctypes': return 'Tambah Tipe Dokumen';
     case 'sectors': return 'Tambah Sektor Industri';
-    case 'stages': return 'Tambah Tahapan Tender';
+    case 'stages': return 'Tambah Skema Alur Tender';
     case 'contracts': return 'Tambah Tipe Kontrak';
     default: return 'Tambah Data';
   }
@@ -152,9 +160,17 @@ function openAddModalForCurrentTab() {
   } else if (activeTab.value === 'sectors') {
     isAddSectorModalOpen.value = true;
   } else if (activeTab.value === 'stages') {
-    stagesTabRef.value?.openAddModal?.();
+    isAddWorkflowModalOpen.value = true;
   } else if (activeTab.value === 'contracts') {
     isAddContractTypeModalOpen.value = true;
+  }
+}
+
+function handleWorkflowCreated(payload) {
+  const newSector = legalStore.addMasterSector(payload);
+  isAddWorkflowModalOpen.value = false;
+  if (newSector && stagesTabRef.value?.setSector) {
+    stagesTabRef.value.setSector(newSector.code);
   }
 }
 

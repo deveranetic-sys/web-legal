@@ -13,10 +13,10 @@
           </div>
           <div>
             <h3 class="text-base font-bold text-[#0F172A]">
-              {{ isEdit ? 'Edit Tahapan Tender' : 'Tambah Tahapan Tender Baru' }}
+              {{ isEdit ? 'Edit Butir Tahapan (Step)' : 'Tambah Butir Tahapan (Step)' }}
             </h3>
             <p class="text-[11px] text-[#64748B] mt-0.5">
-              Sektor: <strong class="text-[#0F172A]">{{ sectorName }} ({{ sectorCode }})</strong>
+              Alur Sektor: <strong class="text-[#0F172A]">{{ sectorName }} ({{ sectorCode }})</strong>
             </p>
           </div>
         </div>
@@ -122,7 +122,7 @@
               class="px-5 py-2.5 rounded-lg bg-[#4338CA] hover:bg-indigo-700 text-white font-bold text-xs transition cursor-pointer shadow-xs flex items-center gap-1.5"
             >
               <Check class="w-4 h-4 stroke-[2.5]" />
-              <span>{{ isEdit ? 'Simpan Perubahan' : 'Tambahkan Tahapan' }}</span>
+              <span>{{ isEdit ? 'Simpan Perubahan' : 'Tambahkan Butir Tahap' }}</span>
             </button>
           </div>
         </form>
@@ -206,3 +206,4 @@ function handleSubmit() {
   });
 }
 </script>
+

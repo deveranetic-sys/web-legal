@@ -2374,23 +2374,29 @@ export const legalStore = {
       name: payload.name,
       icon: payload.icon || 'Building2',
       badgeClass: payload.badgeClass || 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]',
-      regulatoryBasis: payload.regulatoryBasis || 'Regulasi Terkait',
+      regulatoryBasis: payload.regulatoryBasis || 'Perpres 16/2018 jo 12/2021',
       defaultContractType: payload.defaultContractType || 'Perjanjian Kerja Sama',
       hasBelow80Alert: Boolean(payload.hasBelow80Alert),
-      workflowTemplate: payload.workflowTemplate || `${code}_STAGES_8`,
-      description: payload.description || ''
+      workflowTemplate: payload.workflowTemplate || `SPSE_${code}_8`,
+      description: payload.description || '',
+      active: true
     };
     state.masterSectors.push(sector);
     storage.set(storage.KEYS.MASTER_SECTORS, state.masterSectors);
 
-    // If new sector doesn't have stages yet, assign default stages
-    if (!state.masterStages[code]) {
-      state.masterStages[code] = JSON.parse(JSON.stringify(this.getStagesForSector('KONSTRUKSI')));
-      storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
+    // Initialize stages for this sector based on selected template
+    const cloneFrom = (payload.initialStagesTemplate || 'KONSTRUKSI').toUpperCase();
+    if (cloneFrom === 'EMPTY') {
+      state.masterStages[code] = [];
+    } else {
+      const templateStages = this.getStagesForSector(cloneFrom);
+      state.masterStages[code] = JSON.parse(JSON.stringify(templateStages));
     }
+    storage.set(storage.KEYS.MASTER_STAGES, state.masterStages);
 
-    this.addActivityLog('CREATE', 'Data Master', newId, `Menambahkan master sektor industri: ${sector.name} (${sector.code})`);
-    this.triggerToast(`Sektor industri "${sector.name}" berhasil ditambahkan`, 'success');
+    this.addActivityLog('CREATE', 'Data Master', newId, `Menambahkan master skema alur tender sektor: ${sector.name} (${sector.code})`);
+    this.triggerToast(`Skema alur tender "${sector.name}" berhasil ditambahkan!`, 'success');
+    return sector;
   },
 
   updateMasterSector(id, payload) {
