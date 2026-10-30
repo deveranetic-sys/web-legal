@@ -1,47 +1,50 @@
 <template>
-  <div class="space-y-4">
-    <!-- Info banner (Tactile Precision UI: border-first, shadow-none) -->
-    <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div class="flex items-start gap-3">
-        <div class="w-9 h-9 rounded-md bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 border border-[#BFDBFE]">
-          <GitCommit class="w-4.5 h-4.5 text-[#2563EB]" />
+  <div class="space-y-4 animate-in fade-in duration-150">
+    <!-- Compact Info Banner -->
+    <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-indigo-50 text-[#4338CA] border border-indigo-100 flex items-center justify-center shrink-0 font-bold">
+          <GitCommit class="w-4 h-4 text-[#4338CA]" />
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h3 class="text-xs sm:text-sm font-semibold text-[#0F172A]">Konfigurasi Alur Persetujuan Bertingkat (Chain Approval Engine)</h3>
-            <span class="erp-badge erp-badge-primary">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="text-xs sm:text-sm font-extrabold text-[#0F172A]">
+              Konfigurasi Alur Persetujuan Bertingkat (Chain Approval Engine)
+            </h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-[#4338CA] border border-indigo-200">
               Multi-Tier Routing
             </span>
           </div>
-          <p class="text-[11px] text-[#64748B] mt-0.5 max-w-3xl leading-relaxed">
-            SOP perseroan menetapkan dan mengunci 6 alur otorisasi berjenjang standar (AF-01 s/d AF-06): Tender Lelang, Permintaan Legal, Draf Kontrak Korporasi, Addendum VO, Settlement Sengketa, dan Opini Hukum.
+          <p class="text-[11px] text-[#64748B] mt-0.5 leading-normal">
+            SOP perseroan mengunci 6 alur otorisasi berjenjang standar (AF-01 s/d AF-06) dengan pembagian peran Maker, Checker, dan Approver.
           </p>
         </div>
       </div>
-      <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] font-bold text-xs shrink-0 self-start md:self-center shadow-2xs">
-        <Lock class="w-3.5 h-3.5 text-[#2563EB]" />
+
+      <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#4338CA] border border-indigo-200 font-bold text-xs shrink-0 self-start sm:self-center shadow-2xs">
+        <Lock class="w-3.5 h-3.5 text-[#4338CA]" />
         <span>6 Alur Standar Terkunci</span>
       </div>
     </div>
 
-    <!-- Filters & Search Bar (Tactile Control Bar) -->
-    <div class="bg-white p-3 rounded-lg border border-[#E2E8F0] shadow-none flex flex-col sm:flex-row items-center justify-between gap-2.5">
+    <!-- Search & Filter Bar -->
+    <div class="bg-white p-3 rounded-xl border border-[#E2E8F0] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
       <div class="relative w-full sm:w-80">
-        <Search class="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Cari alur, modul, atau peran..."
-          class="form-input form-input-search"
+          placeholder="Cari kode alur, nama, atau peran..."
+          class="w-full pl-9 pr-3 py-2 text-xs border border-[#CBD5E1] rounded-xl outline-none focus:ring-2 focus:ring-[#C7D2FE] bg-white text-[#0F172A]"
         />
       </div>
 
-      <div class="flex items-center gap-2 w-full sm:w-auto">
+      <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
         <select
           v-model="filterModule"
-          class="form-select sm:w-44"
+          class="form-select text-xs h-[38px] sm:w-48 border-[#CBD5E1] rounded-xl font-semibold text-[#0F172A]"
         >
-          <option value="ALL">Semua Modul</option>
+          <option value="ALL">Semua Modul ({{ flows.length }})</option>
           <option value="requests">Permintaan Legal</option>
           <option value="contracts">Manajemen Kontrak</option>
           <option value="tenders">Tender &amp; Pengadaan</option>
@@ -51,7 +54,7 @@
 
         <select
           v-model="filterStatus"
-          class="form-select sm:w-36"
+          class="form-select text-xs h-[38px] sm:w-36 border-[#CBD5E1] rounded-xl font-semibold text-[#0F172A]"
         >
           <option value="ALL">Semua Status</option>
           <option value="ACTIVE">Hanya Aktif</option>
@@ -60,120 +63,154 @@
       </div>
     </div>
 
-    <!-- Approval Flows Grid (Tactile Cards) -->
-    <div v-if="filteredFlows.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+    <!-- Approval Flows List: Stacked Downwards, Clean & Compact -->
+    <div v-if="filteredFlows.length > 0" class="space-y-3">
       <div
         v-for="flow in filteredFlows"
         :key="flow.id"
-        class="bg-white border border-[#E2E8F0] rounded-lg p-4 shadow-none flex flex-col justify-between hover:border-[#CBD5E1] transition-colors"
+        class="bg-white border border-[#E2E8F0] hover:border-[#818CF8] hover:shadow-sm rounded-xl p-4 transition-all flex flex-col gap-3 shadow-2xs"
       >
-        <div class="space-y-3">
-          <!-- Flow Card Header -->
-          <div class="flex items-start justify-between gap-3 border-b border-[#F1F5F9] pb-3">
-            <div class="flex items-start gap-3 min-w-0">
-              <!-- Uniform SVG Lucide Icon Node (No Emoji) -->
-              <div class="w-9 h-9 rounded-md bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] flex items-center justify-center shrink-0">
-                <component :is="getFlowIcon(flow.icon || flow.module)" class="w-4.5 h-4.5 text-[#2563EB]" />
-              </div>
-              <div class="min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h4 class="text-xs sm:text-sm font-semibold text-[#0F172A] truncate">{{ flow.name }}</h4>
-                  <span class="erp-badge erp-badge-neutral text-[10px]">
-                    {{ flow.category || flow.module || 'Umum' }}
-                  </span>
-                </div>
-                <p class="text-[11px] text-[#64748B] mt-0.5 line-clamp-2 leading-relaxed">
-                  {{ flow.description }}
-                </p>
-                <!-- Metadata Badges -->
-                <div class="flex items-center gap-1.5 mt-2 flex-wrap text-[10px]">
-                  <span class="erp-badge erp-badge-neutral font-mono-tabular">
-                    <Clock class="w-3 h-3 text-[#64748B]" />
-                    SLA: {{ flow.slaDays || 3 }} Hari
-                  </span>
-                  <span v-if="flow.threshold && flow.threshold > 0" class="erp-badge erp-badge-warning font-mono-tabular">
-                    Ambang Batas: &gt; {{ formatThreshold(flow.threshold) }}
-                  </span>
-                  <span v-else class="erp-badge erp-badge-neutral font-mono-tabular">
-                    Tanpa Ambang Batas
-                  </span>
-                </div>
-              </div>
+        <!-- Card Top Row: Identity, Badges & Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <!-- Flow Icon & Title Info -->
+          <div class="flex items-start gap-3 min-w-0 flex-1">
+            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-[#4338CA] border border-indigo-100 flex items-center justify-center shrink-0 mt-0.5">
+              <component :is="getFlowIcon(flow.icon || flow.module)" class="w-4.5 h-4.5 text-[#4338CA]" />
             </div>
 
-            <!-- Status Switch -->
-            <div class="shrink-0 flex flex-col items-end gap-1">
-              <span
-                :class="flow.active ? 'erp-badge erp-badge-success' : 'erp-badge erp-badge-neutral'"
-              >
-                {{ flow.active ? 'AKTIF' : 'NONAKTIF' }}
-              </span>
-              <button
-                @click="legalStore.toggleApprovalFlowStatus(flow.id)"
-                class="text-[11px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] hover:underline cursor-pointer"
-              >
-                {{ flow.active ? 'Nonaktifkan' : 'Aktifkan' }}
-              </button>
+            <div class="min-w-0 flex-1">
+              <!-- Badges Row -->
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+                  {{ flow.id }}
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-[#4338CA] border border-indigo-100 shrink-0">
+                  {{ flow.category || flow.module || 'Umum' }}
+                </span>
+                <span class="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Clock class="w-3 h-3 text-slate-400" />
+                  SLA Total: {{ flow.slaDays || 3 }} Hari
+                </span>
+                <span
+                  v-if="flow.threshold && flow.threshold > 0"
+                  class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200"
+                >
+                  Ambang Batas: &gt; {{ formatThreshold(flow.threshold) }}
+                </span>
+                <span
+                  v-else
+                  class="text-[10px] font-medium text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full"
+                >
+                  Tanpa Ambang Batas
+                </span>
+              </div>
+
+              <!-- Title & Brief Description -->
+              <h4 class="text-sm font-extrabold text-[#0F172A] mt-1 leading-snug">
+                {{ flow.name }}
+              </h4>
+              <p class="text-[11px] text-[#64748B] mt-0.5 line-clamp-1 leading-normal">
+                {{ flow.description }}
+              </p>
             </div>
           </div>
 
-          <!-- Flow Stepper Visualization -->
-          <div class="space-y-1.5">
-            <div class="text-[10px] font-semibold text-[#64748B] uppercase tracking-wider flex items-center justify-between">
-              <span>Rantai Persetujuan ({{ (flow.steps || []).length }} Tahap):</span>
-              <span class="text-[#64748B] font-mono-tabular">Maker ➔ Checker ➔ Approver</span>
-            </div>
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+            <!-- Status Toggle Button -->
+            <button
+              @click="legalStore.toggleApprovalFlowStatus(flow.id)"
+              :class="flow.active ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-200'"
+              class="px-2.5 py-1.5 rounded-lg text-xs font-bold border transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              :title="flow.active ? 'Klik untuk menonaktifkan alur ini' : 'Klik untuk mengaktifkan alur ini'"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full"
+                :class="flow.active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'"
+              ></span>
+              <span>{{ flow.active ? 'AKTIF' : 'NONAKTIF' }}</span>
+            </button>
 
-            <div class="flex items-center flex-wrap gap-1.5 pt-0.5">
-              <template v-for="(step, sIdx) in (flow.steps || [])" :key="step.level">
-                <div class="flex items-center gap-1.5">
-                  <div class="bg-[#F8FAFC] border border-[#E2E8F0] px-2.5 py-1.5 rounded-md flex flex-col min-w-[120px]">
-                    <div class="flex items-center justify-between gap-1 text-[10px] text-[#64748B] font-mono-tabular">
-                      <span>Tahap {{ step.level }}</span>
-                      <span>{{ step.slaDays || 1 }}d SLA</span>
-                    </div>
-                    <span class="text-xs font-semibold text-[#0F172A] truncate mt-0.5" :title="step.name">{{ step.name }}</span>
-                    <span class="text-[10px] font-bold font-mono-tabular text-[#2563EB] mt-0.5">{{ step.roleRequired }}</span>
-                  </div>
-                  <ChevronRight v-if="sIdx < (flow.steps || []).length - 1" class="w-3.5 h-3.5 text-[#CBD5E1] shrink-0" />
-                </div>
-              </template>
-            </div>
+            <!-- Edit Parameter Button -->
+            <button
+              @click="$emit('open-edit-flow-modal', flow)"
+              class="px-3 py-1.5 bg-white hover:bg-slate-50 text-[#4338CA] border border-indigo-200 hover:border-indigo-300 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              title="Sesuaikan SLA, peran otorisasi, dan ambang batas alur ini"
+            >
+              <Edit3 class="w-3.5 h-3.5 text-[#4338CA]" />
+              <span>Edit Parameter</span>
+            </button>
           </div>
         </div>
 
-        <!-- Flow Card Footer -->
-        <div class="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between">
-          <div class="text-[10px] text-[#64748B] font-mono-tabular">
-            Terakhir diubah: <span class="font-medium text-[#0F172A]">{{ flow.lastUpdated || '2026-10-15' }}</span>
+        <!-- Card Bottom Row: Linear Stepper Pipeline -->
+        <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 space-y-2">
+          <!-- Stepper Header Label -->
+          <div class="flex items-center justify-between text-[10px] text-[#64748B] font-semibold uppercase tracking-wider">
+            <span>Rantai Persetujuan ({{ (flow.steps || []).length }} Tahap):</span>
+            <span class="text-[#4338CA] font-bold font-mono lowercase tracking-normal">
+              maker ➔ checker ➔ approver
+            </span>
           </div>
 
-          <div class="flex items-center gap-1.5">
-            <span class="inline-flex items-center gap-1 text-[11px] text-[#64748B] font-medium bg-[#F8FAFC] border border-[#E2E8F0] px-2 py-1 rounded-md">
-              <Lock class="w-3 h-3 text-[#64748B]" />
-              <span>Standar Inti Terkunci</span>
-            </span>
+          <!-- Steps Horizontal Pipeline -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <template v-for="(step, sIdx) in (flow.steps || [])" :key="step.level">
+              <!-- Step Box -->
+              <div class="flex-1 bg-white border border-[#E2E8F0] hover:border-indigo-200 rounded-lg p-2.5 shadow-2xs flex items-center gap-2.5 transition">
+                <!-- Step Level Badge -->
+                <div class="w-6 h-6 rounded-full bg-indigo-50 border border-indigo-200 text-[#4338CA] font-black text-[11px] flex items-center justify-center shrink-0">
+                  {{ step.level }}
+                </div>
 
-            <button
-              @click="$emit('open-edit-flow-modal', flow)"
-              class="px-2.5 py-1 bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#2563EB] border border-[#BFDBFE] text-xs font-semibold rounded-md transition cursor-pointer flex items-center gap-1"
-            >
-              <Edit3 class="w-3.5 h-3.5" />
-              <span>Edit Parameter</span>
-            </button>
+                <!-- Step Info -->
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="text-xs font-bold text-[#0F172A] truncate" :title="step.name">
+                      {{ step.name }}
+                    </span>
+                    <span class="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.2 rounded font-mono shrink-0">
+                      {{ step.slaDays || 1 }}d SLA
+                    </span>
+                  </div>
+
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="text-[10px] font-extrabold text-[#4338CA] bg-indigo-50/70 border border-indigo-100 px-1.5 py-0.2 rounded font-mono uppercase">
+                      {{ step.roleRequired }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Connecting Chevron between steps -->
+              <div v-if="sIdx < (flow.steps || []).length - 1" class="hidden sm:flex items-center justify-center shrink-0 text-slate-300">
+                <ChevronRight class="w-4 h-4 text-slate-400 stroke-[2.5]" />
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Footer Meta (Subtle & Inline) -->
+        <div class="flex items-center justify-between text-[10px] text-[#64748B] pt-0.5">
+          <div class="flex items-center gap-2">
+            <span>Terakhir diperbarui: <strong class="text-[#0F172A]">{{ flow.lastUpdated || '2026-10-15' }}</strong></span>
+            <span>•</span>
+            <span class="flex items-center gap-1 text-slate-500">
+              <Lock class="w-3 h-3 text-slate-400" /> Standar SOP Inti Terkunci
+            </span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-else class="bg-white border border-[#E2E8F0] rounded-lg p-10 text-center space-y-2.5">
-      <div class="w-10 h-10 rounded-md bg-[#F1F5F9] text-[#64748B] flex items-center justify-center mx-auto border border-[#E2E8F0]">
+    <div v-else class="bg-white border border-[#E2E8F0] rounded-xl p-10 text-center space-y-2.5 shadow-2xs">
+      <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center mx-auto border border-slate-200">
         <Search class="w-5 h-5" />
       </div>
-      <h4 class="text-xs sm:text-sm font-semibold text-[#0F172A]">Tidak ada alur persetujuan yang cocok</h4>
+      <h4 class="text-xs sm:text-sm font-bold text-[#0F172A]">Tidak ada alur persetujuan yang cocok</h4>
       <p class="text-xs text-[#64748B] max-w-sm mx-auto">
-        Silakan ubah kata kunci pencarian atau filter modul untuk menampilkan 6 alur persetujuan standar.
+        Silakan ubah kata kunci pencarian atau sesuaikan filter modul untuk menampilkan 6 alur persetujuan standar.
       </p>
     </div>
   </div>
@@ -187,7 +224,6 @@ import {
   Clock,
   Edit3,
   ChevronRight,
-  ChevronDown,
   GitCommit,
   Scale,
   FileText,
@@ -202,7 +238,7 @@ import {
 } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 
-const emit = defineEmits(['open-edit-flow-modal']);
+defineEmits(['open-edit-flow-modal']);
 
 const searchQuery = ref('');
 const filterModule = ref('ALL');
@@ -214,6 +250,7 @@ const filteredFlows = computed(() => {
   return flows.value.filter(flow => {
     const q = searchQuery.value.toLowerCase().trim();
     const matchQuery = !q ||
+      (flow.id && flow.id.toLowerCase().includes(q)) ||
       (flow.name && flow.name.toLowerCase().includes(q)) ||
       (flow.description && flow.description.toLowerCase().includes(q)) ||
       (flow.category && flow.category.toLowerCase().includes(q)) ||
