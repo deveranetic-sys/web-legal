@@ -5,7 +5,8 @@ import {
   masterSectorStageGuidance,
   initialCapabilityList,
   initialApprovalFlows,
-  initialMasterTenderStages
+  initialMasterTenderStages,
+  initialMasterContractTypes
 } from '../data/seedData.js';
 
 // Initialize storage and load hydrated dataset in a single pass
@@ -72,6 +73,31 @@ if (Array.isArray(initialData.masterSectors)) {
     return sec;
   });
   storage.set(storage.KEYS.MASTER_SECTORS, initialData.masterSectors);
+}
+
+// Normalize masterContractTypes: ensure rich terms, payment presets, penalty, and dispute forum
+if (Array.isArray(initialData.masterContractTypes)) {
+  const seedMap = new Map(initialMasterContractTypes.map(c => [c.code, c]));
+  initialData.masterContractTypes = initialData.masterContractTypes.map(ct => {
+    const seed = seedMap.get(ct.code) || {};
+    return {
+      id: ct.id || seed.id || `CT-${Math.random().toString().slice(2, 6)}`,
+      code: (ct.code || seed.code || 'KTR').toUpperCase(),
+      name: ct.name || seed.name || 'Kontrak Standar',
+      sector: ct.sector || seed.sector || 'UMUM',
+      standardFormat: ct.standardFormat || seed.standardFormat || 'Standar Korporasi',
+      description: ct.description || seed.description || 'Kontrak operasional pengadaan barang dan jasa korporasi.',
+      paymentType: ct.paymentType || seed.paymentType || 'Milestone Berita Acara',
+      defaultPaymentTerms: ct.defaultPaymentTerms || seed.defaultPaymentTerms || 'Pembayaran bertahap sesuai verifikasi Berita Acara Serah Terima (BAST).',
+      retentionPercent: ct.retentionPercent ?? seed.retentionPercent ?? 0,
+      retentionPeriodDays: ct.retentionPeriodDays ?? seed.retentionPeriodDays ?? 0,
+      governingLaw: ct.governingLaw || seed.governingLaw || 'Hukum Republik Indonesia',
+      disputeForum: ct.disputeForum || seed.disputeForum || 'BANI (Badan Arbitrase Nasional Indonesia)',
+      penaltyClause: ct.penaltyClause || seed.penaltyClause || '1‰ per hari keterlambatan (maksimum 5% dari nilai kontrak)',
+      active: ct.active !== undefined ? ct.active : true
+    };
+  });
+  storage.set(storage.KEYS.MASTER_CONTRACT_TYPES, initialData.masterContractTypes);
 }
 
 // Normalize requests: ensure every request has approvalChain, currentApprovalLevel, and synchronized PIC
@@ -2521,13 +2547,51 @@ export const legalStore = {
       code: (payload.code || `CT-${Date.now().toString().slice(-3)}`).toUpperCase(),
       name: payload.name,
       sector: payload.sector || 'UMUM',
-      standardFormat: payload.standardFormat || 'Standar Korporasi',
-      active: true
+      standardFormat: payload.standardFormat || 'Standar Korporasi Internal',
+      description: payload.description || 'Kontrak operasional pengadaan barang dan jasa korporasi.',
+      paymentType: payload.paymentType || 'Milestone Berita Acara',
+      defaultPaymentTerms: payload.defaultPaymentTerms || 'Pembayaran bertahap sesuai progres verifikasi BAST.',
+      retentionPercent: Number(payload.retentionPercent) || 0,
+      retentionPeriodDays: Number(payload.retentionPeriodDays) || 0,
+      governingLaw: payload.governingLaw || 'Hukum Republik Indonesia',
+      disputeForum: payload.disputeForum || 'BANI (Badan Arbitrase Nasional Indonesia)',
+      penaltyClause: payload.penaltyClause || '1‰ per hari keterlambatan (maksimum 5% dari nilai kontrak)',
+      active: true,
+      createdAt: new Date().toISOString()
     };
     state.masterContractTypes.push(contractType);
     storage.set(storage.KEYS.MASTER_CONTRACT_TYPES, state.masterContractTypes);
     this.addActivityLog('CREATE', 'Data Master', newId, `Menambahkan master tipe kontrak: ${contractType.name}`);
     this.triggerToast(`Tipe kontrak "${contractType.name}" berhasil ditambahkan`, 'success');
+    return contractType;
+  },
+
+  updateMasterContractType(id, payload) {
+    const idx = state.masterContractTypes.findIndex(c => c.id === id);
+    if (idx === -1) return;
+    const existing = state.masterContractTypes[idx];
+    const updated = {
+      ...existing,
+      name: payload.name !== undefined ? payload.name : existing.name,
+      code: payload.code ? payload.code.toUpperCase() : existing.code,
+      sector: payload.sector || existing.sector,
+      standardFormat: payload.standardFormat !== undefined ? payload.standardFormat : existing.standardFormat,
+      description: payload.description !== undefined ? payload.description : existing.description,
+      paymentType: payload.paymentType || existing.paymentType,
+      defaultPaymentTerms: payload.defaultPaymentTerms !== undefined ? payload.defaultPaymentTerms : existing.defaultPaymentTerms,
+      retentionPercent: payload.retentionPercent !== undefined ? Number(payload.retentionPercent) : existing.retentionPercent,
+      retentionPeriodDays: payload.retentionPeriodDays !== undefined ? Number(payload.retentionPeriodDays) : existing.retentionPeriodDays,
+      governingLaw: payload.governingLaw || existing.governingLaw,
+      disputeForum: payload.disputeForum || existing.disputeForum,
+      penaltyClause: payload.penaltyClause !== undefined ? payload.penaltyClause : existing.penaltyClause,
+      active: payload.active !== undefined ? payload.active : existing.active,
+      updatedAt: new Date().toISOString()
+    };
+    state.masterContractTypes[idx] = updated;
+    storage.set(storage.KEYS.MASTER_CONTRACT_TYPES, state.masterContractTypes);
+    this.addActivityLog('UPDATE', 'Data Master', id, `Memperbarui master tipe kontrak: ${updated.name}`);
+    this.triggerToast(`Tipe kontrak "${updated.name}" berhasil diperbarui`, 'success');
+    return updated;
   },
 
   deleteMasterContractType(id) {

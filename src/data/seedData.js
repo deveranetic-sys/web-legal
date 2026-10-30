@@ -1681,11 +1681,86 @@ export const initialMasterTenderStages = {
 };
 
 export const initialMasterContractTypes = [
-  { id: 'CT-01', code: 'EPC', name: 'Engineering Procurement Construction (EPC)', sector: 'KONSTRUKSI', standardFormat: 'FIDIC Silver Book / Standar PUPR', active: true },
-  { id: 'CT-02', code: 'CSA', name: 'Coal / Mineral Supply Agreement (FOB/CIF)', sector: 'PERTAMBANGAN', standardFormat: 'Perjanjian Pasokan Energi Primer PLN', active: true },
-  { id: 'CT-03', code: 'PPA', name: 'Power Purchase Agreement (PPA 25-30 Tahun)', sector: 'ENERGI', standardFormat: 'Standard PLN PPA BOOT / BOO', active: true },
-  { id: 'CT-04', code: 'PSC_JOA', name: 'Joint Operation Agreement / PSC Hulu Migas', sector: 'MIGAS', standardFormat: 'Standar PTK-007 SKK Migas', active: true },
-  { id: 'CT-05', code: 'SPK', name: 'Surat Perintah Kerja (SPK) / Kontrak Jasa Umum', sector: 'UMUM', standardFormat: 'Standar Korporasi Internal', active: true }
+  {
+    id: 'CT-01',
+    code: 'EPC',
+    name: 'Engineering Procurement Construction (EPC)',
+    sector: 'KONSTRUKSI',
+    standardFormat: 'FIDIC Silver Book / Standar PUPR',
+    description: 'Kontrak rancang-bangun turnkey terintegrasi untuk pekerjaan sipil, mekanikal, dan elektrikal dengan tanggung jawab tunggal kontraktor utama (single-point responsibility).',
+    paymentType: 'Termin Bertahap (Milestone Progress)',
+    defaultPaymentTerms: '4 Tahap (Uang Muka 20%, Termin Progress Fisik 40%, Termin Komisioning 35%, Retensi Pemeliharaan 5%)',
+    retentionPercent: 5,
+    retentionPeriodDays: 365,
+    governingLaw: 'Hukum Republik Indonesia',
+    disputeForum: 'BANI (Badan Arbitrase Nasional Indonesia)',
+    penaltyClause: '1‰ (satu permil) per hari keterlambatan, maksimum 5% dari total nilai kontrak',
+    active: true
+  },
+  {
+    id: 'CT-02',
+    code: 'CSA',
+    name: 'Coal / Mineral Supply Agreement (FOB/CIF)',
+    sector: 'PERTAMBANGAN',
+    standardFormat: 'Perjanjian Pasokan Energi Primer PLN',
+    description: 'Perjanjian pasokan batubara/mineral jangka menengah-panjang dengan skema penyerahan FOB Vessel atau CIF Jetty dengan mekanisme penyesuaian kualitas kalori.',
+    paymentType: 'Per Pengapalan (Bill of Lading / LC)',
+    defaultPaymentTerms: 'Tagihan per pengapalan berdasarkan Certificate of Sampling and Analysis (COA) dan Certificate of Weight (COW) surveyor independen',
+    retentionPercent: 0,
+    retentionPeriodDays: 0,
+    governingLaw: 'Hukum Republik Indonesia',
+    disputeForum: 'BANI Jakarta',
+    penaltyClause: 'Penalti deviasi kualitas spesifikasi GAR/NAR & denda demurrage kapal',
+    active: true
+  },
+  {
+    id: 'CT-03',
+    code: 'PPA',
+    name: 'Power Purchase Agreement (PPA 25-30 Tahun)',
+    sector: 'ENERGI',
+    standardFormat: 'Standard PLN PPA BOOT / BOO',
+    description: 'Perjanjian Jual Beli Tenaga Listrik jangka panjang antara Pengembang Pembangkit Swasta (IPP) dan Offtaker Nasional dengan formula tarif Capacity & Energy Charge.',
+    paymentType: 'Bulanan Rekapitulasi (Monthly Billing)',
+    defaultPaymentTerms: 'Tagihan bulanan berdasarkan ketersediaan kapasitas terpasang (Capacity Charge) dan energi listrik neto yang tersalurkan (Energy Charge)',
+    retentionPercent: 0,
+    retentionPeriodDays: 0,
+    governingLaw: 'Hukum Republik Indonesia',
+    disputeForum: 'SIAC (Singapore International Arbitration Centre) / BANI',
+    penaltyClause: 'Penalti Availability Factor (AF) jika performa pembangkit berada di bawah jaminan kinerja',
+    active: true
+  },
+  {
+    id: 'CT-04',
+    code: 'PSC_JOA',
+    name: 'Joint Operation Agreement / PSC Hulu Migas',
+    sector: 'MIGAS',
+    standardFormat: 'Standar PTK-007 SKK Migas',
+    description: 'Perjanjian Operasi Bersama dan Tata Kelola Pengusahaan Wilayah Kerja Hulu Minyak dan Gas Bumi sesuai ketentuan Pedoman Tata Kerja SKK Migas.',
+    paymentType: 'Cash Call Berkala (Monthly Advance)',
+    defaultPaymentTerms: 'Panggilan dana bulanan (Cash Call) sesuai jadwal Authorisation for Expenditure (AFE) dan Work Program & Budget (WP&B) yang disetujui',
+    retentionPercent: 0,
+    retentionPeriodDays: 0,
+    governingLaw: 'Hukum Republik Indonesia',
+    disputeForum: 'Arbitrase Internasional ICC Paris / UNCITRAL Rules',
+    penaltyClause: 'Denda default bunga komersial LIBOR/SOFR + 3% serta forfeiture participating interest',
+    active: true
+  },
+  {
+    id: 'CT-05',
+    code: 'SPK',
+    name: 'Surat Perintah Kerja (SPK) / Kontrak Jasa Umum',
+    sector: 'UMUM',
+    standardFormat: 'Standar Korporasi Internal',
+    description: 'Perjanjian pengadaan barang, jasa pemeliharaan rutin, atau jasa konsultansi operasional perusahaan dengan nilai fleksibel dan verifikasi berita acara serah terima.',
+    paymentType: 'Lump Sum 100% Pasca BAST',
+    defaultPaymentTerms: 'Pembayaran penuh 100% setelah seluruh pekerjaan diselesaikan dan diterbitkan Berita Acara Serah Terima (BAST) 100%',
+    retentionPercent: 0,
+    retentionPeriodDays: 90,
+    governingLaw: 'Hukum Republik Indonesia',
+    disputeForum: 'Pengadilan Negeri Setempat (Domisili Tergugat)',
+    penaltyClause: '1‰ per hari keterlambatan dari nilai sisa pekerjaan yang belum selesai (maks 5%)',
+    active: true
+  }
 ];
 
 export const masterSectorChecklists = {
