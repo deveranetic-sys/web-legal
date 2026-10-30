@@ -68,7 +68,7 @@
       <div
         v-for="flow in filteredFlows"
         :key="flow.id"
-        class="bg-white border border-[#E2E8F0] hover:border-[#818CF8] hover:shadow-sm rounded-xl p-4 transition-all flex flex-col gap-3 shadow-2xs"
+        class="bg-white border border-[#E2E8F0] hover:border-[#818CF8] hover:shadow-sm rounded-xl p-4 transition-all flex flex-col gap-3 shadow-2xs overflow-hidden w-full"
       >
         <!-- Card Top Row: Identity, Badges & Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -143,50 +143,46 @@
           </div>
         </div>
 
-        <!-- Card Bottom Row: Linear Stepper Pipeline -->
+        <!-- Card Bottom Row: Linear Stepper Pipeline (Stacked Downward, 100% Contained) -->
         <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 space-y-2">
           <!-- Stepper Header Label -->
           <div class="flex items-center justify-between text-[10px] text-[#64748B] font-semibold uppercase tracking-wider">
-            <span>Rantai Persetujuan ({{ (flow.steps || []).length }} Tahap):</span>
+            <span class="flex items-center gap-1.5">
+              <span>Rantai Persetujuan</span>
+              <span class="text-slate-400 font-normal">({{ (flow.steps || []).length }} Level Otorisasi):</span>
+            </span>
             <span class="text-[#4338CA] font-bold font-mono lowercase tracking-normal">
               maker ➔ checker ➔ approver
             </span>
           </div>
 
-          <!-- Steps Horizontal Pipeline -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <template v-for="(step, sIdx) in (flow.steps || [])" :key="step.level">
-              <!-- Step Box -->
-              <div class="flex-1 bg-white border border-[#E2E8F0] hover:border-indigo-200 rounded-lg p-2.5 shadow-2xs flex items-center gap-2.5 transition">
-                <!-- Step Level Badge -->
-                <div class="w-6 h-6 rounded-full bg-indigo-50 border border-indigo-200 text-[#4338CA] font-black text-[11px] flex items-center justify-center shrink-0">
+          <!-- Steps Stacked Downward (Clean, Compact & Immune to Overflow) -->
+          <div class="space-y-1.5">
+            <div
+              v-for="step in (flow.steps || [])"
+              :key="step.level"
+              class="bg-white border border-[#E2E8F0] hover:border-indigo-200 rounded-lg px-3 py-2 flex items-center justify-between gap-3 shadow-2xs transition"
+            >
+              <!-- Left: Step Level & Name -->
+              <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                <div class="w-5 h-5 rounded-full bg-indigo-50 border border-indigo-200 text-[#4338CA] font-black text-[10px] flex items-center justify-center shrink-0">
                   {{ step.level }}
                 </div>
-
-                <!-- Step Info -->
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-center justify-between gap-1">
-                    <span class="text-xs font-bold text-[#0F172A] truncate" :title="step.name">
-                      {{ step.name }}
-                    </span>
-                    <span class="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.2 rounded font-mono shrink-0">
-                      {{ step.slaDays || 1 }}d SLA
-                    </span>
-                  </div>
-
-                  <div class="flex items-center gap-1.5 mt-0.5">
-                    <span class="text-[10px] font-extrabold text-[#4338CA] bg-indigo-50/70 border border-indigo-100 px-1.5 py-0.2 rounded font-mono uppercase">
-                      {{ step.roleRequired }}
-                    </span>
-                  </div>
-                </div>
+                <span class="text-xs font-bold text-[#0F172A] truncate" :title="step.name">
+                  {{ step.name }}
+                </span>
               </div>
 
-              <!-- Connecting Chevron between steps -->
-              <div v-if="sIdx < (flow.steps || []).length - 1" class="hidden sm:flex items-center justify-center shrink-0 text-slate-300">
-                <ChevronRight class="w-4 h-4 text-slate-400 stroke-[2.5]" />
+              <!-- Right: Role Required & SLA -->
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[10px] font-extrabold text-[#4338CA] bg-indigo-50/70 border border-indigo-100 px-2 py-0.5 rounded font-mono uppercase">
+                  {{ step.roleRequired }}
+                </span>
+                <span class="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded font-mono shrink-0">
+                  {{ step.slaDays || 1 }}d SLA
+                </span>
               </div>
-            </template>
+            </div>
           </div>
         </div>
 
