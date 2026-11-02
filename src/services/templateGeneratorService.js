@@ -230,8 +230,72 @@ Diselesaikan di ${f.arbitrationForum}.`;
 
 /**
  * Trigger download of document in MS Word (.doc) format with clean legal typography
+ * Supports dynamic letterhead: 'OFFICIAL' (Kop Surat Resmi), 'MEMO' (Kop Memo Legal), or 'NONE' (Tanpa Kop Surat)
  */
-export function downloadAsWordDoc(filename, title, content) {
+export function downloadAsWordDoc(filename, title, content, letterheadType = 'OFFICIAL', config = null) {
+  const c = config || {
+    companyName: 'PT NUSANTARA ENERGI TBK',
+    division: 'DEPARTEMEN LEGAL & KEPATUHAN KORPORAT',
+    tagline: 'Penyedia Solusi Rekayasa Energi Terbarukan & Infrastruktur Nasional',
+    address: 'Energy Tower Lt. 28, Kawasan SCBD Lot 11, Jl. Jend. Sudirman Kav. 52-53',
+    cityPostal: 'Jakarta Selatan 12190, Indonesia',
+    phone: '(021) 5289-7000',
+    email: 'legal@nusantara-energi.co.id',
+    website: 'www.nusantara-energi.co.id',
+    borderStyle: 'double',
+    showTagline: true,
+    showLogo: true,
+    logoUrl: '',
+    memoTitle: 'MEMORANDUM HUKUM / LEGAL OPINION',
+    memoDept: 'Corporate Legal & Compliance Directorate'
+  };
+
+  let letterheadHtml = '';
+
+  if (letterheadType === 'OFFICIAL') {
+    let borderCss = 'border-bottom: 3pt double #000;';
+    if (c.borderStyle === 'single') borderCss = 'border-bottom: 1.5pt solid #000;';
+    else if (c.borderStyle === 'bold') borderCss = 'border-bottom: 2.5pt solid #000;';
+    else if (c.borderStyle === 'accent') borderCss = 'border-bottom: 2pt solid #1E3A8A;';
+    else if (c.borderStyle === 'none') borderCss = 'border-bottom: none;';
+
+    const logoHtml = (c.showLogo && c.logoUrl)
+      ? `<div style="text-align: center; margin-bottom: 6pt;"><img src="${c.logoUrl}" style="max-height: 48pt; max-width: 140pt;" alt="Logo" /></div>`
+      : '';
+
+    const taglineHtml = (c.showTagline && c.tagline)
+      ? `<p style="margin: 2pt 0; font-size: 8.5pt; color: #1E3A8A; font-style: italic;">${c.tagline}</p>`
+      : '';
+
+    letterheadHtml = `
+      <div class="letterhead" style="${borderCss}">
+        ${logoHtml}
+        <h2 style="margin: 0; font-size: 13pt; letter-spacing: 0.5pt; text-transform: uppercase;">${c.companyName}</h2>
+        ${taglineHtml}
+        <p style="margin: 2pt 0; font-size: 9pt; font-weight: bold; color: #222;">${c.division}</p>
+        <p style="margin: 1.5pt 0; font-size: 8.5pt; color: #444;">${c.address}, ${c.cityPostal}</p>
+        <p style="margin: 1.5pt 0; font-size: 8pt; color: #555;">Telp: ${c.phone} | Email: ${c.email} | Web: ${c.website}</p>
+      </div>
+    `;
+  } else if (letterheadType === 'MEMO') {
+    letterheadHtml = `
+      <div style="border-bottom: 2pt solid #000; padding-bottom: 10pt; margin-bottom: 18pt; font-family: Arial, sans-serif;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8pt;">
+          <tr>
+            <td style="font-size: 12pt; font-weight: bold; text-transform: uppercase;">${c.companyName}</td>
+            <td style="text-align: right; font-size: 9pt; font-weight: bold; color: #555; text-transform: uppercase;">INTERNAL LEGAL MEMORANDUM</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="font-size: 9.5pt; color: #333;">${c.memoDept || c.division}</td>
+          </tr>
+        </table>
+        <div style="text-align: center; padding: 6pt 0;">
+          <h2 style="margin: 0; font-size: 13pt; font-weight: bold; text-transform: uppercase; letter-spacing: 1pt;">${c.memoTitle}</h2>
+        </div>
+      </div>
+    `;
+  }
+
   const htmlContent = `
     <!DOCTYPE html>
     <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -239,20 +303,14 @@ export function downloadAsWordDoc(filename, title, content) {
       <meta charset='utf-8'>
       <title>${title}</title>
       <style>
-        body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; color: #000; padding: 2cm; }
+        body { font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.5; color: #000; padding: 2cm; }
         h1, h2, h3 { text-align: center; font-weight: bold; text-transform: uppercase; margin-bottom: 12pt; }
-        .letterhead { text-align: center; border-bottom: 2pt solid #000; padding-bottom: 8pt; margin-bottom: 18pt; }
-        .letterhead h2 { margin: 0; font-size: 14pt; }
-        .letterhead p { margin: 2pt 0; font-size: 9pt; color: #333; }
+        .letterhead { text-align: center; padding-bottom: 8pt; margin-bottom: 18pt; font-family: Arial, sans-serif; }
         .content { white-space: pre-wrap; text-align: justify; }
       </style>
     </head>
     <body>
-      <div class="letterhead">
-        <h2>PT NUSANTARA ENERGI TBK</h2>
-        <p>Energy Tower 28th Fl., SCBD Lot 11, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190</p>
-        <p>Telp: (021) 5289-7000 | Email: legal@nusantara-energi.co.id | Website: www.nusantara-energi.co.id</p>
-      </div>
+      ${letterheadHtml}
       <div class="content">${content.replace(/\n/g, '<br/>')}</div>
     </body>
     </html>

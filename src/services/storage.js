@@ -25,13 +25,16 @@ import {
   initialApprovalFlows,
   initialErpIntegrations,
   initialErpEmployees,
-  initialCapabilityList
+  initialCapabilityList,
+  initialLetterheadConfig,
+  entityLetterheadPresets
 } from '../data/seedData.js';
 
 const STORAGE_KEYS = {
   USERS: 'lms_users_v2',
   CURRENT_USER: 'lms_current_user_v2',
   CURRENT_ENTITY: 'lms_current_entity_v1',
+  LETTERHEAD: 'lms_letterhead_config_v1',
   REQUESTS: 'lms_requests_v1',
   CONTRACTS: 'lms_contracts_v1',
   CORPORATE: 'lms_corporate_v2',
@@ -330,7 +333,8 @@ export const storage = {
       rolesMatrix: normalizeRolesMatrix(this.get(STORAGE_KEYS.ROLES_MATRIX, initialRolesMatrix)),
       approvalFlows: this.get(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows),
       erpIntegrations: this.get(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations),
-      erpEmployees: this.get(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees)
+      erpEmployees: this.get(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees),
+      letterhead: this.get(STORAGE_KEYS.LETTERHEAD, initialLetterheadConfig)
     };
   },
 
@@ -370,6 +374,7 @@ export const storage = {
     this.set(STORAGE_KEYS.APPROVAL_FLOWS, initialApprovalFlows);
     this.set(STORAGE_KEYS.ERP_INTEGRATIONS, initialErpIntegrations);
     this.set(STORAGE_KEYS.ERP_EMPLOYEES, initialErpEmployees);
+    this.set(STORAGE_KEYS.LETTERHEAD, initialLetterheadConfig);
 
     return {
       users: freshUsers,
@@ -399,7 +404,8 @@ export const storage = {
       rolesMatrix: initialRolesMatrix,
       approvalFlows: initialApprovalFlows,
       erpIntegrations: initialErpIntegrations,
-      erpEmployees: initialErpEmployees
+      erpEmployees: initialErpEmployees,
+      letterhead: initialLetterheadConfig
     };
   },
 
@@ -439,7 +445,7 @@ export const storage = {
 
   exportAllJSON() {
     const backup = {
-      app: 'LMS TOHA Enterprise Legal Suite',
+      app: 'ELegal Enterprise Legal Suite',
       version: '2026.1',
       exportedAt: new Date().toISOString(),
       keys: {}

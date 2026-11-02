@@ -28,7 +28,7 @@
           <option value="Siti Rahmawati, S.H., M.H.">Siti Rahmawati, S.H., M.H. (Kepala Legal Operasional)</option>
           <option value="Budi Santoso, S.H., LL.M.">Budi Santoso, S.H., LL.M. (Head of Legal &amp; Compliance)</option>
           <option value="Anisa Maharani, S.H.">Anisa Maharani, S.H. (Staff Legal Specialist)</option>
-          <option value="Toha, S.H., M.H.">Toha, S.H., M.H. (General Counsel)</option>
+          <option value="Budi Santoso, S.H., M.H.">Budi Santoso, S.H., M.H. (General Counsel)</option>
           <option value="Unassigned">-- Lepas Penugasan (Unassigned) --</option>
         </select>
       </div>

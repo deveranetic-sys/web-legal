@@ -169,12 +169,45 @@
         <div class="lg:col-span-7 p-5 sm:p-6 flex flex-col justify-between bg-white max-h-[75vh] overflow-y-auto">
           <div class="space-y-4">
             
-            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span class="text-xs font-bold text-slate-800">Preview Naskah Resmi Jadi</span>
               </div>
-              <span class="text-[11px] text-slate-400">Siap Cetak & Tandatangan</span>
+              
+              <!-- Pilihan Kop Surat -->
+              <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs">
+                <span class="text-[10px] text-slate-500 font-semibold px-1 hidden sm:inline">Pilihan Kop:</span>
+                <button
+                  type="button"
+                  @click="letterheadType = 'NONE'"
+                  :class="letterheadType === 'NONE' ? 'bg-white text-slate-900 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 text-[11px] rounded-lg transition cursor-pointer"
+                  title="Tanpa Kop (Standar Kontrak Perjanjian Bilateral)"
+                >
+                  Tanpa Kop
+                </button>
+                <button
+                  type="button"
+                  @click="letterheadType = 'OFFICIAL'"
+                  :class="letterheadType === 'OFFICIAL' ? 'bg-white text-indigo-700 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 text-[11px] rounded-lg transition cursor-pointer flex items-center gap-1"
+                  title="Kop Resmi Perseroan (Somasi, SPK, Korespondensi)"
+                >
+                  <Building2 class="w-3 h-3 text-indigo-600" />
+                  Kop Resmi
+                </button>
+                <button
+                  type="button"
+                  @click="letterheadType = 'MEMO'"
+                  :class="letterheadType === 'MEMO' ? 'bg-white text-indigo-700 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 text-[11px] rounded-lg transition cursor-pointer flex items-center gap-1"
+                  title="Kop Memo Internal (Legal Opinion)"
+                >
+                  <FileSpreadsheet class="w-3 h-3 text-indigo-600" />
+                  Kop Memo
+                </button>
+              </div>
             </div>
 
             <!-- Letterhead & Legal Document Render Box -->
@@ -182,17 +215,82 @@
               id="printable-document-box"
               class="border border-slate-300 rounded-xl p-6 sm:p-8 bg-white shadow-xs font-serif text-slate-900 text-xs sm:text-sm leading-relaxed space-y-4 select-all"
             >
-              <!-- Formal Corporate Letterhead -->
-              <div class="text-center border-b-2 border-slate-900 pb-3 mb-4 space-y-0.5">
-                <h2 class="text-sm sm:text-base font-black tracking-wider uppercase font-sans text-slate-900">
-                  {{ form.firstParty }}
-                </h2>
-                <p class="text-[10px] sm:text-xs text-slate-600 font-sans">
-                  Energy Tower 28th Fl., SCBD Lot 11, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190
+              <!-- OFFICIAL CORPORATE LETTERHEAD -->
+              <div
+                v-if="letterheadType === 'OFFICIAL'"
+                class="text-center pb-3 mb-4 space-y-0.5 select-none"
+                :class="borderClass"
+              >
+                <div class="flex items-center gap-3 justify-center mb-1">
+                  <div
+                    v-if="letterheadConfig.showLogo"
+                    class="w-9 h-9 rounded-md border border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden shrink-0"
+                  >
+                    <img
+                      v-if="letterheadConfig.logoUrl"
+                      :src="letterheadConfig.logoUrl"
+                      alt="Logo"
+                      class="w-full h-full object-contain"
+                    />
+                    <Scale v-else class="w-5 h-5 text-indigo-700" />
+                  </div>
+                  <div>
+                    <h2 class="text-sm sm:text-base font-black tracking-wider uppercase font-sans text-slate-900">
+                      {{ form.firstParty || letterheadConfig.companyName }}
+                    </h2>
+                    <p
+                      v-if="letterheadConfig.showTagline && letterheadConfig.tagline"
+                      class="text-[9px] text-indigo-800 font-sans italic font-medium"
+                    >
+                      {{ letterheadConfig.tagline }}
+                    </p>
+                  </div>
+                </div>
+
+                <p class="text-[10px] sm:text-xs text-slate-700 font-sans font-semibold">
+                  {{ letterheadConfig.division }}
                 </p>
-                <p class="text-[9px] sm:text-[10px] text-slate-400 font-sans">
-                  Telp: (021) 5289-7000 • Email: legal@nusantara-energi.co.id • Portal: lmstoha.ai.studio
+                <p class="text-[9px] sm:text-[10px] text-slate-600 font-sans">
+                  {{ letterheadConfig.address }}, {{ letterheadConfig.cityPostal }}
                 </p>
+                <p class="text-[9px] text-slate-400 font-sans">
+                  Telp: {{ letterheadConfig.phone }} • Email: {{ letterheadConfig.email }} • Web: {{ letterheadConfig.website }}
+                </p>
+              </div>
+
+              <!-- INTERNAL LEGAL MEMORANDUM HEADER -->
+              <div
+                v-else-if="letterheadType === 'MEMO'"
+                class="border-b-2 border-slate-900 pb-3 mb-4 select-none font-sans text-xs"
+              >
+                <div class="flex items-center justify-between border-b border-slate-300 pb-2 mb-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+                      LE
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-[11px] text-slate-900 uppercase">{{ form.firstParty || letterheadConfig.companyName }}</h4>
+                      <p class="text-[9px] text-slate-500">{{ letterheadConfig.memoDept }}</p>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 bg-slate-100 rounded text-slate-600 font-bold">
+                    INTERNAL LEGAL MEMORANDUM
+                  </span>
+                </div>
+
+                <div class="text-center my-2">
+                  <h3 class="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-slate-900">
+                    {{ letterheadConfig.memoTitle }}
+                  </h3>
+                  <span class="text-[10px] text-slate-500 font-mono">No: {{ form.docNumber }}</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-[10px] bg-slate-50 p-2 rounded border border-slate-200 mt-2">
+                  <div><span class="font-bold text-slate-600">KEPADA:</span> Direksi Perseroan</div>
+                  <div><span class="font-bold text-slate-600">TANGGAL:</span> {{ form.docDate }}</div>
+                  <div><span class="font-bold text-slate-600">DARI:</span> {{ letterheadConfig.division }}</div>
+                  <div><span class="font-bold text-slate-600">PERIHAL:</span> {{ form.subjectOrPurpose }}</div>
+                </div>
               </div>
 
               <!-- Main Document Text with dynamic replacements -->
@@ -247,8 +345,9 @@
 
 <script setup>
 import { ref, computed, reactive, watch } from 'vue';
-import { X, Copy, Printer, FileDown } from 'lucide-vue-next';
+import { X, Copy, Printer, FileDown, Building2, FileSpreadsheet, Scale } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
+import { initialLetterheadConfig } from '../data/seedData';
 import { DEFAULT_TEMPLATE_FIELDS, generateLegalDocument, downloadAsWordDoc } from '../services/templateGeneratorService';
 
 const props = defineProps({
@@ -260,10 +359,45 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+// Letterhead config from store with fallback
+const letterheadConfig = computed(() => legalStore.state.letterhead || initialLetterheadConfig);
+
+// Determine initial letterhead type: 'OFFICIAL' | 'MEMO' | 'NONE'
+function getInitialLetterheadType(template) {
+  const id = template.id || '';
+  const cat = (template.category || '').toLowerCase();
+  if (id === 'TMPL-006' || id === 'TMPL-005' || cat.includes('dispute') || cat.includes('procurement') || cat.includes('surat') || cat.includes('somasi')) {
+    return 'OFFICIAL';
+  }
+  if (id === 'TMPL-007' || cat.includes('opinions') || cat.includes('opinion')) {
+    return 'MEMO';
+  }
+  return 'NONE'; // Default for Mutual NDA, MoU, GSA, EPC Contracts
+}
+
+const letterheadType = ref(getInitialLetterheadType(props.template));
+
+const borderClass = computed(() => {
+  switch (letterheadConfig.value.borderStyle) {
+    case 'double':
+      return 'border-b-4 border-double border-slate-900';
+    case 'single':
+      return 'border-b-2 border-slate-900';
+    case 'bold':
+      return 'border-b-[3px] border-slate-900';
+    case 'accent':
+      return 'border-b-2 border-indigo-700';
+    case 'none':
+      return 'border-b-0';
+    default:
+      return 'border-b-4 border-double border-slate-900';
+  }
+});
+
 // Reactive form pre-filled with context from legalStore and defaults
 const form = reactive({
   ...DEFAULT_TEMPLATE_FIELDS,
-  firstParty: legalStore.state.currentEntity || DEFAULT_TEMPLATE_FIELDS.firstParty,
+  firstParty: letterheadConfig.value.companyName || legalStore.state.currentEntity || DEFAULT_TEMPLATE_FIELDS.firstParty,
   docNumber: `${Math.floor(100 + Math.random() * 900)}/NE-LEGAL/${props.template.id}/X/2026`,
   subjectOrPurpose: props.template.title || props.template.templateName || DEFAULT_TEMPLATE_FIELDS.subjectOrPurpose
 });
@@ -271,7 +405,7 @@ const form = reactive({
 function resetToDefaults() {
   Object.assign(form, {
     ...DEFAULT_TEMPLATE_FIELDS,
-    firstParty: legalStore.state.currentEntity || DEFAULT_TEMPLATE_FIELDS.firstParty,
+    firstParty: letterheadConfig.value.companyName || legalStore.state.currentEntity || DEFAULT_TEMPLATE_FIELDS.firstParty,
     docNumber: `${Math.floor(100 + Math.random() * 900)}/NE-LEGAL/${props.template.id}/X/2026`
   });
   legalStore.triggerToast('Formulir direset ke isian standar', 'info');
@@ -294,6 +428,54 @@ function printDocument() {
     return;
   }
 
+  const c = letterheadConfig.value;
+  let letterheadHtml = '';
+
+  if (letterheadType.value === 'OFFICIAL') {
+    let borderCss = 'border-bottom: 3pt double #000;';
+    if (c.borderStyle === 'single') borderCss = 'border-bottom: 1.5pt solid #000;';
+    else if (c.borderStyle === 'bold') borderCss = 'border-bottom: 2.5pt solid #000;';
+    else if (c.borderStyle === 'accent') borderCss = 'border-bottom: 2pt solid #1E3A8A;';
+    else if (c.borderStyle === 'none') borderCss = 'border-bottom: none;';
+
+    const logoHtml = (c.showLogo && c.logoUrl)
+      ? `<div style="text-align: center; margin-bottom: 6px;"><img src="${c.logoUrl}" style="max-height: 48px; max-width: 150px;" alt="Logo" /></div>`
+      : '';
+
+    const taglineHtml = (c.showTagline && c.tagline)
+      ? `<p style="margin: 2px 0; font-size: 8.5pt; color: #1E3A8A; font-style: italic;">${c.tagline}</p>`
+      : '';
+
+    letterheadHtml = `
+      <div class="letterhead" style="${borderCss} padding-bottom: 8px; margin-bottom: 18px; text-align: center; font-family: Arial, sans-serif;">
+        ${logoHtml}
+        <h2 style="margin: 0; font-size: 13pt; text-transform: uppercase;">${form.firstParty || c.companyName}</h2>
+        ${taglineHtml}
+        <p style="margin: 2px 0; font-size: 9pt; font-weight: bold; color: #222;">${c.division}</p>
+        <p style="margin: 1.5px 0; font-size: 8.5pt; color: #444;">${c.address}, ${c.cityPostal}</p>
+        <p style="margin: 1.5px 0; font-size: 8pt; color: #555;">Telp: ${c.phone} | Email: ${c.email} | Web: ${c.website}</p>
+      </div>
+    `;
+  } else if (letterheadType.value === 'MEMO') {
+    letterheadHtml = `
+      <div style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 18px; font-family: Arial, sans-serif;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px;">
+          <tr>
+            <td style="font-size: 11pt; font-weight: bold; text-transform: uppercase;">${form.firstParty || c.companyName}</td>
+            <td style="text-align: right; font-size: 8.5pt; font-weight: bold; color: #555;">INTERNAL LEGAL MEMORANDUM</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="font-size: 9pt; color: #333;">${c.memoDept || c.division}</td>
+          </tr>
+        </table>
+        <div style="text-align: center; padding: 6px 0;">
+          <h2 style="margin: 0; font-size: 12pt; font-weight: bold; text-transform: uppercase;">${c.memoTitle}</h2>
+          <p style="margin: 2px 0; font-size: 9pt; font-family: monospace; color: #555;">No: ${form.docNumber}</p>
+        </div>
+      </div>
+    `;
+  }
+
   printWindow.document.write(`
     <!DOCTYPE html>
     <html>
@@ -301,9 +483,6 @@ function printDocument() {
       <title>${props.template.title || 'Dokumen Hukum'}</title>
       <style>
         body { font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.5; color: #111; margin: 2.5cm; }
-        .letterhead { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; font-family: sans-serif; }
-        .letterhead h2 { margin: 0; font-size: 14pt; }
-        .letterhead p { margin: 2px 0; font-size: 8.5pt; color: #444; }
         .content { white-space: pre-wrap; text-align: justify; }
         @media print {
           @page { margin: 2cm; }
@@ -312,11 +491,7 @@ function printDocument() {
       </style>
     </head>
     <body>
-      <div class="letterhead">
-        <h2>${form.firstParty}</h2>
-        <p>Energy Tower 28th Fl., SCBD Lot 11, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190</p>
-        <p>Telp: (021) 5289-7000 | Email: legal@nusantara-energi.co.id | Portal: lmstoha.ai.studio</p>
-      </div>
+      ${letterheadHtml}
       <div class="content">${generatedContent.value.replace(/\n/g, '<br/>')}</div>
     </body>
     </html>
@@ -330,14 +505,14 @@ function printDocument() {
 
 function downloadWord() {
   const filename = `${props.template.id}_${props.template.title || 'Dokumen'}`;
-  downloadAsWordDoc(filename, props.template.title, generatedContent.value);
+  downloadAsWordDoc(filename, props.template.title, generatedContent.value, letterheadType.value, letterheadConfig.value);
   legalStore.triggerToast(`Berhasil mengunduh dokumen Word: ${filename}.doc`, 'success');
   
   legalStore.addActivityLog({
     module: 'Templates & Generator',
     action: 'GENERATE_DOC',
     recordId: props.template.id,
-    description: `Mengunduh draf perjanjian siap pakai: ${props.template.title} dengan nomor ${form.docNumber}`
+    description: `Mengunduh draf perjanjian siap pakai: ${props.template.title} dengan nomor ${form.docNumber} [Kop: ${letterheadType.value}]`
   });
 }
 </script>

@@ -78,6 +78,15 @@
         <HardDrive class="w-4 h-4" />
         Kapasitas & Cadangan Data
       </button>
+
+      <button
+        @click="activeTab = 'letterhead'"
+        :class="activeTab === 'letterhead' ? 'bg-[#4338CA] text-white shadow-xs font-bold' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 font-medium'"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition cursor-pointer flex items-center gap-2"
+      >
+        <Building2 class="w-4 h-4" />
+        Profil & Kop Surat
+      </button>
     </div>
 
     <!-- Active Tab Content Components -->
@@ -190,6 +199,9 @@
       </div>
     </div>
 
+    <!-- Letterhead & Corporate Profile Tab Panel -->
+    <SettingsLetterheadTab v-else-if="activeTab === 'letterhead'" />
+
     <!-- MODALS -->
     <SettingsUserModal
       :is-open="isUserModalOpen"
@@ -216,7 +228,7 @@
 
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
-import { Database, HardDrive, Download, Upload } from 'lucide-vue-next';
+import { Database, HardDrive, Download, Upload, Building2 } from 'lucide-vue-next';
 import { legalStore } from '../stores/legalStore';
 import { storage } from '../services/storage';
 
@@ -227,6 +239,7 @@ const SettingsUserModal = defineAsyncComponent(() => import('./Settings/Settings
 const SettingsFlowsTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsFlowsTab.vue'));
 const SettingsRolesTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsRolesTab.vue'));
 const SettingsUsersTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsUsersTab.vue'));
+const SettingsLetterheadTab = defineAsyncComponent(() => import('./Settings/Tabs/SettingsLetterheadTab.vue'));
 
 // Active Sub-tab ('roles' | 'users' | 'flows' | 'storage')
 const activeTab = ref('roles');

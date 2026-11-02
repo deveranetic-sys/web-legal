@@ -1,5 +1,5 @@
 # Panduan Optimasi Arsitektur, Performa & Acuan Pengembangan
-## LMS TOHA Enterprise Legal Suite (web-legal)
+## ELegal Enterprise Legal Suite (web-legal)
 
 Dokumen ini merangkum seluruh hasil audit arsitektur kode dan berfungsi sebagai **standar acuan teknis (engineering guidelines)** resmi untuk pengembang dalam mengoptimasi efisiensi *runtime*, waktu muat (*cold-boot*), konsumsi memori (*memory allocation*), ukuran *bundle*, keamanan ekspor data, ketahanan penyimpanan lokal (*LocalStorage*), serta penanganan galat tak terduga (*Error Boundary*).
 
@@ -302,4 +302,4 @@ Menu konfigurasi alur persetujuan berada di **Pengaturan Sistem & Kontrol Akses 
 7. **Chain Approval**: Alur persetujuan berjenjang berjalan secara transaksional dengan role validation dan konfigurasi CRUD di menu Settings.
 
 ---
-*Dokumen ini diperbarui secara berkala sebagai panduan resmi arsitektur teknis dan pengembangan sistem LMS TOHA Legal Suite.*
+*Dokumen ini diperbarui secara berkala sebagai panduan resmi arsitektur teknis dan pengembangan sistem ELegal Enterprise Suite.*

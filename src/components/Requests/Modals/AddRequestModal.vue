@@ -220,7 +220,7 @@ const legalCounselOptions = [
   { name: 'Siti Rahmawati, S.H., M.H.', title: 'Kepala Legal Operasional' },
   { name: 'Budi Santoso, S.H., LL.M.', title: 'Head of Legal & Compliance' },
   { name: 'Anisa Maharani, S.H.', title: 'Staff Legal Specialist' },
-  { name: 'Toha, S.H., M.H.', title: 'General Counsel' }
+  { name: 'Budi Santoso, S.H., M.H.', title: 'General Counsel' }
 ];
 
 const form = ref({

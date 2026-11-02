@@ -75,7 +75,7 @@ export function getGoogleCalendarUrl({ title, description, location = 'Jakarta, 
     dates: `${start}/${end}`,
     details: description || '',
     location: location || 'Jakarta, Indonesia',
-    add: 'tohalegal@gmail.com'
+    add: 'legal@nusantara-energi.co.id'
   });
 
   return `${baseUrl}&${params.toString()}`;

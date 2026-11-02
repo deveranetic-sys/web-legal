@@ -6,7 +6,9 @@ import {
   initialCapabilityList,
   initialApprovalFlows,
   initialMasterTenderStages,
-  initialMasterContractTypes
+  initialMasterContractTypes,
+  initialLetterheadConfig,
+  entityLetterheadPresets
 } from '../data/seedData.js';
 
 // Initialize storage and load hydrated dataset in a single pass
@@ -261,6 +263,7 @@ const state = reactive({
   approvalFlows: initialData.approvalFlows,
   erpIntegrations: initialData.erpIntegrations,
   erpEmployees: initialData.erpEmployees,
+  letterhead: initialData.letterhead || { ...initialLetterheadConfig },
   capabilityList: initialCapabilityList,
   masterCapabilities: initialCapabilityList,
   selectedTenderId: 'TND-2026-001',
@@ -524,6 +527,33 @@ export const legalStore = {
     state.currentEntity = entity;
     storage.set(storage.KEYS.CURRENT_ENTITY, entity);
     this.triggerToast(`Entitas perseroan aktif: ${entity}`, 'info');
+  },
+
+  // Letterhead & Corporate Profile Configuration
+  updateLetterhead(payload) {
+    state.letterhead = { ...state.letterhead, ...payload };
+    storage.set(storage.KEYS.LETTERHEAD, state.letterhead);
+    this.triggerToast('Konfigurasi kop surat & profil perusahaan berhasil disimpan!', 'success');
+    this.addActivityLog({
+      module: 'Pengaturan & Profil',
+      action: 'UPDATE_LETTERHEAD',
+      recordId: 'LETTERHEAD-01',
+      description: `Memperbarui kop surat perusahaan: ${state.letterhead.companyName}`
+    });
+  },
+
+  resetLetterhead() {
+    state.letterhead = { ...initialLetterheadConfig };
+    storage.set(storage.KEYS.LETTERHEAD, state.letterhead);
+    this.triggerToast('Kop surat berhasil direset ke standar perseroan.', 'info');
+  },
+
+  applyEntityLetterheadPreset(entityName) {
+    if (entityLetterheadPresets && entityLetterheadPresets[entityName]) {
+      state.letterhead = { ...entityLetterheadPresets[entityName] };
+      storage.set(storage.KEYS.LETTERHEAD, state.letterhead);
+      this.triggerToast(`Profil kop surat disesuaikan ke: ${entityName}`, 'success');
+    }
   },
 
   // Toast feedback

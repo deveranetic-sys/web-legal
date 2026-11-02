@@ -2278,8 +2278,8 @@ export const initialErpIntegrations = [
 export const initialErpEmployees = [
   {
     nik: 'EMP-0100',
-    name: 'Toha, S.H., M.H.',
-    email: 'tohalegal@gmail.com',
+    name: 'Budi Santoso, S.H., M.H.',
+    email: 'counsel@nusantara-energi.co.id',
     department: 'Legal & Corporate Governance',
     title: 'General Counsel & Lead Legal Director',
     phone: '+62 811-987-100',
@@ -2455,6 +2455,82 @@ export const initialErpEmployees = [
   }
 ];
 
+export const initialLetterheadConfig = {
+  companyName: 'PT NUSANTARA ENERGI TBK',
+  division: 'DEPARTEMEN LEGAL & KEPATUHAN KORPORAT',
+  tagline: 'Penyedia Solusi Rekayasa Energi Terbarukan & Infrastruktur Nasional',
+  address: 'Energy Tower Lt. 28, Kawasan SCBD Lot 11, Jl. Jend. Sudirman Kav. 52-53',
+  cityPostal: 'Jakarta Selatan 12190, Indonesia',
+  phone: '(021) 5289-7000',
+  fax: '(021) 5289-7001',
+  email: 'legal@nusantara-energi.co.id',
+  website: 'www.nusantara-energi.co.id',
+  logoUrl: '',
+  borderStyle: 'double', // 'double' | 'single' | 'bold' | 'none'
+  accentColor: '#1E3A8A',
+  showLogo: true,
+  showTagline: true,
+  memoTitle: 'MEMORANDUM HUKUM / LEGAL OPINION',
+  memoDept: 'Corporate Legal & Compliance Directorate'
+};
+
+export const entityLetterheadPresets = {
+  'PT Nusantara Energi': {
+    companyName: 'PT NUSANTARA ENERGI TBK',
+    division: 'DEPARTEMEN LEGAL & KEPATUHAN KORPORAT',
+    tagline: 'Penyedia Solusi Rekayasa Energi Terbarukan & Infrastruktur Nasional',
+    address: 'Energy Tower Lt. 28, Kawasan SCBD Lot 11, Jl. Jend. Sudirman Kav. 52-53',
+    cityPostal: 'Jakarta Selatan 12190, Indonesia',
+    phone: '(021) 5289-7000',
+    fax: '(021) 5289-7001',
+    email: 'legal@nusantara-energi.co.id',
+    website: 'www.nusantara-energi.co.id',
+    logoUrl: '',
+    borderStyle: 'double',
+    accentColor: '#1E3A8A',
+    showLogo: true,
+    showTagline: true,
+    memoTitle: 'MEMORANDUM HUKUM / LEGAL OPINION',
+    memoDept: 'Corporate Legal & Compliance Directorate'
+  },
+  'PT Nusantara Holdings Utama': {
+    companyName: 'PT NUSANTARA HOLDINGS UTAMA',
+    division: 'DIVISI TATA KELOLA & HUKUM GRUP (GROUP LEGAL & SECRETARY)',
+    tagline: 'Grup Pengelola Portofolio Investasi & Sinergi Bisnis Terintegrasi',
+    address: 'Menara Astra Lt. 45, Jl. Jend. Sudirman Kav. 5-6',
+    cityPostal: 'Jakarta Pusat 10220, Indonesia',
+    phone: '(021) 5088-9900',
+    fax: '(021) 5088-9901',
+    email: 'corp.legal@nusantara-holdings.co.id',
+    website: 'www.nusantara-holdings.co.id',
+    logoUrl: '',
+    borderStyle: 'double',
+    accentColor: '#0F172A',
+    showLogo: true,
+    showTagline: true,
+    memoTitle: 'GROUP LEGAL OPINION & COMPLIANCE MEMO',
+    memoDept: 'Group Legal & Corporate Secretarial Division'
+  },
+  'PT Sinergi Tambang Gemilang': {
+    companyName: 'PT SINERGI TAMBANG GEMILANG',
+    division: 'BAGIAN LEGAL OPERASIONAL & PERIZINAN TAMBANG',
+    tagline: 'Operasional Pertambangan Berkelanjutan & Kepatuhan Lingkungan',
+    address: 'Gedung Wisma Mulia 2 Lt. 18, Jl. Jend. Gatot Subroto No. 42',
+    cityPostal: 'Jakarta Selatan 12710, Indonesia',
+    phone: '(021) 5290-8800',
+    fax: '(021) 5290-8801',
+    email: 'legal.ops@sinergitambang.co.id',
+    website: 'www.sinergitambang.co.id',
+    logoUrl: '',
+    borderStyle: 'single',
+    accentColor: '#B45309',
+    showLogo: true,
+    showTagline: true,
+    memoTitle: 'NOTA HUKUM OPERASIONAL / LEGAL MEMO',
+    memoDept: 'Mining Concession & Operational Legal Unit'
+  }
+};
+
 export const defaultSeedData = {
   users: initialUsers.map(u => ({
     ...u,
@@ -2488,6 +2564,7 @@ export const defaultSeedData = {
   rolesMatrix: initialRolesMatrix,
   approvalFlows: initialApprovalFlows,
   erpIntegrations: initialErpIntegrations,
+  letterhead: initialLetterheadConfig,
   currentUser: initialUsers[0]
 };
 

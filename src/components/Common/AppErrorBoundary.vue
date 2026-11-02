@@ -14,7 +14,7 @@
             </div>
             <div>
               <h2 class="text-base font-bold tracking-tight">Terjadi Galat Tak Terduga</h2>
-              <p class="text-xs text-rose-100">Modul terlindungi oleh Global Error Boundary LMS TOHA</p>
+              <p class="text-xs text-rose-100">Modul terlindungi oleh Global Error Boundary ELegal</p>
             </div>
           </div>
           <span class="text-[11px] font-mono bg-white/20 px-2.5 py-1 rounded-full text-white">
@@ -168,7 +168,7 @@ function downloadEmergencyBackup() {
 }
 
 function copyError() {
-  const text = `LMS TOHA Error Diagnostic\nTime: ${errorTimestamp.value}\nMessage: ${errorMessage.value}\nInfo: ${errorInfo.value}\nStack:\n${errorStack.value}`;
+  const text = `ELegal Error Diagnostic\nTime: ${errorTimestamp.value}\nMessage: ${errorMessage.value}\nInfo: ${errorInfo.value}\nStack:\n${errorStack.value}`;
   navigator.clipboard?.writeText(text).then(() => {
     copied.value = true;
     setTimeout(() => {

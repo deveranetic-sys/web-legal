@@ -1,6 +1,6 @@
-# LMS TOHA Enterprise Legal Suite — Full Prototype Web
+# ELegal Enterprise Legal Suite — Full Prototype Web
 
-Aplikasi web prototipe penuh (*full prototype*) hasil reverse-engineering menyeluruh dari sistem produksi [https://lmstoha.ai.studio/](https://lmstoha.ai.studio/), dibangun menggunakan stack modern:
+Aplikasi web prototipe penuh (*full prototype*) hasil reverse-engineering menyeluruh dari sistem produksi [https://elegal.ai.studio/](https://elegal.ai.studio/), dibangun menggunakan stack modern:
 - **Frontend**: **Vue.js 3** (Composition API `<script setup>`) + **Vite 8**
 - **Styling**: **Tailwind CSS v4** (`@tailwindcss/vite`)
 - **Penyimpanan (Storage)**: **Reactive LocalStorage Engine** (`storage.js`) dengan dataset asli lengkap (`originalData.json` / `seedData.js`)
