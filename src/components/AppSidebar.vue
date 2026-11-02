@@ -74,7 +74,7 @@
 
       <!-- Bottom User Profile Card (Pinned at the very bottom) -->
       <div class="mt-auto p-3 border-t border-[#E2E8F0] bg-[#F8FAFC]">
-        <div class="p-3 rounded-xl bg-white border border-[#CBD5E1] shadow-2xs space-y-2.5">
+        <div class="p-3 rounded-xl bg-white border border-[#CBD5E1] shadow-2xs">
           <!-- User info row with prominent name visibility -->
           <div class="flex items-center gap-2.5">
             <div class="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center font-black text-sm shrink-0 shadow-xs">
@@ -87,19 +87,6 @@
               <div class="text-[11px] text-[#64748B] font-medium truncate" :title="legalStore.state.currentUser?.title">
                 {{ legalStore.state.currentUser?.title || legalStore.state.currentUser?.department || 'Corporate Division' }}
               </div>
-            </div>
-          </div>
-
-          <!-- Role Badge row - Full width & high contrast visibility diujung bawah -->
-          <div class="pt-2 border-t border-[#F1F5F9]">
-            <div class="flex items-center justify-between text-[10px] text-[#64748B] font-semibold mb-1">
-              <span>PERAN AKTIF</span>
-            </div>
-            <div
-              class="w-full text-center text-[11px] font-black px-2.5 py-1.5 rounded-lg bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] tracking-wide uppercase shadow-2xs"
-              :title="legalStore.state.currentUser?.role"
-            >
-              {{ legalStore.state.currentUser?.role }}
             </div>
           </div>
         </div>
