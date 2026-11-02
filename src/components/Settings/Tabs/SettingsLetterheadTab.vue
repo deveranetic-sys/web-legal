@@ -12,20 +12,30 @@
         </p>
       </div>
 
-      <!-- Quick Preset Selector -->
-      <div class="flex items-center gap-2 flex-wrap">
-        <span class="text-xs font-semibold text-slate-500">Pilih Profil Entitas:</span>
-        <button
-          v-for="(preset, entityName) in entityPresets"
-          :key="entityName"
-          @click="loadEntityPreset(entityName)"
-          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer"
-          :class="form.companyName === preset.companyName
-            ? 'bg-indigo-50 border-indigo-300 text-indigo-700 shadow-2xs'
-            : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700'"
-        >
-          {{ entityName.replace('PT ', '') }}
-        </button>
+      <!-- Entity Profile Dropdown -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2.5">
+        <label for="entityProfileSelect" class="text-xs font-bold text-slate-700 whitespace-nowrap">
+          Pilih Profil Entitas:
+        </label>
+        <div class="relative min-w-[260px] sm:w-72">
+          <Building class="w-3.5 h-3.5 text-indigo-600 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <select
+            id="entityProfileSelect"
+            v-model="selectedEntityPreset"
+            @change="handlePresetChange"
+            class="w-full pl-8.5 pr-8 py-2 bg-slate-50 hover:bg-slate-100/90 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer appearance-none transition-all outline-none shadow-2xs"
+          >
+            <option value="" disabled>-- Pilih Profil Entitas Perseroan --</option>
+            <option
+              v-for="(preset, entityName) in entityPresets"
+              :key="entityName"
+              :value="entityName"
+            >
+              {{ entityName }}
+            </option>
+          </select>
+          <ChevronDown class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        </div>
       </div>
     </div>
 
@@ -471,7 +481,8 @@ import {
   FileSpreadsheet,
   Save,
   Scale,
-  FileDown
+  FileDown,
+  ChevronDown
 } from 'lucide-vue-next';
 import { legalStore } from '../../../stores/legalStore';
 import { entityLetterheadPresets, initialLetterheadConfig } from '../../../data/seedData';
@@ -500,6 +511,17 @@ const form = reactive({
   memoTitle: currentStoreConfig.memoTitle || 'MEMORANDUM HUKUM / LEGAL OPINION',
   memoDept: currentStoreConfig.memoDept || 'Corporate Legal & Compliance Directorate'
 });
+
+// Dropdown selection state
+const selectedEntityPreset = ref(
+  Object.keys(entityPresets).find(name => entityPresets[name].companyName === form.companyName) || 'PT Nusantara Energi'
+);
+
+function handlePresetChange() {
+  if (selectedEntityPreset.value) {
+    loadEntityPreset(selectedEntityPreset.value);
+  }
+}
 
 const previewMode = ref('OFFICIAL'); // 'OFFICIAL' | 'MEMO'
 const logoFileInput = ref(null);
@@ -548,6 +570,7 @@ function loadEntityPreset(entityName) {
 
 function resetDefaults() {
   Object.assign(form, initialLetterheadConfig);
+  selectedEntityPreset.value = 'PT Nusantara Energi';
   legalStore.triggerToast('Formulir dikembalikan ke konfigurasi default perseroan', 'info');
 }
 
